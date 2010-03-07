@@ -1,13 +1,17 @@
 - post = post_meta
 
 #meta
-  %p{ :class => 'author' }
-    Publié par
-    =link_to h(post.author.name), :action => :archives_by_author, :id => post.author
-  TODO QUAND
   %p{ :class => 'tags' }
-  - post.tags.each do |tag|
-    =link_to h(tag.display_name), :action => :archives_by_tag, :id => tag
+    Tags:
+    - post.tags.each do |tag|
+      =link_to h(tag.display_name), :action => :archives_by_tag, :id => tag
+  %p{ :class => 'author' }
+    Publié dans la catégorie
+    %strong= link_to h(post.category.name), :action => :archives_by_category, :id => post.category
+    par
+    %em= link_to h(post.author.name), :action => :archives_by_author, :id => post.author
+    le
+    = h(post.created_at)
   %p{ :class => 'links' }
     = link_to 'Lien permanent', post_meta
     = link_to 'TODO Commentaire(s)', post_meta

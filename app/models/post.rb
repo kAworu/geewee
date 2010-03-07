@@ -1,8 +1,10 @@
 class Post < ActiveRecord::Base
   belongs_to  :author
+  belongs_to  :category
   has_and_belongs_to_many :tags
 
-  validates_presence_of :title, :intro, :author_id
+  validates_presence_of :author, :category
+  validates_presence_of :title,  :intro
 
   def str_tags
     ts = Array.new

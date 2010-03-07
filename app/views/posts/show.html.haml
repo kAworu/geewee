@@ -1,0 +1,24 @@
+%p
+  %strong Title:
+  =h @post.title
+
+%p
+  %strong Intro:
+  =h @post.intro
+
+%p
+  %strong Body:
+  =h @post.body
+
+%p
+  %strong Tags:
+  =h @post.tags
+
+%p
+  %strong Published:
+  =h @post.published
+
+
+= link_to 'Edit', edit_post_path(@post)
+|
+= link_to 'Back', posts_path

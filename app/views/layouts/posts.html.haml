@@ -1,0 +1,49 @@
+!!!
+%html{ :xmlns => "http://www.w3.org/1999/xhtml" }
+  %head
+    %meta{ :name => 'author', :content => 'kAworu' }
+    %meta{ :content => 'text/html; charset=UTF-8', 'http-equiv' => 'Content-Type' }
+    %title
+      fork while fork:
+      =h '@post.title TODO'
+
+    = stylesheet_link_tag 'style', 'application'
+    = yield :head
+
+  %body
+
+    <!-- start header -->
+    %div{ :id => 'header' }
+      %div{ :id => 'logo' }
+        %h1
+          %a{ :href => '/'}
+            fork while fork
+        %h2 :(){:|:&nbsp;};:
+      %div{ :id => 'menu' }
+        %ul
+          %li{ :class => 'page_item' }
+            %a{ :href => '/' }
+              Accueil
+          %li{ :class => 'page_item' }
+            %a{ :href => '/archives' }
+              Articles
+          %li{ :class => 'page_item' }
+            %a{ :href => '/about' }
+              À propos
+    <!-- end header -->
+
+    <!-- start body -->
+    %div{ :id => 'page' }
+      %div{ :id => 'content' }
+        = yield
+    <!-- end body -->
+
+    <!-- start footer -->
+    %div{ :id => 'footer' }
+      %div{ :class => 'wrap' }
+        %p{ :id => 'legal' }
+          Design par TODO
+          %br
+          Propulsé par
+          %a{ :href => 'http://hg.kaworu.ch/rails-rgolb' } Rgolb
+    <!-- end footer -->

@@ -1,15 +1,8 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 one:
-  title: MyString
-  intro: MyText
-  body: MyText
-  tags: MyString
-  published: false
-
-two:
-  title: MyString
-  intro: MyText
-  body: MyText
-  tags: MyString
-  published: false
+  title: My First Post!
+  intro: this is my first post
+  body: about ruby
+  tags: ruby
+  published: true

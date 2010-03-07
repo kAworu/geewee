@@ -11,7 +11,17 @@
 
 ActiveRecord::Schema.define(:version => 20100307183134) do
 
+  create_table "authors", :force => true do |t|
+    t.string   "name"
+    t.string   "email"
+    t.string   "salt"
+    t.string   "hashed_password"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "posts", :force => true do |t|
+    t.integer  "author_id"
     t.string   "title"
     t.text     "intro"
     t.text     "body"

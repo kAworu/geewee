@@ -3,7 +3,7 @@
 #meta
   %p{ :class => 'author' }
     Publié par
-    %cite TODO
+    =link_to h(post.author.name), :action => :archives_by_author, :id => post.author
   TODO QUAND
   %p{ :class => 'tags' }
   - post.tags.each do |tag|

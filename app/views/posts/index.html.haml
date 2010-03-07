@@ -1,32 +1,17 @@
-%h1 Listing posts
-
-%table
-  %tr 
-    %th Title
-    %th Intro
-    %th Body
-    %th Tags
-    %th Published
-
-  - @posts.each do |post|
-    %tr
-      %td
-        =h post.title
-      %td
-        =h post.intro
-      %td
-        =h post.body
-      %td
-        =h post.tags
-      %td
-        =h post.published
-      %td
-        = link_to 'Show', post
-      %td
-        = link_to 'Edit', edit_post_path(post)
-      %td
-        = link_to 'Destroy', post, :confirm => 'Are you sure?', :method => :delete
-
-%br
-
-= link_to 'New post', new_post_path
+- @posts.each do |post|
+  - if post.published
+    %h2{ :class => 'title' }
+      =h post.title
+    #content
+      =markdown post.intro
+      #extended
+        %p
+          = link_to 'Lire la suite...', post
+    #meta
+      %p{ :class => 'author' }
+        Publié par
+        %cite TODO
+      TODO QUAND
+      %p{ :class => 'links' }
+        = link_to 'Lien permanent', post
+        = link_to 'TODO Commentaire(s)', post

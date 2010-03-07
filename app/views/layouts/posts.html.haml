@@ -13,13 +13,13 @@
   %body
 
     <!-- start header -->
-    %div{ :id => 'header' }
-      %div{ :id => 'logo' }
+    #header
+      #logo
         %h1
           %a{ :href => '/'}
             fork while fork
         %h2 :(){:|:&nbsp;};:
-      %div{ :id => 'menu' }
+      #menu
         %ul
           %li{ :class => 'page_item' }
             %a{ :href => '/' }
@@ -33,14 +33,14 @@
     <!-- end header -->
 
     <!-- start body -->
-    %div{ :id => 'page' }
-      %div{ :id => 'content' }
+    #page
+      #content
         = yield
     <!-- end body -->
 
     <!-- start footer -->
-    %div{ :id => 'footer' }
-      %div{ :class => 'wrap' }
+    #footer
+      .wrap
         %p{ :id => 'legal' }
           Design par TODO
           %br

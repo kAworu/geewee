@@ -1,0 +1,9 @@
+- if post.published
+  %h2{ :class => 'title' }
+    =link_to h(post.title), post
+  #content
+    =markdown post.intro
+    #extended
+      %p
+        = link_to 'Lire la suite...', post
+  = render :partial => 'post_meta', :object => post

@@ -1,18 +1,2 @@
-- @posts.each do |post|
-  - if post.published
-    %h2{ :class => 'title' }
-      =h post.title
-    #content
-      =markdown post.intro
-      #extended
-        %p
-          = link_to 'Lire la suite...', post
-    #meta
-      %p{ :class => 'author' }
-        Publié par
-        %cite TODO
-      TODO QUAND
-      %p{ :class => 'links' }
-        = link_to 'Lien permanent', post
-        = link_to 'TODO Commentaire(s)', post
+= render :partial => 'post', :collection => @posts
 = link_to 'new post', new_post_path

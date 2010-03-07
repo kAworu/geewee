@@ -1,24 +1,16 @@
-%p
-  %strong Title:
-  =h @post.title
-
-%p
-  %strong Intro:
-  =markdown @post.intro
-
-%p
-  %strong Body:
-  =markdown @post.body
-
-%p
-  %strong Tags:
-  =h @post.tags
-
-%p
-  %strong Published:
-  =h @post.published
-
+- if @post.published
+  %h2{ :class => 'title' }
+    =h @post.title
+  #content
+    =markdown @post.intro
+    =markdown @post.body
+  #meta
+    %p{ :class => 'author' }
+      Publié par
+      %cite TODO
+    TODO QUAND
+    %p{ :class => 'links' }
+      = link_to 'Lien permanent', @post
+      = link_to 'TODO Commentaire(s)', @post
 
 = link_to 'Edit', edit_post_path(@post)
-|
-= link_to 'Back', posts_path

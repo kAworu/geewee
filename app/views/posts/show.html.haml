@@ -1,7 +1,1 @@
-- if @post.published
-  %h2{ :class => 'title' }
-    =link_to h(@post.title), @post
-  #content
-    =markdown @post.intro
-    =markdown @post.body
-  = render :partial => 'post_meta', :object => @post
+= render :partial => 'post', :object => @post

@@ -6,7 +6,7 @@
     - @post.comments.each do |comment|
       %li{ :id => "comment-#{comment.id}", :class => 'comment' }
         .author
-          %cite=h (comment.author)
+          %cite= comment.url.nil? ? h(comment.author) : link_to(h(comment.author), comment.url)
           %abbr{ :title => comment.created_at }= comment.created_at
         .content
           = h(comment.body)
@@ -29,6 +29,10 @@
       = f.label :email, 'email:'
       %br
       = f.text_field :email
+    %p
+      = f.label :url, 'URL:'
+      %br
+      = f.text_field :url
     %p
       = f.label :body, 'commentaire:'
       %br

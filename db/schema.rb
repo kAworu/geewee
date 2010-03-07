@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(:version => 20100307211309) do
 
   create_table "categories", :force => true do |t|
     t.string   "name"
+    t.string   "display_name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -30,6 +31,7 @@ ActiveRecord::Schema.define(:version => 20100307211309) do
     t.integer  "post_id"
     t.string   "author"
     t.string   "email"
+    t.string   "url"
     t.text     "body"
     t.datetime "created_at"
     t.datetime "updated_at"

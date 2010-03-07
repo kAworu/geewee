@@ -18,14 +18,15 @@
             = markdown post.body
     %ul{ :class => 'meta' }
       %li{ :class => 'categories' }
-        catégorie =
+        catégorie:
         = link_to h(post.category.name), :action => :archives_by_category, :id => post.category
       %li{ :class => 'tags' }
-        tags =
+        tags:
         - post.tags.each do |tag|
           =link_to h(tag.display_name), :action => :archives_by_tag, :id => tag
       %li
-        - if post.comments.any?
-          = link_to "#{post.comments.count} commentaire(s)", :action => :show, :id => post, :anchor => 'comments'
+        = link_to "#{(c = post.comments.count).zero? ? "aucun" : c} commentaire(s)", :action => :show, :id => post, :anchor => 'comments'
+        \-
         = link_to 'Lien permanent', post, :rel => 'bookmark'
+        \-
         %a{ :href => '#' } rss/atom TODO

@@ -1,3 +1,4 @@
+# only creation is allowed, deletion is only allowed to the post's author.
 class CommentsController < ApplicationController
 
   # POST /comments

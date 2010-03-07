@@ -1,7 +1,8 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
 
-  # our own markdown function that support coderay
+  # our own markdown function that support coderay.
+  # FIXME: it's ugly.
   def markdown text
     result  = String.new
     code    = nil

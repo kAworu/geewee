@@ -11,39 +11,33 @@
     = yield :head
 
   %body
-
-    <!-- start header -->
-    #header
-      #logo
+    #container
+      <!-- start header -->
+      #header
         %h1
-          %a{ :href => '/'}
-            fork while fork
+          %span
+            %a{ :href => '/' } fork while fork
         %h2 :(){:|:&nbsp;};:
-      #menu
-        %ul
-          %li{ :class => 'page_item' }
-            %a{ :href => '/' }
-              Accueil
-          %li{ :class => 'page_item' }
-            %a{ :href => '/archives' }
-              Articles
-          %li{ :class => 'page_item' }
-            %a{ :href => '/about' }
-              À propos
-    <!-- end header -->
+      <!-- end header -->
 
-    <!-- start body -->
-    #page
-      #content
-        = yield
-    <!-- end body -->
+      <!-- start body -->
+      #page
+        #content
+          = yield
+        #sidebar
+          SIDEBAR TODO
+        %br{ :style => 'clear:both' }
+      <!-- end body -->
 
-    <!-- start footer -->
-    #footer
-      .wrap
-        %p{ :id => 'legal' }
-          Design par TODO
-          %br
-          Propulsé par
-          %a{ :href => 'http://hg.kaworu.ch/rails-rgolb' } Rgolb
-    <!-- end footer -->
+      <!-- start footer -->
+      #footer
+        %hr
+          %p
+            %a{ :href => '/' } fork while fork
+          %ul
+            %li
+              Propulsé par:
+              %a{ :href => 'http://hg.kaworu.ch/rails-rgolb' } Rgolb
+              \/ Design:
+              %a{ :href => 'http://quotedprintable.com/pages/scribbish' } scribbish
+      <!-- end footer -->

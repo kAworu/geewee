@@ -1,1 +1,38 @@
-= render :partial => 'post', :object => @post
+= render :partial => @post
+
+%a{ :href => '#comments' }
+%ol{ :id => 'comments', :class => 'comments' }
+  - if @post.comments.any?
+    - @post.comments.each do |comment|
+      %li{ :id => "comment-#{comment.id}", :class => 'comment' }
+        .author
+          %cite=h (comment.author)
+          %abbr{ :title => comment.created_at }= comment.created_at
+        .content
+          = h(comment.body)
+  - else
+    %li{ :class => 'dummy_comment', :style => 'display:none' }
+      Aucun commentaires.
+
+%a{ :href => '#comment_form' }
+- form_for [@post, Comment.new] do |f|
+  %p{ :style => 'color:green' }= flash[:notice]
+  %p{ :style => 'color:red' }= flash[:error]
+  #preview{ :style => 'display:none' }
+  %fieldset
+    %legend Écrire un commentaire
+    %p
+      = f.label :author, 'nom:'
+      %br
+      = f.text_field :author
+    %p
+      = f.label :email, 'email:'
+      %br
+      = f.text_field :email
+    %p
+      = f.label :body, 'commentaire:'
+      %br
+      = f.text_area :body
+    %p
+      = f.submit 'Ajouter!'
+      = image_tag '/images/theme/spinner.gif', :id => 'spinner', :style => 'display:none'

@@ -6,7 +6,7 @@
       Posté par
       %span{ :class => 'fn'}
         = link_to h(post.author.name), :action => :archives_by_author, :id => post.author
-    %abbr{ :class => 'published', :title => post.created_at }
+    %abbr{ :class => 'published', :title => post.created_at }= post.created_at
     %br{ :class => 'clear' }
     .entry-content
       =markdown post.intro
@@ -25,6 +25,7 @@
         - post.tags.each do |tag|
           =link_to h(tag.display_name), :action => :archives_by_tag, :id => tag
       %li
-        = link_to 'TODO Commentaire(s)', post
+        - if post.comments.any?
+          = link_to "#{post.comments.count} commentaire(s)", :action => :show, :id => post, :anchor => 'comments'
         = link_to 'Lien permanent', post, :rel => 'bookmark'
         %a{ :href => '#' } rss/atom TODO

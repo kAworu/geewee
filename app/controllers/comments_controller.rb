@@ -8,15 +8,18 @@ class CommentsController < ApplicationController
     respond_to do |format|
       if @comment.save
         flash[:notice] = 'commentaire ajouté!'
+        flash[:error]  = ''
       else
-        flash[:error] = "erreur lors de l'ajout du commentaire"
+        flash[:notice] = ''
+        flash[:error]  = "erreur lors de l'ajout du commentaire"
       end
       format.html do
         redirect_to :controller => :posts,
                     :action => :show,
                     :id => @post,
-                    :anchor => 'comment_form'
+                    :anchor => :new_comment
       end
+      format.js
     end
   end
 end

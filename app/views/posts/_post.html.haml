@@ -4,7 +4,7 @@
       =link_to h(post.title), post
     .vcard
       Posté par
-      %span{ :class => 'fn'}
+      %span{ :class => 'fn' }
         = link_to h(post.author.name), :action => :archives_by_author, :id => post.author
     %abbr{ :class => 'published', :title => post.created_at }= post.created_at
     %br{ :class => 'clear' }
@@ -25,8 +25,6 @@
         - post.tags.each do |tag|
           =link_to h(tag.display_name), :action => :archives_by_tag, :id => tag
       %li
-        = link_to "#{(c = post.comments.count).zero? ? "aucun" : c} commentaire(s)", :action => :show, :id => post, :anchor => 'comments'
+        = link_to "#{(c = post.comments.count).zero? ? 'aucun' : c} commentaire(s)", :action => :show, :id => post, :anchor => :comments
         \-
-        = link_to 'Lien permanent', post, :rel => 'bookmark'
-        \-
-        %a{ :href => '#' } rss/atom TODO
+        %a{ :href => 'TODO' } rss/atom TODO

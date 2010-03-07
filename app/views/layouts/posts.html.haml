@@ -1,5 +1,5 @@
 !!!
-%html{ :xmlns => "http://www.w3.org/1999/xhtml" }
+%html{ :xmlns => 'http://www.w3.org/1999/xhtml' }
   %head
     %meta{ :name => 'author', :content => 'kAworu' }
     %meta{ :content => 'text/html; charset=UTF-8', 'http-equiv' => 'Content-Type' }
@@ -8,6 +8,7 @@
       =h '@post.title TODO'
 
     = stylesheet_link_tag 'style', 'application'
+    = javascript_include_tag :all
     = yield :head
 
   %body
@@ -15,8 +16,7 @@
       <!-- start header -->
       #header
         %h1
-          %span
-            %a= link_to 'fork while fork', posts_path
+          %span= link_to 'fork while fork', posts_path
         %h2 :(){:|:&nbsp;};:
       <!-- end header -->
 
@@ -33,7 +33,7 @@
       #footer
         %hr
           %p
-            %a= link_to 'fork while fork', posts_path
+            = link_to 'fork while fork', posts_path
           %ul
             %li
               Propulsé par:

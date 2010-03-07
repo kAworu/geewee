@@ -1,0 +1,11 @@
+%li{ :id => "comment_#{comment.id}", :class => 'comment' }
+  .author
+    %div
+    %cite
+      - if comment.url.nil?
+        =h comment.author
+      - else
+        = link_to h(comment.author), comment.url
+    %abbr{ :title => comment.created_at }= comment.created_at
+  .content
+    = h(comment.body)

@@ -1,0 +1,10 @@
+page.replace_html 'flash-error', flash[:error]
+page['flash-error'].visual_effect :highlight unless flash[:error].blank?
+page.replace_html 'flash-notice', flash[:notice]
+page['flash-notice'].visual_effect :highlight unless flash[:notice].blank?
+
+if @comment.valid?
+  page.insert_html :bottom, :comments, :partial => @comment
+  page[@comment].visual_effect :highlight
+  page[:new_comment].reset
+end

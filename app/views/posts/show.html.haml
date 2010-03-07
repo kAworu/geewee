@@ -1,26 +1,19 @@
 = render :partial => @post
 
-%a{ :href => '#comments' }
 %ol{ :id => 'comments', :class => 'comments' }
   - if @post.comments.any?
     - @post.comments.each do |comment|
-      %li{ :id => "comment-#{comment.id}", :class => 'comment' }
-        .author
-          %cite= comment.url.nil? ? h(comment.author) : link_to(h(comment.author), comment.url)
-          %abbr{ :title => comment.created_at }= comment.created_at
-        .content
-          = h(comment.body)
+      = render :partial => comment
   - else
     %li{ :class => 'dummy_comment', :style => 'display:none' }
       Aucun commentaires.
 
-%a{ :href => '#comment_form' }
-- form_for [@post, Comment.new] do |f|
-  %p{ :style => 'color:green' }= flash[:notice]
-  %p{ :style => 'color:red' }= flash[:error]
+- remote_form_for [@post, Comment.new] do |f|
   #preview{ :style => 'display:none' }
   %fieldset
     %legend Écrire un commentaire
+    %p{ :id => 'flash-notice' }= flash[:notice]
+    %p{ :id => 'flash-error'  }= flash[:error]
     %p
       = f.label :author, 'nom:'
       %br

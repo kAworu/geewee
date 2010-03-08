@@ -21,7 +21,7 @@
         Aucun commentaires.
 
 %a{ :name => 'new_comment' }
-- remote_form_for [@post, Comment.new] do |f|
+- remote_form_for [@post, @comment] do |f|
   %fieldset
     %legend Écrire un commentaire
     %p{ :id => 'flash-notice' }= flash[:notice]

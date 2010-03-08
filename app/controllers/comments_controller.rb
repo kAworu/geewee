@@ -1,6 +1,7 @@
 # only creation is allowed, deletion is only allowed to the post's author.
 class CommentsController < ApplicationController
 
+  # FIXME: i'm ulgy
   # POST /comments
   def create
     @post = Post.find(params[:post_id])
@@ -8,6 +9,7 @@ class CommentsController < ApplicationController
     @preview = params[:option][:preview] == '1'
     @captcha = params[:option][:captcha].downcase == 'kaworu.ch'
 
+    flash[:comment] = @comment
     respond_to do |format|
       if @captcha
         if @comment.valid?
@@ -18,6 +20,7 @@ class CommentsController < ApplicationController
             @comment.created_at = Time.now
           else
             @comment.save!
+            flash[:comment] = nil
             flash[:notice] = 'commentaire enregistré!'
           end
         else

@@ -1,5 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :pages
+  map.resources :categories
 
   map.resources :posts, :has_many => :comments
 

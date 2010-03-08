@@ -43,6 +43,11 @@ module ApplicationHelper
     BlueCloth.new(result).to_html
   end
 
+  # disable html support in mkd
+  def markdown_no_html text
+    BlueCloth.new(text, :filter_html).to_html
+  end
+
   # archives url helper
   def archives_url what
     opts = { :controller => :archives, :id => what }

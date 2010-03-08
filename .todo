@@ -24,11 +24,14 @@
             done!
         </comment>
     </note>
-    <note priority="high" time="1267997341">
-        comment in markdown
-    </note>
     <note priority="high" time="1267997349" done="1268016030">
         sexy dates
+        <comment>
+            done!
+        </comment>
+    </note>
+    <note priority="high" time="1267997341" done="1268017036">
+        comment in markdown
         <comment>
             done!
         </comment>

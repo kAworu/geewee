@@ -1,9 +1,14 @@
 # post, the main model of Rgolb.
 class Post < ActiveRecord::Base
+  # scopes
+  default_scope :order => 'created_at DESC'
+  named_scope :created_after,
+    lambda { |date| { :conditions => ["created_at > ?", date] } }
+  named_scope :created_before,
+    lambda { |date| { :conditions => ["created_at < ?", date] } }
+
   # friendly_id
   has_friendly_id :title, :use_slug => true
-
-  default_scope :order => 'created_at DESC'
 
   # relations
   belongs_to  :author
@@ -32,5 +37,10 @@ class Post < ActiveRecord::Base
         self.tags << t
       end
     end
+  end
+
+  # used for group_by
+  def month
+      I18n.localize(self.created_at, :format => :month_and_year)
   end
 end

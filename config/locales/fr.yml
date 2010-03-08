@@ -25,6 +25,7 @@ fr:
       default: "%A %e %B %Y à %Hh%M"
       short: "%d %b %H:%M"
       long: "%d %B, %Y %H:%M"
+      month_and_year: "%B %Y"
     am: " du matin"
     pm: " de l'après-midi"
 

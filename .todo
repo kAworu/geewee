@@ -30,6 +30,12 @@
             done!
         </comment>
     </note>
+    <note priority="veryhigh" time="1268052387" done="1268055261">
+        fix coderay
+        <comment>
+            done
+        </comment>
+    </note>
     <note priority="high" time="1267997341" done="1268017036">
         comment in markdown
         <comment>
@@ -60,20 +66,17 @@
             done with friendly_id
         </comment>
     </note>
-    <note priority="veryhigh" time="1268052387" done="1268055261">
-        fix coderay
-        <comment>
-            done
-        </comment>
-    </note>
     <note priority="medium" time="1268005298">
         client
     </note>
     <note priority="medium" time="1268010554">
         static pages
     </note>
-    <note priority="medium" time="1268013170">
+    <note priority="medium" time="1268013170" done="1268058474">
         archive by dates
+        <comment>
+            done
+        </comment>
     </note>
     <note priority="low" time="1268000560">
         removing comment by author

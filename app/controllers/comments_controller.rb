@@ -7,7 +7,7 @@ class CommentsController < ApplicationController
     @post = Post.find(params[:post_id])
     @comment = @post.comments.build(params[:comment])
     @preview = params[:option][:preview] == '1'
-    @captcha = params[:option][:captcha].downcase == 'kaworu.ch'
+    @captcha = params[:option][:captcha].to_i == 42
 
     flash[:comment] = @comment
     respond_to do |format|

@@ -7,7 +7,7 @@
       fork while fork:
       =h '@post.title TODO'
 
-    = stylesheet_link_tag 'style', 'application'
+    = stylesheet_link_tag 'application'
     = javascript_include_tag :all
     = auto_discovery_link_tag :atom, posts_path(:atom)
     = yield :head
@@ -41,17 +41,24 @@
               %li
                 = link_to h(author.name), archives_url(author)
                 = "(#{author.posts.count})"
-          %h3
-            = link_to 'Catégories', :controller => :archives, :action => :by_category
+          %h3= link_to 'Catégories', :controller => :archives, :action => :by_category
           %ul
             - Category.find(:all).each do |category|
               %li
                 = link_to h(category.display_name), archives_url(category)
                 = "(#{category.posts.count})"
-          %h3
-            = link_to 'Mots-clefs', :controller => :archives, :action => :by_tag
-          - Tag.find(:all).each do |tag|
-            = link_to h(tag.display_name), archives_url(tag), :style => "font-size: #{6 + tag.posts.count}pt; text-decoration: none;"
+          %h3= link_to 'Mots-clefs', :controller => :archives, :action => :by_tag
+          %ul
+            %li
+              - Tag.find(:all).each do |tag|
+                = link_to h(tag.display_name), archives_url(tag), :style => "font-size: #{6 + tag.posts.count}pt; text-decoration: none;"
+          %h3= link_to 'Archives', :controller => :archives, :action => :by_month
+          %ul
+            - ps = Post.find(:all, :select => :created_at).group_by(&:month)
+            - ps.keys.each do |month|
+              %li
+                - d = ps[month].first.created_at
+                = link_to h("#{month} (#{ps[month].size})"), :controller => :archives, :action => :by_month, :year => d.year, :month => d.month
         %br{ :style => 'clear:both' }
       <!-- end body -->
 

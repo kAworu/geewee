@@ -1,0 +1,6 @@
+%h1 Archives par Mois:
+
+- @posts.keys.each do |month|
+  %h2=h month
+  %ul
+    = render :partial => 'line_post', :collection => @posts[month]

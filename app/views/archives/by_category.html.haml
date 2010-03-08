@@ -1,0 +1,13 @@
+- @categories.each do |category|
+  %h1=h category.display_name
+  %ul
+    - category.posts.find(:all, :conditions => 'published = true', :order => 'created_at DESC').each do |post|
+      %li
+        = link_to h(post.title), post
+        par
+        = link_to h(post.author.name), :controller => :archives, :action => :by_author, :id => post.author
+        le
+        %abbr{ :title => post.created_at }= post.created_at
+        \/
+        - post.tags.each do |tag|
+          = link_to h(tag.display_name), :controller => :archives, :action => :by_tag, :id => tag

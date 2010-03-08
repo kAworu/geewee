@@ -1,0 +1,146 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+fr:
+  date:
+    formats:
+      # Use the strftime parameters for formats.
+      # When no format has been given, it uses default.
+      # You can provide other formats here if you like!
+      default: "%d-%m-%Y"
+      short: "%b %d"
+      long: "%d %B, %Y"
+
+    day_names: [Dimanche, Lundi, Mardi, Mercredi, Jeudi, Vendredi, Samedi]
+    abbr_day_names: [Dim, Lun, Mar, Mer, Jeu, Ven, Sam]
+
+    # Don't forget the nil at the beginning; there's no such thing as a 0th month
+    month_names: [~, Janvier, Février, Mars, Avril, Mai, Juin, Juillet, Août, Septembre, Octobre, Novembre, Décembre]
+    abbr_month_names: [~, Jan, Fév, Mar, Avr, Mai, Juin, Juil, Août, Sep, Oct, Nov, Dec]
+    # Used in date_select and datime_select.
+    order: [ :day, :month, :year ]
+
+  time:
+    formats:
+      default: "%A %d %B %Y à %Hh%M"
+      short: "%d %b %H:%M"
+      long: "%d %B, %Y %H:%M"
+    am: " du matin"
+    pm: " de l'après-midi"
+
+  number:
+    # Used in number_with_delimiter()
+    # These are also the defaults for 'currency', 'percentage', 'precision', and 'human'
+    format:
+      # Sets the separator between the units, for more precision (e.g. 1.0 / 2.0 == 0.5)
+      separator: "."
+      # Delimets thousands (e.g. 1,000,000 is a million) (always in groups of three)
+      delimiter: ","
+      # Number of decimals, behind the separator (the number 1 with a precision of 2 gives: 1.00)
+      precision: 3
+      
+    # Used in number_to_currency()
+    currency:
+      format:
+        # Where is the currency sign? %u is the currency unit, %n the number (default: $5.00)
+        format: "%n%u"
+        unit: "CHF"
+        # These three are to override number.format and are optional
+        separator: "."
+        delimiter: ","
+        precision: 2
+        
+    # Used in number_to_percentage()
+    percentage:
+      format:
+        # These three are to override number.format and are optional
+        # separator: 
+        delimiter: ""
+        # precision: 
+        
+    # Used in number_to_precision()
+    precision:
+      format:
+        # These three are to override number.format and are optional
+        # separator:
+        delimiter: ""
+        # precision:
+        
+    # Used in number_to_human_size()
+    human:
+      format:
+        # These three are to override number.format and are optional
+        # separator: 
+        delimiter: ""
+        precision: 1
+      storage_units:
+        # Storage units output formatting.
+        # %u is the storage unit, %n is the number (default: 2 MB)
+        format: "%n %u"
+        units:
+          byte:
+            one:   "Byte"
+            other: "Bytes"
+          kb: "KB"
+          mb: "MB"
+          gb: "GB"
+          tb: "TB"
+
+  # Used in distance_of_time_in_words(), distance_of_time_in_words_to_now(), time_ago_in_words()
+  datetime:
+    distance_in_words:
+      half_a_minute: "une demi minute"
+      less_than_x_seconds:
+        one:   "moins d'une second"
+        other: "moins de {{count}} secondes"
+      x_seconds:
+        one:   "une seconde"
+        other: "{{count}} secondes"
+      less_than_x_minutes:
+        one:   "moins d'une minute"
+        other: "moins de {{count}} minutes"
+      x_minutes:
+        one:   "une minute"
+        other: "{{count}} minutes"
+      about_x_hours:
+        one:   "environ une heure"
+        other: "environ {{count}} heures"
+      x_days:
+        one:   "un jour"
+        other: "{{count}} jours"
+      about_x_months:
+        one:   "environ un mois"
+        other: "environ {{count}} mois"
+      x_months:
+        one:   "un mois"
+        other: "{{count}} mois"
+      about_x_years:
+        one:   "environ un an"
+        other: "environ {{count}} ans"
+      over_x_years:
+        one:   "plus d'un year"
+        other: "plus de {{count}} ans"
+      almost_x_years:
+        one:   "presque un an"
+        other: "presque {{count}} ans"
+    prompts:
+      year:   "An"
+      month:  "Mois"
+      day:    "Jour"
+      hour:   "Heure"
+      minute: "Minute"
+      second: "Secondes"
+
+  activerecord:
+    errors:
+      template:
+        header:
+          one:    "une erreur à empêché ce {{model}} d'être enregistré"
+          other:  "{{count}} erreurs à empêché ce {{model}} d'être enregistré"
+        # The variable :count is also available
+        body: "Les champs suivant ne sont pas corrects:"
+
+  support:
+    select:
+      # default value for :prompt => true in FormOptionsHelper
+      prompt: "faire un choix"

@@ -107,7 +107,8 @@
 
 #content pre {
   color: #333;
-  background: #eee;
+  /*background: #eee;*/
+  border: 1px solid #ddd;
   overflow: auto;
   font: normal 12px "bitstream vera sans mono", monaco "lucida console", "courier new", courier, serif;
   margin: 0.9em 0; padding: 8px;

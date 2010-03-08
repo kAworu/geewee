@@ -1,5 +1,7 @@
+%h1 Archives par Catégorie:
+
 - @categories.each do |category|
-  %h1=h category.display_name
+  %h2=h category.display_name
   %ul
     - category.posts.find(:all, :conditions => 'published = true').each do |post|
       %li

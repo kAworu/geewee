@@ -1,5 +1,7 @@
+%h1 Archives par Auteur:
+
 - @authors.each do |author|
-  %h1=h author.name
+  %h2=h author.name
   %ul
     - author.posts.find(:all, :conditions => 'published = true').each do |post|
       %li

@@ -7,32 +7,23 @@ module ApplicationHelper
     result  = String.new
     code    = nil
     lang    = nil
-    ln      = nil
 
     text.split("\n").each do |line|
       if code
         if line =~ /^\s*%end\s*code\s*$/
           result << if lang
-                      tokens = CodeRay.scan(code, lang.downcase.to_sym)
-                      if ln
-                        tokens.div(:line_numbers => :table)
-                      else
-                        tokens.div
-                      end
+                      CodeRay.scan(code, lang.downcase.to_sym).div
                     else
                       "<div class=\"code\"><pre>#{code}</pre></div>"
                     end
-          code = ln = lang = nil
+          code = lang = nil
         else
           code << line << "\n"
         end
       else
         if line =~ /^\s*%code\s/
-          if line =~ /\s+lang=(\w+)\s+/
+          if line =~ /\s+lang(?:uage)?=(\w+)\s*/
             lang = $1
-          end
-          if line =~ /\s+ln=(\w+)\s+/ and $1 =~ /yes|true/i
-            ln = true
           end
           code = String.new
         else

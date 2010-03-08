@@ -1,5 +1,7 @@
+%h1 Archive par Mot-Clef:
+
 - @tags.each do |tag|
-  %h1=h tag.display_name
+  %h2=h tag.display_name
   %ul
     - tag.posts.find(:all, :conditions => 'published = true').each do |post|
       %li

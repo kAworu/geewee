@@ -1,7 +1,19 @@
 <?xml version="1.0"?>
 <todo version="0.1.20">
+    <note priority="veryhigh" time="1267997362" done="1268010503">
+        atom / rss
+        <comment>
+            done!
+        </comment>
+    </note>
     <note priority="veryhigh" time="1267999834" done="1268005078">
         js comment
+        <comment>
+            done!
+        </comment>
+    </note>
+    <note priority="veryhigh" time="1268005232" done="1268013159">
+        side bar
         <comment>
             done!
         </comment>
@@ -11,15 +23,6 @@
         <comment>
             done!
         </comment>
-    </note>
-    <note priority="veryhigh" time="1267997362" done="1268010503">
-        atom / rss
-        <comment>
-            done!
-        </comment>
-    </note>
-    <note priority="veryhigh" time="1268005232">
-        side bar
     </note>
     <note priority="high" time="1267997341">
         comment in markdown
@@ -38,6 +41,12 @@
     </note>
     <note priority="medium" time="1268005298">
         client
+    </note>
+    <note priority="medium" time="1268010554">
+        static pages
+    </note>
+    <note priority="medium" time="1268013170">
+        archive by dates
     </note>
     <note priority="low" time="1268000560">
         removing comment by author

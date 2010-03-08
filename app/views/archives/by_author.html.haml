@@ -5,9 +5,9 @@
       %li
         = link_to h(post.title), post
         dans
-        = link_to h(post.category.display_name), :controller => :archives, :action => :by_category, :id => post.category
+        = link_to h(post.category.display_name), archives_url(post.category)
         le
         %abbr{ :title => post.created_at }= post.created_at
         \/
         - post.tags.each do |tag|
-          = link_to h(tag.display_name), :controller => :archives, :action => :by_tag, :id => tag
+          = link_to h(tag.display_name), archives_url(tag)

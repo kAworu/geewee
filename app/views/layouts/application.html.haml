@@ -26,7 +26,32 @@
         #content
           = yield
         #sidebar
-          SIDEBAR TODO
+          %p
+            = image_tag '/images/feed-icon16x16.png'
+            = link_to 'Abonne toi à mon beau RSS'
+          %h2 Pages
+          %ul
+            %li TODO
+            %li TODO
+            %li TODO
+          %h3
+            = link_to 'Auteurs', :controller => :archives, :action => :by_author
+          %ul
+            - Author.find(:all).each do |author|
+              %li
+                = link_to h(author.name), archives_url(author)
+                = "(#{author.posts.count})"
+          %h3
+            = link_to 'Catégories', :controller => :archives, :action => :by_category
+          %ul
+            - Category.find(:all).each do |category|
+              %li
+                = link_to h(category.display_name), archives_url(category)
+                = "(#{category.posts.count})"
+          %h3
+            = link_to 'Mots-clefs', :controller => :archives, :action => :by_tag
+          - Tag.find(:all).each do |tag|
+            = link_to h(tag.display_name), archives_url(tag), :style => "font-size: #{6 + tag.posts.count}pt; text-decoration: none;"
         %br{ :style => 'clear:both' }
       <!-- end body -->
 

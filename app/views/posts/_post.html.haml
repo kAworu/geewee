@@ -4,7 +4,7 @@
   .vcard
     Posté par
     %span{ :class => 'fn' }
-      = link_to h(post.author.name), :controller => :archives, :action => :by_author, :id => post.author
+      = link_to h(post.author.name), archives_url(post.author)
   %abbr{ :class => 'published', :title => post.created_at }= post.created_at
   %br{ :class => 'clear' }
   .entry-content
@@ -18,12 +18,12 @@
   %ul{ :class => 'meta' }
     %li{ :class => 'categories' }
       catégorie:
-      = link_to h(post.category.display_name), :controller => :archives, :action => :by_category, :id => post.category
+      = link_to h(post.category.display_name), archives_url(post.category)
     %li{ :class => 'tags' }
-      tags:
+      Mots-clefs:
       - post.tags.each do |tag|
-        =link_to h(tag.display_name), :controller => :archives, :action => :by_tag, :id => tag
+        =link_to h(tag.display_name), archives_url(tag)
     %li
       = link_to "#{(c = post.comments.count).zero? ? 'aucun' : c} commentaire(s)", :action => :show, :id => post, :anchor => :comments
       \-
-      = link_to 'atom feed', formatted_posts_path(:atom)
+      = link_to 'atom feed TODO', formatted_posts_path(:atom)

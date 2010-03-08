@@ -1,5 +1,7 @@
 # post, the main model of Rgolb.
 class Post < ActiveRecord::Base
+  default_scope :order => 'created_at DESC'
+
   # relations
   belongs_to  :author
   belongs_to  :category

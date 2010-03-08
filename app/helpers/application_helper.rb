@@ -42,4 +42,15 @@ module ApplicationHelper
     end
     BlueCloth.new(result).to_html
   end
+
+  # archives url helper
+  def archives_url what
+    opts = { :controller => :archives, :id => what }
+    opts[:action] = case what
+                      when Author   then :by_author
+                      when Category then :by_category
+                      when Tag      then :by_tag
+                    end
+    opts
+  end
 end

@@ -22,17 +22,27 @@
 
 %a{ :name => 'new_comment' }
 - remote_form_for [@post, Comment.new] do |f|
-  #preview{ :style => 'display:none' }
   %fieldset
     %legend Écrire un commentaire
     %p{ :id => 'flash-notice' }= flash[:notice]
     %p{ :id => 'flash-error'  }= flash[:error]
+    #preview{ :style => 'display:none;' }
+      %h3 Prévisualisation
+      %ul
+        %li{ :id => 'preview-comment' }
     %p
+      les champs avec une étoile rouge (
+      %span{ :style => 'color:red' } *
+      ) sont obligatoires.
+    %p
+      %span{ :style => 'color:red' } *
       = f.label :author, 'nom:'
       %br
       = f.text_field :author
     %p
+      %span{ :style => 'color:red' } *
       = f.label :email, 'email:'
+      (utilisé pour gravatar, ne sera pas affiché)
       %br
       = f.text_field :email
     %p
@@ -40,9 +50,22 @@
       %br
       = f.text_field :url, :value => 'http://'
     %p
+      %span{ :style => 'color:red' } *
       = f.label :body, 'commentaire:'
       %br
+      Tu peux utiliser la syntaxe
+      %a{ :href => 'http://daringfireball.net/projects/markdown/syntax' } Markdown.
       = f.text_area :body
+    %p{ :id => 'js-preview', :style => 'display:none;' }
+      = label :option, :preview, 'prévisualiser'
+      %br
+      = check_box :option, :preview
     %p
-      = f.submit 'Ajouter!'
+      = f.submit 'Envoyer'
       = image_tag '/images/theme/spinner.gif', :id => 'spinner', :style => 'display:none'
+
+%script{ :type => 'text/javascript' }
+  \//<![CDATA[
+  window.onload = js_preview_show;
+  function js_preview_show() { $("js-preview").style.display = "block"; }
+  \//]]>

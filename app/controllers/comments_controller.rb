@@ -5,13 +5,21 @@ class CommentsController < ApplicationController
   def create
     @post = Post.find(params[:post_id])
     @comment = @post.comments.build(params[:comment])
+    @preview = params[:option][:preview] == '1'
     respond_to do |format|
-      if @comment.save
-        flash[:notice] = 'commentaire ajouté!'
+      if @comment.valid?
         flash[:error]  = ''
+        if @preview
+          flash[:notice] = 'commentaire valide.'
+          # hack for the partial
+          @comment.created_at = Time.now
+        else
+          @comment.save!
+          flash[:notice] = 'commentaire enregistré!'
+        end
       else
         flash[:notice] = ''
-        flash[:error]  = "erreur lors de l'ajout du commentaire"
+        flash[:error]  = 'commentaire invalide'
       end
       format.html do
         redirect_to :controller => :posts,

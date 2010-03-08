@@ -241,6 +241,11 @@
   padding: 1em 0.5em;
 }
 
+#content form.new_comment li#preview-comment {
+  background: white;
+}
+
+
 #content form.new_comment #flash-notice {
   color: green;
 }

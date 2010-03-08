@@ -1,4 +1,5 @@
-%li{ :id => "comment_#{comment.id}", :class => 'comment' }
+- id = if @preview then 'preview-comment' else "comment_#{comment.id}" end
+%li{ :id => id, :class => 'comment' }
   .author
     %div
     %cite

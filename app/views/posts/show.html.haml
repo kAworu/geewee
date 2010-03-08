@@ -1,13 +1,26 @@
 = render :partial => @post
 
-%ol{ :id => 'comments', :class => 'comments' }
-  - if @post.comments.any?
-    - @post.comments.each do |comment|
-      = render :partial => comment
-  - else
-    %li{ :class => 'dummy_comment', :style => 'display:none' }
-      Aucun commentaires.
+%h5
+  %a{ :name => 'comments' }
+    = @post.comments.count
+    - if @post.comments.count > 1
+      Commentaires:
+    - else
+      Commentaire:
+    %em=h @post.title
+%p
+  %a{ :href => '#new_comment' } Écrire un commentaire
 
+#comment_div
+  %ol{ :id => 'comments', :class => 'comments' }
+    - if @post.comments.any?
+      - @post.comments.each do |comment|
+        = render :partial => comment
+    - else
+      %li{ :class => 'dummy_comment', :style => 'display:none' }
+        Aucun commentaires.
+
+%a{ :name => 'new_comment' }
 - remote_form_for [@post, Comment.new] do |f|
   #preview{ :style => 'display:none' }
   %fieldset

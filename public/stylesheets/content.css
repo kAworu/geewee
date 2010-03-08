@@ -253,7 +253,7 @@
 }
 
 #content form.new_comment legend { 
-  display: none;
+  font-weight: bold;
 }
 
 #content form.new_comment label { 

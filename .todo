@@ -54,6 +54,9 @@
             done with friendly_id
         </comment>
     </note>
+    <note priority="veryhigh" time="1268049972">
+        timezone
+    </note>
     <note priority="medium" time="1268005298">
         client
     </note>

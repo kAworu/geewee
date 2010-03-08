@@ -22,7 +22,7 @@ fr:
 
   time:
     formats:
-      default: "%A %d %B %Y à %Hh%M"
+      default: "%A %e %B %Y à %Hh%M"
       short: "%d %b %H:%M"
       long: "%d %B, %Y %H:%M"
     am: " du matin"
@@ -38,7 +38,7 @@ fr:
       delimiter: ","
       # Number of decimals, behind the separator (the number 1 with a precision of 2 gives: 1.00)
       precision: 3
-      
+
     # Used in number_to_currency()
     currency:
       format:

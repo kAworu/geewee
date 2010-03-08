@@ -20,7 +20,7 @@ class PostsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.haml
-      format.xml  { render :xml => @post }
+      format.atom # show.atom.builder
     end
   end
 

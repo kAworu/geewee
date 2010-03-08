@@ -9,7 +9,7 @@
 
     = stylesheet_link_tag 'style', 'application'
     = javascript_include_tag :all
-    = auto_discovery_link_tag :atom, formatted_posts_path(:atom)
+    = auto_discovery_link_tag :atom, posts_path(:atom)
     = yield :head
 
   %body
@@ -28,7 +28,7 @@
         #sidebar
           %p
             = image_tag '/images/feed-icon16x16.png'
-            = link_to 'Abonne toi à mon beau RSS', formatted_posts_path(:atom)
+            = link_to 'Abonne toi à mon beau flux Atom', posts_path(:atom)
           %h2 Pages
           %ul
             %li TODO

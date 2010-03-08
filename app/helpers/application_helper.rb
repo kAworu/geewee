@@ -58,4 +58,9 @@ module ApplicationHelper
                     end
     opts
   end
+
+  # hack for atom
+  def comment_url comment
+    post_url comment.post, :anchor => "comment_#{comment.id}"
+  end
 end

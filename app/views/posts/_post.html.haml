@@ -26,6 +26,9 @@
       - post.tags.each do |tag|
         =link_to h(tag.display_name), archives_url(tag)
     %li
+      Meta:
       = link_to "#{(c = post.comments.count).zero? ? 'aucun' : c} commentaire#{'s' if post.comments.count > 1}", :action => :show, :id => post, :anchor => :comments
       \-
       = link_to 'flux atom', post_path(post, :atom)
+      \-
+      = link_to 'Lien permanent', post

@@ -9,6 +9,7 @@
 
     = stylesheet_link_tag 'style', 'application'
     = javascript_include_tag :all
+    = auto_discovery_link_tag :atom, formatted_posts_path(:atom)
     = yield :head
 
   %body

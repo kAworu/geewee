@@ -1,7 +1,7 @@
 - @authors.each do |author|
   %h1=h author.name
   %ul
-    - author.posts.find(:all, :conditions => 'published = true', :order => 'created_at DESC').each do |post|
+    - author.posts.find(:all, :conditions => 'published = true').each do |post|
       %li
         = link_to h(post.title), post
         dans

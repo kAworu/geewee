@@ -26,4 +26,4 @@
     %li
       = link_to "#{(c = post.comments.count).zero? ? 'aucun' : c} commentaire(s)", :action => :show, :id => post, :anchor => :comments
       \-
-      %a{ :href => 'TODO' } rss/atom TODO
+      = link_to 'atom feed', formatted_posts_path(:atom)

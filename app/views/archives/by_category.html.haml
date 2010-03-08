@@ -1,7 +1,7 @@
 - @categories.each do |category|
   %h1=h category.display_name
   %ul
-    - category.posts.find(:all, :conditions => 'published = true', :order => 'created_at DESC').each do |post|
+    - category.posts.find(:all, :conditions => 'published = true').each do |post|
       %li
         = link_to h(post.title), post
         par

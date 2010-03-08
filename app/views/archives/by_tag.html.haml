@@ -1,7 +1,7 @@
 - @tags.each do |tag|
   %h1=h tag.display_name
   %ul
-    - tag.posts.find(:all, :conditions => 'published = true', :order => 'created_at DESC').each do |post|
+    - tag.posts.find(:all, :conditions => 'published = true').each do |post|
       %li
         = link_to h(post.title), post
         par

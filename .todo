@@ -66,14 +66,17 @@
             done with friendly_id
         </comment>
     </note>
+    <note priority="medium" time="1268013170" done="1268058474">
+        archive by dates
+        <comment>
+            done
+        </comment>
+    </note>
     <note priority="medium" time="1268005298">
         client
     </note>
-    <note priority="medium" time="1268010554">
+    <note priority="medium" time="1268010554" done="1268061870">
         static pages
-    </note>
-    <note priority="medium" time="1268013170" done="1268058474">
-        archive by dates
         <comment>
             done
         </comment>
@@ -101,5 +104,11 @@
         <note priority="medium" time="1268050459">
             timezone
         </note>
+    </note>
+    <note priority="verylow" time="1268058504">
+        cache system
+    </note>
+    <note priority="verylow" time="1268059127">
+        link?
     </note>
 </todo>

@@ -4,10 +4,10 @@ class CreateAuthors < ActiveRecord::Migration
       t.string :name
       t.string :email
 
-      t.string :cached_slug
       t.string :salt
       t.string :hashed_password
 
+      t.string :cached_slug
       t.timestamps
     end
   end

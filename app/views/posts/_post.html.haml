@@ -1,6 +1,5 @@
 .hentry{ :id => "post-#{post.id}" }
-  %h2{ :class => 'entry-title' }
-    =link_to h(post.title), post
+  %h2{ :class => 'entry-title' }= link_to h(post.title), post
   .vcard
     Posté par
     %span{ :class => 'fn' }

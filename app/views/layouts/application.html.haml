@@ -29,24 +29,22 @@
           %p
             = image_tag '/images/feed-icon16x16.png'
             = link_to 'Abonne toi à mon beau flux Atom', posts_path(:atom)
-          %h2 Pages
+          %h3 Pages
           %ul
-            %li TODO
-            %li TODO
-            %li TODO
-          %h3
-            = link_to 'Auteurs', :controller => :archives, :action => :by_author
+            - Page.find(:all).each do |page|
+              %li= link_to h(page.title), page
+          %h3= link_to 'Auteurs', :controller => :archives, :action => :by_author
           %ul
             - Author.find(:all).each do |author|
               %li
                 = link_to h(author.name), archives_url(author)
-                = "(#{author.posts.count})"
+                %em= "(#{author.posts.count})"
           %h3= link_to 'Catégories', :controller => :archives, :action => :by_category
           %ul
             - Category.find(:all).each do |category|
               %li
                 = link_to h(category.display_name), archives_url(category)
-                = "(#{category.posts.count})"
+                %em= "(#{category.posts.count})"
           %h3= link_to 'Mots-clefs', :controller => :archives, :action => :by_tag
           %ul
             %li
@@ -58,7 +56,8 @@
             - ps.keys.each do |month|
               %li
                 - d = ps[month].first.created_at
-                = link_to h("#{month} (#{ps[month].size})"), :controller => :archives, :action => :by_month, :year => d.year, :month => d.month
+                = link_to h(month), :controller => :archives, :action => :by_month, :year => d.year, :month => d.month
+                %em= "(#{ps[month].size})"
         %br{ :style => 'clear:both' }
       <!-- end body -->
 

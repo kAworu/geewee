@@ -61,6 +61,11 @@
       %br
       = check_box :option, :preview
     %p
+      = label :option, :captcha, 'écris kaworu.ch'
+      (anti spam bot)
+      %br
+      = text_field :option, :captcha
+    %p
       = f.submit 'Envoyer'
       = image_tag '/images/theme/spinner.gif', :id => 'spinner', :style => 'display:none'
 

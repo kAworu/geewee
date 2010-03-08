@@ -3,7 +3,7 @@ page['flash-error'].visual_effect :highlight unless flash[:error].blank?
 page.replace_html 'flash-notice', flash[:notice]
 page['flash-notice'].visual_effect :highlight unless flash[:notice].blank?
 
-if @comment.valid?
+if @captcha and @comment.valid?
   if @preview
     page.replace_html 'preview-comment', :partial => @comment
     page['preview-comment'].visual_effect :highlight

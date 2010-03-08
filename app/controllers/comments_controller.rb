@@ -6,20 +6,27 @@ class CommentsController < ApplicationController
     @post = Post.find(params[:post_id])
     @comment = @post.comments.build(params[:comment])
     @preview = params[:option][:preview] == '1'
+    @captcha = params[:option][:captcha].downcase == 'kaworu.ch'
+
     respond_to do |format|
-      if @comment.valid?
-        flash[:error]  = ''
-        if @preview
-          flash[:notice] = 'commentaire valide.'
-          # hack for the partial
-          @comment.created_at = Time.now
+      if @captcha
+        if @comment.valid?
+          flash[:error]  = ''
+          if @preview
+            flash[:notice] = 'commentaire valide.'
+            # hack for the partial
+            @comment.created_at = Time.now
+          else
+            @comment.save!
+            flash[:notice] = 'commentaire enregistré!'
+          end
         else
-          @comment.save!
-          flash[:notice] = 'commentaire enregistré!'
+          flash[:notice] = ''
+          flash[:error]  = 'commentaire invalide'
         end
       else
         flash[:notice] = ''
-        flash[:error]  = 'commentaire invalide'
+        flash[:error]  = 'et ma captcha alors?'
       end
       format.html do
         redirect_to :controller => :posts,

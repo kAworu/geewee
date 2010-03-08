@@ -9,6 +9,7 @@ class CreatePosts < ActiveRecord::Migration
       t.string :tags
       t.boolean :published
 
+      t.string :cached_slug
       t.timestamps
     end
   end

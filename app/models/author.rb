@@ -3,6 +3,9 @@ require 'digest/sha1'
 # Blog Author(s)
 #   they write posts.
 class Author < ActiveRecord::Base
+  # friendly_id
+  has_friendly_id :name, :use_slug => true
+
   # relations
   has_many :posts
 

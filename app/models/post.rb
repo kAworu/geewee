@@ -1,5 +1,8 @@
 # post, the main model of Rgolb.
 class Post < ActiveRecord::Base
+  # friendly_id
+  has_friendly_id :title, :use_slug => true
+
   default_scope :order => 'created_at DESC'
 
   # relations

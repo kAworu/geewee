@@ -25,6 +25,7 @@ Rails::Initializer.run do |config|
   config.gem 'BlueCloth', :lib => 'bluecloth', :version => '1.0.1'
   config.gem 'coderay', :version => '0.9.1'
   config.gem 'builder', :version => '2.1.2'
+  config.gem "friendly_id", :version => '>= 2.3.0'
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named

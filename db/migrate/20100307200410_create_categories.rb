@@ -4,6 +4,7 @@ class CreateCategories < ActiveRecord::Migration
       t.string :name
       t.string :display_name
 
+      t.string :cached_slug
       t.timestamps
     end
   end

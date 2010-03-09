@@ -1,13 +1,13 @@
 .hentry{ :id => "post-#{post.id}" }
-  %h2{ :class => 'entry-title' }= link_to h(post.title), post
+  %h2.entry-title= link_to h(post.title), post
   .vcard
     Posté par
-    %span{ :class => 'fn' }
+    %span.fn
       = link_to h(post.author.name), archives_by_author_url(post.author)
-  %abbr{ :class => 'published', :title => I18n.localize(post.created_at) }
+  %abbr.published{ :title => I18n.localize(post.created_at) }
     il y a
     = time_ago_in_words(post.created_at)
-  %br{ :class => 'clear' }
+  %br.clear
   .entry-content
     =markdown post.intro
     - if post.body
@@ -16,11 +16,11 @@
           = link_to 'Lire la suite...', post
         - else
           = markdown post.body
-  %ul{ :class => 'meta' }
-    %li{ :class => 'categories' }
+  %ul.meta
+    %li.categories
       catégorie:
       = link_to h(post.category.display_name), archives_by_category_url(post.category)
-    %li{ :class => 'tags' }
+    %li.tags
       Mots-clefs:
       - post.tags.each do |tag|
         =link_to h(tag.display_name), archives_by_tag_url(tag)
@@ -28,6 +28,6 @@
       Meta:
       = link_to "#{(c = post.comments.count).zero? ? 'aucun' : c} commentaire#{'s' if post.comments.count > 1}", :action => :show, :id => post, :anchor => :comments
       \-
-      = link_to 'flux atom', post_path(post, :atom)
+      = link_to 'flux Atom', post_path(post, :atom)
       \-
       = link_to 'Lien permanent', post

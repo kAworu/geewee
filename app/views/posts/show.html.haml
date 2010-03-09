@@ -12,24 +12,24 @@
   %a{ :href => '#new_comment' } Écrire un commentaire
 
 #comment_div
-  %ol{ :id => 'comments', :class => 'comments' }
+  %ol#comments.comments
     - if @post.comments.any?
       - @post.comments.each do |comment|
         = render :partial => comment
     - else
-      %li{ :class => 'dummy_comment', :style => 'display:none' }
+      %li.dummy_comment{ :style => 'display:none' }
         Aucun commentaires.
 
 %a{ :name => 'new_comment' }
 - remote_form_for [@post, @comment] do |f|
   %fieldset
     %legend Écrire un commentaire
-    %p{ :id => 'flash-notice' }= flash[:notice]
-    %p{ :id => 'flash-error'  }= flash[:error]
+    %p#flash-notice= flash[:notice]
+    %p#flash-error=  flash[:error]
     #preview{ :style => 'display:none;' }
       %h3 Prévisualisation
       %ul
-        %li{ :id => 'preview-comment' }
+        %li#preview-comment
     %p
       les champs avec une étoile rouge (
       %span{ :style => 'color:red' } *
@@ -56,7 +56,7 @@
       Tu peux utiliser la syntaxe
       %a{ :href => 'http://daringfireball.net/projects/markdown/syntax' } Markdown.
       = f.text_area :body
-    %p{ :id => 'js-preview', :style => 'display:none;' }
+    %p#js-preview{ :style => 'display:none;' }
       = label :option, :preview, 'prévisualiser'
       %br
       = check_box :option, :preview
@@ -67,7 +67,7 @@
       = text_field :option, :captcha
     %p
       = f.submit 'Envoyer'
-      = image_tag '/images/theme/spinner.gif', :id => 'spinner', :style => 'display:none'
+      = image_tag '/images/theme/spinner.gif', :id => 'spinner', :style => 'display:none' # FIXME unused.
 
 %script{ :type => 'text/javascript' }
   \//<![CDATA[

@@ -1,11 +1,11 @@
 .hentry
-  %h2{ :class => 'entry-title' }=h @page.title
+  %h2.entry-title=h @page.title
   - if @page.subtitle
     .vcard=h @page.subtitle
-    %br{ :class => 'clear' }
+    %br.clear
   .entry-content
     = markdown @page.body
-    %ul{ :class => 'meta' }
+    %ul.meta
       %li
         Meta:
         = link_to 'Lien permanent', @page

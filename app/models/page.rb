@@ -1,5 +1,7 @@
-# static Pages model.
-#     body is in markdown (extended)
+# Static Pages.
+#
+#   * body is in markdown (extended).
+#
 class Page < ActiveRecord::Base
   # friendly_id, use Page's title.
   has_friendly_id :title, :use_slug => true

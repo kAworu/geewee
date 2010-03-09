@@ -1,6 +1,8 @@
-# Category of posts
-#   name is display_name.downcase, to allow the user to mix the case of
-#   Categories. friendly_id use the name attribute.
+# Category of posts.
+#
+#   * name is display_name.downcase, to allow the user to mix the case of
+#     Categories. friendly_id use the name attribute.
+#
 class Category < ActiveRecord::Base
   # friendly_id, use the Category's name.
   has_friendly_id :name, :use_slug => true

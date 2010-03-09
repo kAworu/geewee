@@ -1,3 +1,7 @@
+# Controller to manage Categories.
+#
+#   * all methods are private via JSON API. TODO
+#
 class CategoriesController < ApplicationController
 
   # GET /categories.json

@@ -1,7 +1,9 @@
-# comments of a Post.
-#   name is the comment's author name.
-#   email is used for gravatar.
-#   body is in markdown format (html disallowed).
+# Comments of a Post.
+#
+#   * name is the comment's author name.
+#   * email is used for gravatar.
+#   * body is in markdown format (html disallowed).
+#
 class Comment < ActiveRecord::Base
   # relations
   belongs_to :post

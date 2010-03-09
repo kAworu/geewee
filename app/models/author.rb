@@ -1,5 +1,7 @@
 # Blog Authors.
+#
 #   they write posts (well, at least they should).
+#
 class Author < ActiveRecord::Base
   # friendly_id, use the Author's name.
   has_friendly_id :name, :use_slug => true

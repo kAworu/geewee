@@ -1,10 +1,15 @@
-# main controller.
+# Post controller, the most used.
+# 
+#   * index and show are public via HTML UI. FIXME cleanup
+#   * index and show are public via Atom.
+#   * all are private via JSON API. TODO
+#
 class PostsController < ApplicationController
 
   # GET /posts
-  # GET /posts.xml
+  # GET /posts.atom
   def index
-    @posts = Post.find(:all, :conditions => 'published = true')
+    @posts = Post.published
 
     respond_to do |format|
       format.html # index.html.haml
@@ -13,7 +18,7 @@ class PostsController < ApplicationController
   end
 
   # GET /posts/1
-  # GET /posts/1.xml
+  # GET /posts/1.atom
   def show
     @post = Post.find(params[:id])
     @comment = flash[:comment] || Comment.new

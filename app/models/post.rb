@@ -1,6 +1,8 @@
 # Post, a Blog entry.
-#   intro and body are in markdown (extended).
-#   published is false by default!
+#
+#   * intro and body are in markdown (extended).
+#   * published is false by default!
+#
 class Post < ActiveRecord::Base
   ### scopes
   # we always use the creation order.

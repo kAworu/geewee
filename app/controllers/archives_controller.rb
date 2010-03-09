@@ -1,5 +1,7 @@
-#
 # Archives, display Posts filtered and/or ordered.
+#
+#   * all methods are public via HTML UI.
+#   * none are supported by JSON API.
 #
 class ArchivesController < ApplicationController
 

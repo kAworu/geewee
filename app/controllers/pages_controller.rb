@@ -1,12 +1,16 @@
+# Controller for static Page management.
+#
+#   * show is public via HTML UI. FIXME cleanup
+#   * all are private via JSON API. TODO
+#
 class PagesController < ApplicationController
+
   # GET /pages/1
-  # GET /pages/1.xml
   def show
     @page = Page.find(params[:id])
 
     respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @page }
+      format.html # show.html.haml
     end
   end
 

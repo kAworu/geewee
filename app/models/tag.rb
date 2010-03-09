@@ -1,6 +1,8 @@
 # Tag of a post.
-#   As for Category, name is display_name.downcase to allow lazy author to mix
-#   case.
+#
+#   * name is display_name.downcase to allow lazy author to mix
+#     case (as for Category).
+#
 class Tag < ActiveRecord::Base
   # friendly_id, use Tag's name.
   has_friendly_id :name, :use_slug => true

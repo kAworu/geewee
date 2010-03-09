@@ -1,7 +1,11 @@
-# only creation is allowed, deletion is only allowed to the post's author.
+# Controller to manage Comments.
+#
+#   * create is public via HTML (http/ajax) UI.
+#   * removing comment is private via by JSON API. TODO
+#
 class CommentsController < ApplicationController
 
-  # FIXME: i'm ulgy
+  # FIXME: i'm (very) ulgy
   # POST /comments
   def create
     @post = Post.find(params[:post_id])

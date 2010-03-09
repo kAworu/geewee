@@ -66,6 +66,12 @@
             done with friendly_id
         </comment>
     </note>
+    <note priority="high" time="1268093120" done="1268133307">
+        global email regex
+        <comment>
+            done!
+        </comment>
+    </note>
     <note priority="medium" time="1268010554" done="1268061870">
         static pages
         <comment>
@@ -78,25 +84,13 @@
             done
         </comment>
     </note>
-    <note priority="high" time="1268093120" done="1268133307">
-        global email regex
-        <comment>
-            done!
-        </comment>
-    </note>
     <note priority="medium" time="1268005298">
         client
-        <note priority="veryhigh" time="1268064126">
-            auth
+        <note priority="veryhigh" time="1268062003">
+            manage categories
         </note>
         <note priority="high" time="1268062028">
             manage posts
-        </note>
-        <note priority="high" time="1268103084">
-            JSON API versioning
-        </note>
-        <note priority="medium" time="1268062003">
-            manage categories
         </note>
         <note priority="medium" time="1268062085">
             manage static
@@ -104,15 +98,12 @@
         <note priority="low" time="1268062042">
             remove comment
         </note>
+        <note priority="low" time="1268064126">
+            auth
+        </note>
         <note priority="verylow" time="1268062166">
             manage users
         </note>
-    </note>
-    <note priority="low" time="1268000560">
-        removing comment by author
-    </note>
-    <note priority="low" time="1268000567">
-        format of controllers
     </note>
     <note priority="low" time="1268093339">
         good errors messages for comments
@@ -128,6 +119,9 @@
     </note>
     <note priority="verylow" time="1268047294">
         blog config
+        <note priority="high" time="1268103084">
+            JSON API versioning
+        </note>
         <note priority="medium" time="1268050449">
             blog name
         </note>
@@ -139,7 +133,7 @@
         </note>
     </note>
     <note priority="verylow" time="1268058504">
-        cache system
+        cache system ?
     </note>
     <note priority="verylow" time="1268059127">
         static link in sidebar ?

@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(:version => 20100308143555) do
 
   create_table "pages", :force => true do |t|
     t.string   "title"
+    t.string   "subtitle"
     t.text     "body"
     t.string   "cached_slug"
     t.datetime "created_at"

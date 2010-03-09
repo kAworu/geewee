@@ -1,5 +1,8 @@
 .hentry
   %h2{ :class => 'entry-title' }=h @page.title
+  - if @page.subtitle
+    .vcard=h @page.subtitle
+    %br{ :class => 'clear' }
   .entry-content
     = markdown @page.body
     %ul{ :class => 'meta' }

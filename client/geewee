@@ -1,12 +1,12 @@
 #!/usr/bin/env ruby
-#  ____             _ _          _   _
-# |  _ \ __ _  ___ | | |__   ___| |_| |
-# | |_) / _` |/ _ \| | '_ \ / __| __| |
-# |  _ < (_| | (_) | | |_) | (__| |_| |
-# |_| \_\__, |\___/|_|_.__/ \___|\__|_|
-#       |___/
 #
-# Rgolb client, see http://hg.kaworu.ch/rails-rgolb.
+#   __ _  ___  _____      _____  ___
+#  / _` |/ _ \/ _ \ \ /\ / / _ \/ _ \
+# | (_| |  __/  __/\ V  V /  __/  __/
+#  \__, |\___|\___| \_/\_/ \___|\___|
+#  |___/
+#
+# geewee client, see http://hg.kaworu.ch/rails-geewee.
 #
 require 'yaml'
 require 'rubygems'
@@ -131,8 +131,8 @@ end
 
 ### config and argument setup {{{
 # basic config setup.
-RgolbConfig = YAML.load(DATA.read)
-unless RgolbConfig and RgolbConfig[:base_url]
+GeeweeConfig = YAML.load(DATA.read)
+unless GeeweeConfig and GeeweeConfig[:base_url]
     STDERR.puts 'Config is missing :base_url'
     exit 1
 end
@@ -146,7 +146,7 @@ unless R
     EOF
     exit 1
 end
-r = R.new REST::Connection.new(RgolbConfig[:base_url], RgolbConfig)
+r = R.new REST::Connection.new(GeeweeConfig[:base_url], GeeweeConfig)
 r.handle(ARGV.shift)
 # }}}
 

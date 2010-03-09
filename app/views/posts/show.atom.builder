@@ -4,7 +4,7 @@ atom_feed do |feed|
 
   @post.comments.each do |comment|
     feed.entry(comment) do |entry|
-      entry.title('Par :' + comment.author)
+      entry.title('Par :' + comment.name)
       entry.content(markdown_no_html(comment.body), :type => 'html')
     end
   end

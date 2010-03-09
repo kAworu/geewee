@@ -1,7 +1,7 @@
 # comments of a Post.
+#   name is the comment's author name.
 #   email is used for gravatar.
 #   body is in markdown format (html disallowed).
-#     FIXME: author is a bad chosen name for the author's nickname of a comment.
 class Comment < ActiveRecord::Base
   # relations
   belongs_to :post
@@ -16,7 +16,7 @@ class Comment < ActiveRecord::Base
 
   # validations
   validate              :good_email_when_match_blog_author
-  validates_presence_of :post, :author, :email, :body
+  validates_presence_of :post, :name, :email, :body
   validates_associated  :post
   validates_format_of   :email, # regexp from http://api.rubyonrails.org/classes/ActiveRecord/Validations/ClassMethods.html
                         :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i

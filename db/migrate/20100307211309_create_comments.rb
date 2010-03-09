@@ -1,11 +1,12 @@
 class CreateComments < ActiveRecord::Migration
   def self.up
     create_table :comments do |t|
-      t.references :post
-      t.string :author
-      t.string :email
-      t.string :url
-      t.text :body
+      t.references  :post
+
+      t.string      :name
+      t.string      :email
+      t.string      :url
+      t.text        :body
 
       t.timestamps
     end

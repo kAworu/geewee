@@ -4,9 +4,9 @@
     %div
     %cite
       - if comment.url.nil?
-        =h comment.author
+        =h comment.name
       - else
-        = link_to h(comment.author), comment.url
+        = link_to h(comment.name), comment.url
     %abbr{ :title => I18n.localize(comment.created_at) }
       il y a
       = time_ago_in_words(comment.created_at)

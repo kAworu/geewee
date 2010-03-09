@@ -105,6 +105,9 @@
     <note priority="low" time="1268000567">
         format of controllers
     </note>
+    <note priority="low" time="1268095064">
+        tests
+    </note>
     <note priority="verylow" time="1267999859">
         gravatar!
     </note>
@@ -128,5 +131,11 @@
     </note>
     <note priority="verylow" time="1268059127">
         link?
+    </note>
+    <note priority="verylow" time="1268093120">
+        global email regex
+    </note>
+    <note priority="verylow" time="1268093339">
+        good errors messages for comments
     </note>
 </todo>

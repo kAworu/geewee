@@ -1,37 +1,41 @@
+#
+# Archives, display Posts filtered and/or ordered.
+#
 class ArchivesController < ApplicationController
-  # group posts by author
+
+  # order posts by author.
   def by_author
     if params[:id]
       @authors = [ Author.find(params[:id]) ]
     else
-      @authors = Author.find(:all)
+      @authors = Author.all
     end
   end
 
-  # group posts by category
+  # order posts by category.
   def by_category
     if params[:id]
       @categories = [ Category.find(params[:id]) ]
     else
-      @categories = Category.find(:all)
+      @categories = Category.all
     end
   end
 
-  # group posts by tag
+  # order posts by tag.
   def by_tag
     if params[:id]
       @tags = [ Tag.find(params[:id]) ]
     else
-      @tags = Tag.find(:all)
+      @tags = Tag.all
     end
   end
 
-  # group posts by month
-  def by_month
+  # order posts by month
+  def by_month_and_year
     if params[:month] and params[:year]
-      first = Time.local(params[:year].to_i, params[:month].to_i)
-      last  = first + 1.month
-      posts = Post.created_after(first).created_before(last)
+      start = Time.local(params[:year].to_i, params[:month].to_i)
+      stop  = start + 1.month
+      posts = Post.created_after(start).created_before(stop)
     else
       posts = Post.all
     end

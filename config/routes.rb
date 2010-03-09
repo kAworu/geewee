@@ -43,7 +43,7 @@ ActionController::Routing::Routes.draw do |map|
   # Install the default routes as the lowest priority.
   # Note: These default routes make all actions in every controller accessible via GET requests. You should
   # consider removing or commenting them out if you're using named routes and resources.
-  map.connect 'archives/by_month/:month/:year', :controller => :archives, :action => :by_month
+  map.connect 'archives/by_month_and_year/:year/:month', :controller => :archives, :action => :by_month_and_year
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
 end

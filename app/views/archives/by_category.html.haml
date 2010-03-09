@@ -3,5 +3,4 @@
 - @categories.each do |category|
   %h2=h category.display_name
   %ul
-    - category.posts.find(:all, :conditions => 'published = true').each do |post|
-      = render :partial => 'line_post', :object => post
+    = render :partial => 'line_post', :collection => category.posts.published

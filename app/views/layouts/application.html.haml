@@ -50,13 +50,13 @@
             %li
               - Tag.find(:all).each do |tag|
                 = link_to h(tag.display_name), archives_url(tag), :style => "font-size: #{6 + tag.posts.count}pt; text-decoration: none;"
-          %h3= link_to 'Archives', :controller => :archives, :action => :by_month
+          %h3= link_to 'Archives', :controller => :archives, :action => :by_month_and_year
           %ul
             - ps = Post.find(:all, :select => :created_at).group_by(&:month_and_year)
             - ps.keys.each do |month|
               %li
                 - d = ps[month].first.created_at
-                = link_to h(month), :controller => :archives, :action => :by_month, :year => d.year, :month => d.month
+                = link_to h(month), :controller => :archives, :action => :by_month_and_year, :year => d.year, :month => d.month
                 %em= "(#{ps[month].size})"
         %br{ :style => 'clear:both' }
       <!-- end body -->

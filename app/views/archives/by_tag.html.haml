@@ -3,5 +3,4 @@
 - @tags.each do |tag|
   %h2=h tag.display_name
   %ul
-    - tag.posts.find(:all, :conditions => 'published = true').each do |post|
-      = render :partial => 'line_post', :object => post
+    = render :partial => 'line_post', :collection => tag.posts.published

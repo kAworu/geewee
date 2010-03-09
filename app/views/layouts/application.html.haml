@@ -1,10 +1,10 @@
 !!!
 %html{ :xmlns => 'http://www.w3.org/1999/xhtml' }
+
   %head
-    %meta{ :name => 'author', :content => 'kAworu' }
     %meta{ :content => 'text/html; charset=UTF-8', 'http-equiv' => 'Content-Type' }
     %title
-      fork while fork:
+      TODO fork while fork:
       =h '@post.title TODO'
 
     = stylesheet_link_tag 'application'
@@ -25,40 +25,50 @@
       #page
         #content
           = yield
+
+        <!-- start sidebar -->
         #sidebar
+          <!-- Atom feed link -->
           %p
             = image_tag '/images/feed-icon16x16.png'
             = link_to 'Abonne toi à mon beau flux Atom', posts_path(:atom)
+
+          <!-- static Pages -->
           %h3 Pages
           %ul
-            - Page.find(:all).each do |page|
+            - Page.all.each do |page|
               %li= link_to h(page.title), page
-          %h3= link_to 'Auteurs', :controller => :archives, :action => :by_author
+
+          <!-- archives by Author -->
+          %h3= link_to 'Auteurs', archives_by_author_url
           %ul
             - Author.find(:all).each do |author|
               %li
-                = link_to h(author.name), archives_url(author)
+                = link_to h(author.name), archives_by_author_url(author)
                 %em= "(#{author.posts.count})"
-          %h3= link_to 'Catégories', :controller => :archives, :action => :by_category
+          <!-- archives by Category -->
+          %h3= link_to 'Catégories', archives_by_category_url
           %ul
-            - Category.find(:all).each do |category|
+            - Category.all.each do |category|
               %li
-                = link_to h(category.display_name), archives_url(category)
+                = link_to h(category.display_name), archives_by_category_url(category)
                 %em= "(#{category.posts.count})"
-          %h3= link_to 'Mots-clefs', :controller => :archives, :action => :by_tag
+          <!-- archives by Tag -->
+          %h3= link_to 'Mots-clefs', archives_by_tag_url
           %ul
             %li
-              - Tag.find(:all).each do |tag|
-                = link_to h(tag.display_name), archives_url(tag), :style => "font-size: #{6 + tag.posts.count}pt; text-decoration: none;"
-          %h3= link_to 'Archives', :controller => :archives, :action => :by_month_and_year
+              - Tag.all.each do |tag|
+                = link_to h(tag.display_name), archives_by_tag_url(tag),                  |
+                  :style => "font-size: #{6 + tag.posts.count}pt; text-decoration: none;" |
+          <!-- archives by month and year -->
+          %h3= link_to 'Archives', archives_by_month_and_year_url
           %ul
-            - ps = Post.find(:all, :select => :created_at).group_by(&:month_and_year)
-            - ps.keys.each do |month|
+            - Post.all.group_by(&:month_and_year).each do |month, posts|
               %li
-                - d = ps[month].first.created_at
-                = link_to h(month), :controller => :archives, :action => :by_month_and_year, :year => d.year, :month => d.month
-                %em= "(#{ps[month].size})"
+                = link_to h(month), archives_by_month_and_year_url(posts.first.created_at)
+                %em= "(#{posts.size})"
         %br{ :style => 'clear:both' }
+      <!-- end sidebar -->
       <!-- end body -->
 
       <!-- start footer -->

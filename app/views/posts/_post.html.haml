@@ -3,7 +3,7 @@
   .vcard
     Posté par
     %span{ :class => 'fn' }
-      = link_to h(post.author.name), archives_url(post.author)
+      = link_to h(post.author.name), archives_by_author_url(post.author)
   %abbr{ :class => 'published', :title => I18n.localize(post.created_at) }
     il y a
     = time_ago_in_words(post.created_at)
@@ -19,11 +19,11 @@
   %ul{ :class => 'meta' }
     %li{ :class => 'categories' }
       catégorie:
-      = link_to h(post.category.display_name), archives_url(post.category)
+      = link_to h(post.category.display_name), archives_by_category_url(post.category)
     %li{ :class => 'tags' }
       Mots-clefs:
       - post.tags.each do |tag|
-        =link_to h(tag.display_name), archives_url(tag)
+        =link_to h(tag.display_name), archives_by_tag_url(tag)
     %li
       Meta:
       = link_to "#{(c = post.comments.count).zero? ? 'aucun' : c} commentaire#{'s' if post.comments.count > 1}", :action => :show, :id => post, :anchor => :comments

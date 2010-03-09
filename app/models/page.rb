@@ -9,4 +9,10 @@ class Page < ActiveRecord::Base
   # validations
   validates_uniqueness_of :title
   validates_presence_of   :title, :body
+
+  # return true if self has been modified, false otherwise. We allow a 1 sec
+  # delta because otherwise it would always return true.
+  def modified_since_created?
+    self.updated_at.to_i > self.created_at.to_i
+  end
 end

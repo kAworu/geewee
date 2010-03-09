@@ -39,17 +39,6 @@ module ApplicationHelper
     BlueCloth.new(text, :filter_html).to_html
   end
 
-  # archives url helper
-  def archives_url what
-    opts = { :controller => :archives, :id => what }
-    opts[:action] = case what
-                      when Author   then :by_author
-                      when Category then :by_category
-                      when Tag      then :by_tag
-                    end
-    opts
-  end
-
   # hack for atom
   def comment_url comment
     post_url comment.post, :anchor => "comment_#{comment.id}"

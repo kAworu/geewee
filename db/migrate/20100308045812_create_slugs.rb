@@ -1,3 +1,4 @@
+# setup for friendly_id
 class CreateSlugs < ActiveRecord::Migration
   def self.up
     create_table :slugs do |t|

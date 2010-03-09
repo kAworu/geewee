@@ -15,8 +15,6 @@ ActiveRecord::Schema.define(:version => 20100308143555) do
     t.string   "name"
     t.string   "email"
     t.string   "cached_slug"
-    t.string   "salt"
-    t.string   "hashed_password"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -31,7 +29,7 @@ ActiveRecord::Schema.define(:version => 20100308143555) do
 
   create_table "comments", :force => true do |t|
     t.integer  "post_id"
-    t.string   "author"
+    t.string   "name"
     t.string   "email"
     t.string   "url"
     t.text     "body"

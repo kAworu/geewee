@@ -52,7 +52,7 @@
                 = link_to h(tag.display_name), archives_url(tag), :style => "font-size: #{6 + tag.posts.count}pt; text-decoration: none;"
           %h3= link_to 'Archives', :controller => :archives, :action => :by_month
           %ul
-            - ps = Post.find(:all, :select => :created_at).group_by(&:month)
+            - ps = Post.find(:all, :select => :created_at).group_by(&:month_and_year)
             - ps.keys.each do |month|
               %li
                 - d = ps[month].first.created_at

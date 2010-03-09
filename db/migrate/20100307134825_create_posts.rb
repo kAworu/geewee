@@ -3,10 +3,10 @@ class CreatePosts < ActiveRecord::Migration
     create_table :posts do |t|
       t.references :author
       t.references :category
-      t.string :title
-      t.text :intro
-      t.text :body
-      t.string :tags
+
+      t.string  :title
+      t.text    :intro
+      t.text    :body
       t.boolean :published
 
       t.string :cached_slug

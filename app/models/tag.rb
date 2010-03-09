@@ -8,7 +8,12 @@ class Tag < ActiveRecord::Base
   # relations
   has_and_belongs_to_many :posts
 
+  # set self.name
+  def before_validation
+    self.name = self.display_name.downcase
+  end
+
   # validations
-  validates_uniqueness_of :name
   validates_presence_of   :name, :display_name
+  validates_uniqueness_of :name
 end

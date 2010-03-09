@@ -35,6 +35,6 @@ class ArchivesController < ApplicationController
     else
       posts = Post.all
     end
-    @posts = posts.group_by(&:month)
+    @posts = posts.group_by(&:month_and_year)
   end
 end

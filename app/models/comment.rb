@@ -21,7 +21,7 @@ class Comment < ActiveRecord::Base
   validates_presence_of :post, :name, :email, :body
   validates_associated  :post
   validates_format_of   :email, # regexp from http://api.rubyonrails.org/classes/ActiveRecord/Validations/ClassMethods.html
-                        :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
+                        :with   => Author::EmailValidationRegexp
 
   # check that if self.name match an Author, self.email does too.
   def good_email_when_match_blog_author

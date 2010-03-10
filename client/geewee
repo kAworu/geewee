@@ -40,11 +40,24 @@ def main
         exit 1
     end
 
+    case ARGV.size
+    when 2 # operation resource
+      operation, resource, id, argument = ARGV[0], ARGV[1], nil,     nil
+    when 3 # operation resource argument
+      operation, resource, id, argument = ARGV[0], ARGV[1], nil,     ARGV[2]
+    when 4 # operation resource id argument
+      operation, resource, id, argument = ARGV[0], ARGV[1], ARGV[2], ARGV[3]
+    else   # fail.
+        usage 'wrong # of arguments'
+        exit 1
+    end
     # find the resource wanted.
-    res = Geewee::Resources::detect(ARGV[1].downcase.to_sym)
-    usage "couldn't find resource #{ARGV[1]}" unless res
-    r = res.new Geewee::REST::Connection.new($config[:base_url], $config)
-    r.apply Geewee::Action.new :operation => ARGV[0]
+    rclass = Geewee::Resources::detect(resource.downcase.to_sym)
+    usage "couldn't find resource #{ressource}" unless rclass
+    r = rclass.new Geewee::REST::Connection.new($config[:base_url], $config)
+    r.apply Geewee::Action.new  :operation  => operation.downcase.to_sym,
+                                :id         => id,
+                                :argument   => argument
 end
 
 
@@ -52,7 +65,9 @@ end
 def usage message
     STDERR.puts "#{__FILE__}: #{message}"
     STDERR.puts
-    STDERR.puts "usage: #{__FILE__} operation ressource [id] [argument]"
+    STDERR.puts "usage: #{__FILE__} operation ressource"
+    STDERR.puts "       #{__FILE__} operation ressource argument"
+    STDERR.puts "       #{__FILE__} operation ressource id argument"
 
     # Build the operation -> resource help.
     h = Hash.new
@@ -69,13 +84,19 @@ def usage message
         rsstr = rs.collect { |r| r.resources.join('|') }.join(', ')
         STDERR.puts '- %10s: %s' % [op, rsstr]
     end
-    exit 1
 end
 
 # really simple error function.
 def error message
     STDERR.puts "#{__FILE__}: #{message}"
     exit 1
+end
+
+# ask the user
+def ask question
+  STDOUT.print question
+  STDOUT.flush
+  STDIN.gets.chomp
 end
 
 # Object#instance_eval can't pass argument to the block. Ruby 1.9 will define
@@ -142,31 +163,8 @@ module REST
             http.use_ssl = (url.port == 443)
 
             res = http.start { |conn| conn.request(req) }
-            res.body
+            res
         end
-    end
-end
-
-# define HTTP methods and handle REST::Connection object.
-module Connectable
-    def initialize conn
-        @conn = conn
-    end
-
-    def get(resource, args=nil)
-        @conn.request(resource, :GET, args)
-    end
-
-    def post(resource, args=nil)
-        @conn.request(resource, :POST, args)
-    end
-
-    def put(resource, args=nil)
-        @conn.request(resource, :PUT, args)
-    end
-
-    def delete(resource, args=nil)
-        @conn.request(resource, :DELETE, args)
     end
 end
 # }}}
@@ -188,7 +186,7 @@ module Resources
     # Auto-detect available resources.
     #   target argument must be a symbol.
     def self.detect target
-        self.all.each do |klass|
+        all.each do |klass|
             return klass if klass.resources.include?(target)
         end
         nil # couldn't find it!
@@ -210,11 +208,16 @@ end
 
 # Base class for Resources.
 class Resources::Base
-    # CRUD operations.
-    All = [:create, :show, :edit, :destroy]
+    All = [:create, :show, :update, :destroy]
+
+    # conn is a REST::Connection instance.
+    def initialize conn
+        @conn = conn
+    end
 
     # Array of name matching this Resource.
     #   it's composed of symbols like [:category, :categories] that are alias.
+    #   The first symbol is used as reference name for HTTP request.
     def self.resources
         # NOTE: the current context is class, so it is a class instance
         #       variable.
@@ -244,14 +247,47 @@ class Resources::Base
 
     protected
 
-    # declare which name this resources is responsible for.
-    def self.named_resource *list
+    # declare which name this resource is responsible for, used for HTTP request.
+    def self.named_resource name
+        # put it as first element.
+        resources.unshift name
+    end
+
+    # declare aliases for the resource.
+    def self.alias_resource *list
+        # add them at the end
         (resources << list).flatten!
     end
 
     # declare which operations are accepted.
     def self.accept(op, &block)
         operations[op] = block
+    end
+
+    # helpers for HTTP request.
+    def get(id=nil, args=nil)
+        request(id, :GET, args)
+    end
+    def post(id=nil, args=nil)
+        request(id, :POST, args)
+    end
+    def put(id=nil, args=nil)
+        request(id, :PUT, args)
+    end
+    def delete(id=nil, args=nil)
+        request(id, :DELETE, args)
+    end
+
+    def request(id, method, args)
+        if id and not args
+            args = id
+            id = nil
+        end
+        resource =  '/' + self.class.resources.first.to_s
+        resource << "/#{id}" if id
+        resource << '.json'
+        res = @conn.request(resource, method, args)
+        JSON.parse(res.body)
     end
 end
 # }}}
@@ -261,26 +297,29 @@ end
 #
 class Resources::All::Category < Resources::Base
     private
-    include Connectable
 
     # accept plural form
-    named_resource :category, :categories
+    named_resource :categories
+    alias_resource :category
 
     # id and arg are ignored, always display a list of Category.
     accept :show do |id, arg|
-        require "pp"
-        pp list
-        l = list
-        l.each do |c|
-            c   = c['category']
-            uri = "#{$config[:base_url]}/archives/by_category/#{c['cached_slug']}"
-            puts '%d. %s (%s)' % [c['id'], c['display_name'], uri]
-        end
+        categories = get
+        # TODO handle error.
+        categories.each { |h| display h['category'] }
     end
 
-    # return the Category list.
-    def list
-        JSON.parse(get('/categories.json'))
+    # id and arg are ignored, the user is asked for the display_name on the
+    # cli.
+    accept :create do |id, arg|
+        n = ask 'new Category name: '
+        x= post '[category]display_name' => n
+        puts x
+    end
+
+    # print category on stdout
+    def display category
+        puts "#{category['id']}. #{category['display_name']}"
     end
 end
 

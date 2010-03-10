@@ -11,4 +11,16 @@ class CategoriesController < ApplicationController
       format.json { render :json => @categories }
     end
   end
+
+  # POST /categories.json
+  def create
+    @category = Category.new(params[:category])
+    respond_to do |format|
+      if @category.save
+        format.json { render :json => @category, :status => :created }
+      else
+        format.json { render :json => @category.errors, :status => :error }
+      end
+    end
+  end
 end

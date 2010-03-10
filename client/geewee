@@ -13,15 +13,49 @@ require 'rubygems'
 require 'json'
 require 'json/add/rails'
 
-### stolen and hacked REST module {{{
+# Basic stuff {{{
+#   Extending ruby for greater justice.
+#
+
+# really simple error function.
+def error message
+    STDERR.puts "#{__FILE__}: #{message}"
+    exit 1
+end
+
+# Object#instance_eval can't pass argument to the block. Ruby 1.9 will define
+# Object#instance_exec but for 1.8 we hack it.
+#   see http://www.ruby-forum.com/topic/54096.
+class Object
+    def instance_exec(*args, &block)
+        mname = "__instance_exec_#{Thread.current.object_id.abs}"
+        class << self; self end.class_eval{ define_method(mname, &block) }
+        begin
+            ret = send(mname, *args)
+        ensure
+            class << self; self end.class_eval{ undef_method(mname) } rescue
+            nil
+        end
+        ret
+    end
+end if RUBY_VERSION < '1.9.0'
+#}}}
+
+# stolen and hacked REST module {{{
 #   from http://snipplr.com/view.php?codeview&id=2476
 #
 require 'net/https'
 module REST
 
-    # all HTTP methods supported
-    Methods = [:GET, :POST, :PUT, :DELETE]
+    # all HTTP methods.
+    HTTPMethods = {
+        :GET    => Net::HTTP::Get,
+        :POST   => Net::HTTP::Post,
+        :PUT    => Net::HTTP::Put,
+        :DELETE => Net::HTTP::Delete,
+    }
 
+    # HTTP connection handler class.
     class Connection
         def initialize(base_url, args = {})
             @base_url = base_url
@@ -29,40 +63,18 @@ module REST
             @password = args[:password]
         end
 
-        def get(resource, args = nil)
-            request(resource, :GET, args)
-        end
-
-        def post(resource, args = nil)
-            request(resource, :POST, args)
-        end
-
-        def put(resource, args = nil)
-            request(resource, :PUT, args)
-        end
-        def delete(resource, args = nil)
-            request(resource, :DELETE, args)
-        end
-
-        protected
-        def request(resource, method=:GET, args=nil)
+        # send the HTTP request, method should be a key of HTTPMethods.
+        def request(resource, method, args)
             url = URI.join(@base_url, resource)
 
             if args
                 # TODO: What about keys without value?
-                url.query = args.map { |k,v| "%s=%s" % [URI.encode(k), URI.encode(v)] }.join("&")
+                url.query = args.map do |k,v|
+                    '%s=%s' % [URI.encode(k), URI.encode(v)]
+                end.join('&')
             end
 
-            case method
-            when :GET
-                req = Net::HTTP::Get.new(url.request_uri)
-            when :POST
-                req = Net::HTTP::Post.new(url.request_uri)
-            when :PUT
-                req = Net::HTTP::Put.new(url.request_uri)
-            when :DELETE
-                req = Net::HTTP::Delete.new(url.request_uri)
-            end
+            req = HTTPMethods[method].new(url.request_uri)
 
             if @username and @password
                 req.basic_auth(@username, @password)
@@ -71,60 +83,121 @@ module REST
             http = Net::HTTP.new(url.host, url.port)
             http.use_ssl = (url.port == 443)
 
-            res = http.start() { |conn| conn.request(req) }
+            res = http.start { |conn| conn.request(req) }
             res.body
         end
     end
 end
-# }}}
 
-### Resources {{{
-# managable resources.
-module Resources
-
-    # resource auto detection.
-    def self.detect rstr
-        constants.each do |c|
-            return eval c if c.downcase == rstr.downcase
-        end if rstr
-        nil
+# define HTTP methods and handle REST::Connection object.
+module Connectable
+    def initialize conn
+        @conn = conn
     end
 
-    #
-    # Category handler.
-    #
-    class Category
-        # create a new Resources::Category with a connection object.
-        def initialize conn
-            @conn = conn
-        end
+    def get(resource, args=nil)
+        @conn.request(resource, :GET, args)
+    end
 
-        # return the Category list.
-        def list
-            JSON.parse(@conn.get('/categories.json'))
-        end
+    def post(resource, args=nil)
+        @conn.request(resource, :POST, args)
+    end
 
-        def handle action
-            case action
-            when 'list'
-                l = self.list
-                puts 'Categories List:'
-                require "pp"
-                l.each do |h|
-                    c = h['category']
-                    printf "\t%02d. %s\n", c['id'], c['display_name']
-                end
-            else
-                if action
-                    STDERR.puts <<-EOF
-                        no action respond to `#{action}'
-                    EOF
-                    exit 1
-                else
-                    STDERR.puts "no action"
-                end
-            end
+    def put(resource, args=nil)
+        @conn.request(resource, :PUT, args)
+    end
+
+    def delete(resource, args=nil)
+        @conn.request(resource, :DELETE, args)
+    end
+end
+# }}}
+
+# Resources module and bases classes {{{
+#   modules and functions used to implements Resources management.
+#
+
+# contains all Resources and find them.
+module Resources
+    # This is where all Resources classes belongs.
+    module All end
+
+    # Auto-detect available resources.
+    def self.detect target
+        error 'no resource given.' unless target
+        t = target.downcase
+        self::All.constants.each do |const|
+            return eval "self::All::#{const}" if const.downcase == t
         end
+        # couldn't find it!
+        error "#{target}: invalid resource."
+    end
+end
+
+# Contains an operation to apply with an optional id and an optional argument.
+class Action
+    attr_reader :op, :id, :argument
+
+    # create a new Action with a hash of parameters.
+    def initialize hash
+        @op        = hash[:operation].to_sym
+        @id        = hash[:id]
+        @argument  = hash[:argument]
+    end
+end
+
+
+# Base class for Resources.
+class Resources::Base
+    # CRUD operations.
+    All = [:create, :show, :edit, :destroy]
+
+    protected
+
+    # Hash of supported operations for this class.
+    def self.operations
+        # NOTE: the current context is class, so @operations is a class
+        #       instance variable.
+        @operations ||= Hash.new
+    end
+
+    # declare which operations are accepted.
+    def self.accept(op, &block)
+        operations[op] = block
+    end
+
+    public
+
+    # Do the given action if possible.
+    def apply action
+        ops = self.class.operations
+        unless f = ops[action.op]
+            error "#{action.op}: operation not supported by #{self.class}\n" +
+                  "Supported operations are: #{ops.keys.join(', ')}"
+        end
+        instance_exec(action.id, action.argument, &f)
+    end
+end
+# }}}
+
+# Category Resource {{{
+#   TODO
+#
+class Resources::All::Category < Resources::Base
+    private
+    include Connectable
+
+    accept :show do |id, arg|
+        l = list
+        l.each do |h|
+            c = h['category']
+            puts "#{c['id']}. #{c['display_name']}"
+        end
+    end
+
+    # return the Category list.
+    def list
+        JSON.parse(get('/categories.json'))
     end
 end
 # }}}
@@ -138,24 +211,25 @@ unless GeeweeConfig and GeeweeConfig[:base_url]
 end
 
 # find the resource wanted.
-R = Resources::detect(rstr = ARGV.shift)
-unless R
-    STDERR.puts "invalid resource name: `#{rstr}'" if rstr
-    STDERR.puts <<-EOF
-    usage: #$0 [#{Resources.constants.join(' | ')}]
-    EOF
-    exit 1
-end
+R = Resources::detect(ARGV[1])
 r = R.new REST::Connection.new(GeeweeConfig[:base_url], GeeweeConfig)
-r.handle(ARGV.shift)
+r.apply Action.new :operation => ARGV[0]
 # }}}
 
 
+
+###
+# Config for the geewee client in YAML, example:
 #
-# Config for the client
-#
+=begin
+
+---
+:base_url:   http://my.sexy.geewee/blog/path
+:user:       username
+:password:   secret
+
+=end
+
 __END__
 ---
-:base_url:   "http://localhost:3000"
-:user:       "kAworu"
-:password:   "gou"
+:base_url:   http://localhost:3000

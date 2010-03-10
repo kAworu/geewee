@@ -17,6 +17,30 @@ require 'json/add/rails'
 #   Extending ruby for greater justice.
 #
 
+# dynamic usage function
+def usage message
+    STDERR.puts "#{__FILE__}: #{message}"
+    STDERR.puts
+    STDERR.puts "usage: #{__FILE__} operation ressource [id] [argument]"
+
+    # Build the operation -> resource help.
+    h = Hash.new
+    Resources.all.each do |r|
+        r.operations.keys.each do |op|
+            (h[op] ||= Array.new) << r
+        end
+    end
+    # and  display it
+    STDERR.puts
+    STDERR.puts "operations and resources:"
+    STDERR.puts "========================>"
+    h.each do |op, rs|
+        rsstr = rs.collect { |r| r.resources.join('|') }.join(', ')
+        STDERR.puts '- %10s: %s' % [op, rsstr]
+    end
+    exit 1
+end
+
 # really simple error function.
 def error message
     STDERR.puts "#{__FILE__}: #{message}"
@@ -122,15 +146,20 @@ module Resources
     # This is where all Resources classes belongs.
     module All end
 
+    # return all Resources in the All module, as Class objects.
+    def self.all
+        self::All.constants.collect { |const| eval "self::All::#{const}" }
+    end
+
     # Auto-detect available resources.
     def self.detect target
-        error 'no resource given.' unless target
-        t = target.downcase
-        self::All.constants.each do |const|
-            return eval "self::All::#{const}" if const.downcase == t
+        usage 'no resource given.' unless target
+        t = target.downcase.to_sym
+        self.all.each do |klass|
+            return klass if klass.resources.include?(target)
         end
         # couldn't find it!
-        error "#{target}: invalid resource."
+        usage "#{target}: invalid resource."
     end
 end
 
@@ -152,30 +181,47 @@ class Resources::Base
     # CRUD operations.
     All = [:create, :show, :edit, :destroy]
 
-    protected
+    # Array of name matching this Resource.
+    #   it's composed of symbols like [:category, :categories] that are alias.
+    def self.resources
+        # NOTE: the current context is class, so it is a class instance
+        #       variable.
+        @resources ||= Array.new
+    end
 
     # Hash of supported operations for this class.
+    #   it's a Hash from operations keys (like :show) to lambda functions that
+    #   take two arguments, id and argument (that can be nil).
     def self.operations
-        # NOTE: the current context is class, so @operations is a class
-        #       instance variable.
+        # NOTE: the current context is class, so it is a class instance
+        #       variable.
         @operations ||= Hash.new
+    end
+
+    # Do the given action if possible.
+    def apply action
+        ops = self.class.operations
+        unless ops.key?(action.op)
+            usage "#{action.op}: operation not supported by #{self.class}\n" +
+                  "Supported operations are: #{ops.keys.join(', ')}"
+        else
+            f = ops[action.op]
+            instance_exec(action.id, action.argument, &f)
+        end
+    end
+
+    protected
+
+    # declare which name this resources is responsible for.
+    def self.named_resource *list
+        # NOTE: the current context is class, so it is a class instance
+        #       variable.
+        @resources = list.flatten
     end
 
     # declare which operations are accepted.
     def self.accept(op, &block)
         operations[op] = block
-    end
-
-    public
-
-    # Do the given action if possible.
-    def apply action
-        ops = self.class.operations
-        unless f = ops[action.op]
-            error "#{action.op}: operation not supported by #{self.class}\n" +
-                  "Supported operations are: #{ops.keys.join(', ')}"
-        end
-        instance_exec(action.id, action.argument, &f)
     end
 end
 # }}}
@@ -186,6 +232,8 @@ end
 class Resources::All::Category < Resources::Base
     private
     include Connectable
+
+    named_resource :category, :categories
 
     accept :show do |id, arg|
         l = list
@@ -200,9 +248,11 @@ class Resources::All::Category < Resources::Base
         JSON.parse(get('/categories.json'))
     end
 end
+
 # }}}
 
 ### config and argument setup {{{
+# FIXME: UGLY UGLY UGLY
 # basic config setup.
 GeeweeConfig = YAML.load(DATA.read)
 unless GeeweeConfig and GeeweeConfig[:base_url]

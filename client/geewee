@@ -7,15 +7,46 @@
 #  |___/
 #
 # geewee client, see http://hg.kaworu.ch/rails-geewee.
+#   this client need json in order to be able to use the geewee JSON API.
 #
 require 'yaml'
 require 'rubygems'
-require 'json'
-require 'json/add/rails'
 
-# Basic stuff {{{
-#   Extending ruby for greater justice.
+begin
+    require 'json'
+    require 'json/add/rails'
+rescue LoadError => e
+    STDERR.puts <<-EOF
+#{e.class}: #{e}
+
+    this client need json in order to be able to use the geewee JSON API.
+    please run:
+        gem install json_pure
+    EOF
+    exit 1
+end
+
+# Extending ruby for greater justice. {{{
+#   main / usage / error function.
 #
+
+# main procedure called if this script is executed.
+def main
+    # FIXME: UGLY UGLY UGLY
+    # basic config setup.
+    $config = YAML.load(DATA.read)
+    unless $config and $config[:base_url]
+        STDERR.puts 'Config is missing :base_url'
+        exit 1
+    end
+
+    # find the resource wanted.
+    res = Geewee::Resources::detect(ARGV[1].downcase.to_sym)
+    usage "couldn't find resource #{ARGV[1]}" unless res
+    r = res.new Geewee::REST::Connection.new($config[:base_url], $config)
+    r.apply Geewee::Action.new :operation => ARGV[0]
+end
+
 
 # dynamic usage function
 def usage message
@@ -25,7 +56,7 @@ def usage message
 
     # Build the operation -> resource help.
     h = Hash.new
-    Resources.all.each do |r|
+    Geewee::Resources.all.each do |r|
         r.operations.keys.each do |op|
             (h[op] ||= Array.new) << r
         end
@@ -65,6 +96,9 @@ class Object
 end if RUBY_VERSION < '1.9.0'
 #}}}
 
+
+# My Shiny Geewee module <3
+module Geewee
 # stolen and hacked REST module {{{
 #   from http://snipplr.com/view.php?codeview&id=2476
 #
@@ -152,14 +186,12 @@ module Resources
     end
 
     # Auto-detect available resources.
+    #   target argument must be a symbol.
     def self.detect target
-        usage 'no resource given.' unless target
-        t = target.downcase.to_sym
         self.all.each do |klass|
             return klass if klass.resources.include?(target)
         end
-        # couldn't find it!
-        usage "#{target}: invalid resource."
+        nil # couldn't find it!
     end
 end
 
@@ -214,9 +246,7 @@ class Resources::Base
 
     # declare which name this resources is responsible for.
     def self.named_resource *list
-        # NOTE: the current context is class, so it is a class instance
-        #       variable.
-        @resources = list.flatten
+        (resources << list).flatten!
     end
 
     # declare which operations are accepted.
@@ -233,13 +263,18 @@ class Resources::All::Category < Resources::Base
     private
     include Connectable
 
+    # accept plural form
     named_resource :category, :categories
 
+    # id and arg are ignored, always display a list of Category.
     accept :show do |id, arg|
+        require "pp"
+        pp list
         l = list
-        l.each do |h|
-            c = h['category']
-            puts "#{c['id']}. #{c['display_name']}"
+        l.each do |c|
+            c   = c['category']
+            uri = "#{$config[:base_url]}/archives/by_category/#{c['cached_slug']}"
+            puts '%d. %s (%s)' % [c['id'], c['display_name'], uri]
         end
     end
 
@@ -249,28 +284,17 @@ class Resources::All::Category < Resources::Base
     end
 end
 
+
 # }}}
+end # end of Geewee module.
 
-### config and argument setup {{{
-# FIXME: UGLY UGLY UGLY
-# basic config setup.
-GeeweeConfig = YAML.load(DATA.read)
-unless GeeweeConfig and GeeweeConfig[:base_url]
-    STDERR.puts 'Config is missing :base_url'
-    exit 1
-end
 
-# find the resource wanted.
-R = Resources::detect(ARGV[1])
-r = R.new REST::Connection.new(GeeweeConfig[:base_url], GeeweeConfig)
-r.apply Action.new :operation => ARGV[0]
-# }}}
-
+# run main procedure if we're executed!
+main if $0 == __FILE__
 
 
 ###
 # Config for the geewee client in YAML, example:
-#
 =begin
 
 ---
@@ -279,6 +303,7 @@ r.apply Action.new :operation => ARGV[0]
 :password:   secret
 
 =end
+
 
 __END__
 ---

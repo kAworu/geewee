@@ -19,8 +19,20 @@ class CategoriesController < ApplicationController
       if @category.save
         format.json { render :json => @category, :status => :created }
       else
-        format.json { render :json => @category.errors, :status => :error }
+        format.json do
+          render :json => @category.errors, :status => :unprocessable_entity
+        end
       end
+    end
+  end
+
+  # DELETE /categories/1.json
+  def destroy
+    @category = Category.find(params[:id])
+    @category.destroy
+
+    respond_to do |format|
+      format.json { head :ok }
     end
   end
 end

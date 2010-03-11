@@ -14,7 +14,7 @@ require 'rubygems'
 
 begin
     require 'json'
-    require 'json/add/rails'
+    #require 'json/add/rails'
 rescue LoadError => e
     STDERR.puts <<-EOF
 #{e.class}: #{e}
@@ -38,8 +38,10 @@ def main
     # basic config setup.
     $config = YAML.load(DATA.read)
     unless $config and $config['base_url']
-        STDERR.puts "Config is missing `base_url'"
-        exit 1
+        error "Config is missing `base_url'"
+    end
+    unless $config['editor'] or $config['editor'] = ENV['EDITOR']
+        error "please set `editor' in config or $EDITOR in env."
     end
 
     if ARGV.size < 2
@@ -53,15 +55,19 @@ def main
 
     # find the resource wanted.
     rclass = Geewee::Resources::detect(resource.downcase.to_sym)
-    usage "couldn't find resource #{ressource}" unless rclass
-    r = rclass.new Geewee::REST::Connection.new($config['base_url'], $config)
-    r.apply :operation  => operation.downcase.to_sym,
-            :resource   => resource,
-            :argv       => argv
+    usage "couldn't find resource #{resource}" unless rclass
+    r = rclass.new Geewee::REST::Connection.new($config['base_url'])
+    begin
+        r.apply :operation  => operation.downcase.to_sym,
+                :resource   => resource,
+                :argv       => argv
+    rescue Errno::ECONNREFUSED
+        error "#{$config['base_url']} #$!"
+    end
 end
 
 
-# dynamic usage function
+# dynamic usage function.
 def usage message
     STDERR.puts "#{__FILE__}: #{message}"
     STDERR.puts
@@ -102,20 +108,18 @@ def error message
     exit 1
 end
 
-# ask the user
+# ask the user.
 def ask question
     STDOUT.print question
     STDOUT.flush
     STDIN.gets.chomp
 end
 
-# ask the user
+# ask the user to answer by yes or no.
 def yesno question
     ans = String.new
     until ans =~ /^\s*(?:y(?:es)?|no?)\s*$/i
-        STDOUT.print question + '? [y/n]: '
-        STDOUT.flush
-        ans = STDIN.gets.chomp
+        ans = ask(question + '? [y/n]: ')
     end
     ans =~ /y(?:es)?/
 end
@@ -156,7 +160,7 @@ module REST
 
     # HTTP connection handler class.
     class Connection
-        def initialize(base_url, args = {})
+        def initialize(base_url, args=Hash.new)
             @base_url = base_url
             @username = args[:username]
             @password = args[:password]
@@ -169,8 +173,7 @@ module REST
             if args
                 # TODO: What about keys without value?
                 url.query = args.map do |k,v|
-                    v ||= String.new
-                    '%s=%s' % [URI.encode(k), URI.encode(v)]
+                    '%s=%s' % [URI.encode(k), URI.encode(v || '')]
                 end.join('&')
             end
 
@@ -242,7 +245,7 @@ class Resources::Base
     end
 
     # Do the given action if possible.
-    def apply(h)
+    def apply h
         ops = self.class.operations
         unless ops.key?(h[:operation])
             raise ArgumentError.new(
@@ -255,18 +258,18 @@ class Resources::Base
         end
     end
 
+    # declare aliases for the resource.
+    def self.alias_resource *list
+        # add them at the end
+        (resources << list).flatten!
+    end
+
     protected
 
     # declare which name this resource is responsible for, used for HTTP request.
     def self.named_resource name
         # put it as first element.
         resources.unshift name
-    end
-
-    # declare aliases for the resource.
-    def self.alias_resource *list
-        # add them at the end
-        (resources << list).flatten!
     end
 
     # declare which operations are accepted.
@@ -304,7 +307,14 @@ end
 #   Handle a human readable Resource description.
 #   RFile looks like email, a header of key:values, an empty line and a body.
 class RFile
-    attr_accessor :head, :body
+    attr_accessor :head, :body, :path
+
+    # crate a new RFile with a path to load.
+    def self.load(path)
+        rf = RFile.new
+        rf.path = path
+        rf.parse!
+    end
 
     # create a new RFile.
     #   if head is an Array, it is a list of empty header keys.
@@ -315,8 +325,8 @@ class RFile
     end
 
     # parse a file argument, if `-' STDIN is used.
-    def parse path
-        fd    = if path == '-' then STDIN else File.open(path) end
+    def parse!
+        fd    = if @path == '-' then STDIN else File.open(@path) end
         data  = fd.read
         @head = Hash.new
         @body = nil
@@ -328,7 +338,7 @@ class RFile
                 elsif line =~ /^(.+?):(.*)$/
                     @head[$1.strip] = $2.strip
                 else
-                    raise SyntaxError.new("bad RFile header line: #{line}")
+                    raise SyntaxError.new("#@path: bad RFile header line: #{line}")
                 end
             else
                 @body << line << "\n"
@@ -343,11 +353,16 @@ class RFile
         s << @body
     end
 
-    # save the RFile in a tempfile, and return the tempfile's path.
-    def save!
-        path = "/tmp/#{File.basename(__FILE__)}_#{Time.now.to_i}"
-        File.open(path, 'w') { |fd| fd << self.to_s }
-        path
+    # call editor to edit self. return self if all went well, nil if the editor
+    # returned a non-zero status.
+    def edit!
+        @path = "/tmp/#{File.basename(__FILE__)}_#{Time.now.to_i}#$$"
+        File.open(@path, 'w') { |fd| fd << self.to_s }
+        if system "#{$config['editor']} #@path" then
+            self.parse!
+        else
+            nil
+        end
     end
 end
 # }}}
@@ -364,7 +379,6 @@ class Resources::All::Category < Resources::Base
 
     # accept plural form
     named_resource :categories
-    alias_resource :category
 
     # always display a list of Category.
     #   show category
@@ -374,14 +388,19 @@ class Resources::All::Category < Resources::Base
 
         case response = get(id)
         when ::Net::HTTPOK
-            JSON.parse(response.body).each { |h| display h['category'] }
+            if id
+                cs = [JSON.parse(response.body)]
+            else
+                cs = JSON.parse(response.body)
+            end
+            cs.each { |h| display h['category'] }
         else
             error response.class
         end
     end
 
     # create a new category.
-    #   generate a stub file:
+    #   generate a stub file and call editor:
     #       create category
     #   load from STDIN:
     #       create category -
@@ -390,24 +409,21 @@ class Resources::All::Category < Resources::Base
     accept :create do |h|
         file = h[:argv].first rescue nil
         if file
-            rf = RFile.new.parse(file)
-            case response = post(rf.head)
-            when ::Net::HTTPCreated
-                puts 'new Category created.'
-                display JSON.parse(response.body)['category']
-            else
-                msg = JSON.parse(response.body).collect do |err|
-                    err.join(' ')
-                end.join("\n")
-                error "#{response.message}\n#{msg}"
-            end
+            rf = RFile.load(file)
         else
-            rf = RFile.new [Keys::DISPLAY_NAME]
-            path = rf.save!
-            puts "edit #{path} and then call:\n" +
-                "   #{$0} #{h[:operation]} #{h[:resource]} #{path}"
+            rf = RFile.new([Keys::DISPLAY_NAME])
+            error "editor aborded\nfile was #{rf.path}" unless rf.edit!
         end
-        name = rf.head[Keys::DISPLAY_NAME]
+        case response = post(rf.head)
+        when ::Net::HTTPCreated
+            puts 'new Category created.'
+            display JSON.parse(response.body)['category']
+        else
+            msg = JSON.parse(response.body).collect do |err|
+                err.join(' ')
+            end.join("\n")
+            error "#{msg}\nfile was #{rf.path}"
+        end
     end
 
     # destroy a category.
@@ -416,10 +432,10 @@ class Resources::All::Category < Resources::Base
     accept :destroy do |h|
         id = h[:argv].first rescue nil
         unless id
-            # display categories
+            # show categories and ask for id.
             self.apply  :operation => :show,
                         :resource  => h[:resource]
-            id = ask 'target Category id to destroy: '
+            id = ask('target Category id to destroy: ')
         end
         case response = get(id)
         when ::Net::HTTPOK
@@ -456,6 +472,7 @@ main if $0 == __FILE__
 
 ---
 base_url:   http://my.sexy.geewee/blog/path
+editor:     vim
 user:       username
 password:   secret
 
@@ -464,4 +481,5 @@ password:   secret
 
 __END__
 ---
-base_url:   http://localhost:3000
+base_url: http://localhost:3000
+editor:   vim

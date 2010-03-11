@@ -117,6 +117,9 @@
     <note priority="low" time="1268095064">
         tests
     </note>
+    <note priority="low" time="1268266545">
+        clean tags
+    </note>
     <note priority="verylow" time="1267999859">
         gravatar!
     </note>

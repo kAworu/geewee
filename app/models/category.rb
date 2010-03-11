@@ -12,10 +12,10 @@ class Category < ActiveRecord::Base
 
   # set self.name
   def before_validation
-    self.name = self.display_name.downcase
+    self.name = self.display_name.downcase if self.display_name
   end
 
   # validations
-  validates_presence_of   :name, :display_name
+  validates_presence_of   :display_name
   validates_uniqueness_of :name
 end

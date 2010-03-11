@@ -22,6 +22,8 @@ rescue LoadError => e
     this client need json in order to be able to use the geewee JSON API.
     please run:
         gem install json_pure
+    or
+        gem install json
     EOF
     exit 1
 end
@@ -35,29 +37,37 @@ def main
     # FIXME: UGLY UGLY UGLY
     # basic config setup.
     $config = YAML.load(DATA.read)
-    unless $config and $config[:base_url]
-        STDERR.puts 'Config is missing :base_url'
+    unless $config and $config['base_url']
+        STDERR.puts "Config is missing `base_url'"
         exit 1
     end
 
     case ARGV.size
     when 2 # operation resource
-      operation, resource, id, argument = ARGV[0], ARGV[1], nil,     nil
-    when 3 # operation resource argument
-      operation, resource, id, argument = ARGV[0], ARGV[1], nil,     ARGV[2]
-    when 4 # operation resource id argument
-      operation, resource, id, argument = ARGV[0], ARGV[1], ARGV[2], ARGV[3]
+      operation, resource, id, path = ARGV[0], ARGV[1], nil,     nil
+    when 3 # operation resource file
+      operation, resource, id, path = ARGV[0], ARGV[1], nil,     ARGV[2]
+    when 4 # operation resource id file
+      operation, resource, id, path = ARGV[0], ARGV[1], ARGV[2], ARGV[3]
     else   # fail.
         usage 'wrong # of arguments'
         exit 1
     end
+
+    file = case path
+           when nil then nil
+           when '-' then STDIN
+           else          File.open(path)
+           end
+
     # find the resource wanted.
     rclass = Geewee::Resources::detect(resource.downcase.to_sym)
     usage "couldn't find resource #{ressource}" unless rclass
-    r = rclass.new Geewee::REST::Connection.new($config[:base_url], $config)
-    r.apply Geewee::Action.new  :operation  => operation.downcase.to_sym,
-                                :id         => id,
-                                :argument   => argument
+    r = rclass.new Geewee::REST::Connection.new($config['base_url'], $config)
+    r.apply :operation  => operation.downcase.to_sym,
+            :resource   => resource,
+            :id         => id,
+            :file       => file
 end
 
 
@@ -66,8 +76,8 @@ def usage message
     STDERR.puts "#{__FILE__}: #{message}"
     STDERR.puts
     STDERR.puts "usage: #{__FILE__} operation ressource"
-    STDERR.puts "       #{__FILE__} operation ressource argument"
-    STDERR.puts "       #{__FILE__} operation ressource id argument"
+    STDERR.puts "       #{__FILE__} operation ressource file"
+    STDERR.puts "       #{__FILE__} operation ressource id file"
 
     # Build the operation -> resource help.
     h = Hash.new
@@ -99,7 +109,7 @@ def ask question
   STDIN.gets.chomp
 end
 
-# Object#instance_eval can't pass argument to the block. Ruby 1.9 will define
+# Object#instance_eval can't pass arguments to the block. Ruby 1.9 will define
 # Object#instance_exec but for 1.8 we hack it.
 #   see http://www.ruby-forum.com/topic/54096.
 class Object
@@ -115,8 +125,7 @@ class Object
         ret
     end
 end if RUBY_VERSION < '1.9.0'
-#}}}
-
+# }}}
 
 # My Shiny Geewee module <3
 module Geewee
@@ -127,7 +136,7 @@ require 'net/https'
 module REST
 
     # all HTTP methods.
-    HTTPMethods = {
+    Methods = {
         :GET    => Net::HTTP::Get,
         :POST   => Net::HTTP::Post,
         :PUT    => Net::HTTP::Put,
@@ -142,18 +151,19 @@ module REST
             @password = args[:password]
         end
 
-        # send the HTTP request, method should be a key of HTTPMethods.
+        # send the HTTP request, method should be a key of Methods.
         def request(resource, method, args)
             url = URI.join(@base_url, resource)
 
             if args
                 # TODO: What about keys without value?
                 url.query = args.map do |k,v|
+                    v ||= String.new
                     '%s=%s' % [URI.encode(k), URI.encode(v)]
                 end.join('&')
             end
 
-            req = HTTPMethods[method].new(url.request_uri)
+            req = Methods[method].new(url.request_uri)
 
             if @username and @password
                 req.basic_auth(@username, @password)
@@ -193,19 +203,6 @@ module Resources
     end
 end
 
-# Contains an operation to apply with an optional id and an optional argument.
-class Action
-    attr_reader :op, :id, :argument
-
-    # create a new Action with a hash of parameters.
-    def initialize hash
-        @op        = hash[:operation].to_sym
-        @id        = hash[:id]
-        @argument  = hash[:argument]
-    end
-end
-
-
 # Base class for Resources.
 class Resources::Base
     All = [:create, :show, :update, :destroy]
@@ -226,7 +223,7 @@ class Resources::Base
 
     # Hash of supported operations for this class.
     #   it's a Hash from operations keys (like :show) to lambda functions that
-    #   take two arguments, id and argument (that can be nil).
+    #   take two arguments, id and file (that can be nil).
     def self.operations
         # NOTE: the current context is class, so it is a class instance
         #       variable.
@@ -234,14 +231,16 @@ class Resources::Base
     end
 
     # Do the given action if possible.
-    def apply action
+    def apply(h)
         ops = self.class.operations
-        unless ops.key?(action.op)
-            usage "#{action.op}: operation not supported by #{self.class}\n" +
-                  "Supported operations are: #{ops.keys.join(', ')}"
+        unless ops.key?(h[:operation])
+            raise ArgumentError.new(
+                "#{h[:operation]}: operation not supported by #{self.class}\n" +
+                "Supported operations are: #{ops.keys.join(', ')}"
+            )
         else
-            f = ops[action.op]
-            instance_exec(action.id, action.argument, &f)
+            f = ops[h[:operation]]
+            instance_exec(h, &f)
         end
     end
 
@@ -286,8 +285,57 @@ class Resources::Base
         resource =  '/' + self.class.resources.first.to_s
         resource << "/#{id}" if id
         resource << '.json'
-        res = @conn.request(resource, method, args)
-        JSON.parse(res.body)
+        @conn.request(resource, method, args)
+    end
+end
+
+# Resource File
+#   Handle a human readable Resource description.
+#   RFile looks like email, a header of key:values, an empty line and a body.
+class RFile
+    attr_accessor :head, :body
+
+    # create a new RFile.
+    #   if head is an Array, it is a list of empty header keys.
+    def initialize(head=nil, body=String.new)
+        @body = body
+        @head = Hash.new
+        head.each { |k,v| @head[k] = v } if head
+    end
+
+    # parse a file argument, if `-' STDIN is used.
+    def parse fd
+        data = fd.read
+        @head = Hash.new
+        @body = nil
+        data.split("\n").each do |line|
+            if @body.nil?
+                # parsing head.
+                if line.empty?
+                    @body = String.new
+                elsif line =~ /^(.+?):(.*)$/
+                    @head[$1.strip] = $2.strip
+                else
+                    raise SyntaxError.new("bad RFile header line: #{line}")
+                end
+            else
+                @body << line << "\n"
+            end
+        end
+        self
+    end
+
+    def to_s
+        s = String.new
+        @head.each { |k,v| s << "#{k}: #{v}\n" }
+        s << @body
+    end
+
+    # save the RFile in a tempfile, and return the tempfile's path.
+    def save!
+        path = "/tmp/#{File.basename(__FILE__)}_#{Time.now.to_i}"
+        File.open(path, 'w') { |fd| fd << self.to_s }
+        path
     end
 end
 # }}}
@@ -297,24 +345,55 @@ end
 #
 class Resources::All::Category < Resources::Base
     private
+    # keys for the geewee API.
+    module Keys
+        DISPLAY_NAME = '[category]display_name'
+    end
 
     # accept plural form
     named_resource :categories
     alias_resource :category
 
-    # id and arg are ignored, always display a list of Category.
-    accept :show do |id, arg|
-        categories = get
-        # TODO handle error.
-        categories.each { |h| display h['category'] }
+    # always display a list of Category.
+    #   show category|categories
+    accept :show do |h|
+        case response = get
+        when ::Net::HTTPOK
+            puts 'Categories:'
+            puts '==========>'
+            JSON.parse(response.body).each { |h| display h['category'] }
+        else
+            error response.class
+        end
     end
 
-    # id and arg are ignored, the user is asked for the display_name on the
-    # cli.
-    accept :create do |id, arg|
-        n = ask 'new Category name: '
-        x= post '[category]display_name' => n
-        puts x
+    # create a new category.
+    #   generate a stub file:
+    #       create category
+    #   load from STDIN:
+    #       create category -
+    #   load from file:
+    #       create category /path/to/stub/file
+    accept :create do |h|
+        if h[:file]
+            rf = RFile.new.parse(h[:file])
+            case response = post(rf.head)
+            when ::Net::HTTPCreated
+                puts 'new Category created.'
+                display JSON.parse(response.body)['category']
+            else
+                msg = JSON.parse(response.body).collect do |err|
+                    err.join(' ')
+                end.join("\n")
+                error "#{response.message}\n#{msg}"
+            end
+        else
+            rf = RFile.new [Keys::DISPLAY_NAME]
+            path = rf.save!
+            puts "edit #{path} and then call:\n" +
+                "   #{$0} #{h[:operation]} #{h[:resource]} #{path}"
+        end
+        name = rf.head[Keys::DISPLAY_NAME]
     end
 
     # print category on stdout
@@ -322,8 +401,6 @@ class Resources::All::Category < Resources::Base
         puts "#{category['id']}. #{category['display_name']}"
     end
 end
-
-
 # }}}
 end # end of Geewee module.
 
@@ -337,13 +414,13 @@ main if $0 == __FILE__
 =begin
 
 ---
-:base_url:   http://my.sexy.geewee/blog/path
-:user:       username
-:password:   secret
+base_url:   http://my.sexy.geewee/blog/path
+user:       username
+password:   secret
 
 =end
 
 
 __END__
 ---
-:base_url:   http://localhost:3000
+base_url:   http://localhost:3000

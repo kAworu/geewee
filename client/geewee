@@ -42,23 +42,14 @@ def main
         exit 1
     end
 
-    case ARGV.size
-    when 2 # operation resource
-      operation, resource, id, path = ARGV[0], ARGV[1], nil,     nil
-    when 3 # operation resource file
-      operation, resource, id, path = ARGV[0], ARGV[1], nil,     ARGV[2]
-    when 4 # operation resource id file
-      operation, resource, id, path = ARGV[0], ARGV[1], ARGV[2], ARGV[3]
-    else   # fail.
+    if ARGV.size < 2
         usage 'wrong # of arguments'
         exit 1
     end
 
-    file = case path
-           when nil then nil
-           when '-' then STDIN
-           else          File.open(path)
-           end
+    operation = ARGV.shift
+    resource  = ARGV.shift
+    argv      = ARGV
 
     # find the resource wanted.
     rclass = Geewee::Resources::detect(resource.downcase.to_sym)
@@ -66,8 +57,7 @@ def main
     r = rclass.new Geewee::REST::Connection.new($config['base_url'], $config)
     r.apply :operation  => operation.downcase.to_sym,
             :resource   => resource,
-            :id         => id,
-            :file       => file
+            :argv       => argv
 end
 
 
@@ -75,9 +65,19 @@ end
 def usage message
     STDERR.puts "#{__FILE__}: #{message}"
     STDERR.puts
-    STDERR.puts "usage: #{__FILE__} operation ressource"
-    STDERR.puts "       #{__FILE__} operation ressource file"
-    STDERR.puts "       #{__FILE__} operation ressource id file"
+    STDERR.puts "usage: #{__FILE__} operation ressource [arguments...]"
+    STDERR.puts
+    STDERR.puts "CRUD operations:"
+    STDERR.puts "===============>"
+    STDERR.puts "\t#{__FILE__} create ressource"
+    STDERR.puts "\t#{__FILE__} create ressource /path/to/file"
+    STDERR.puts "\t#{__FILE__} show resource"
+    STDERR.puts "\t#{__FILE__} show resource id"
+    STDERR.puts "\t#{__FILE__} update ressource"
+    STDERR.puts "\t#{__FILE__} update ressource id"
+    STDERR.puts "\t#{__FILE__} update ressource id /path/to/file"
+    STDERR.puts "\t#{__FILE__} destroy ressource"
+    STDERR.puts "\t#{__FILE__} destroy ressource id"
 
     # Build the operation -> resource help.
     h = Hash.new
@@ -104,9 +104,20 @@ end
 
 # ask the user
 def ask question
-  STDOUT.print question
-  STDOUT.flush
-  STDIN.gets.chomp
+    STDOUT.print question
+    STDOUT.flush
+    STDIN.gets.chomp
+end
+
+# ask the user
+def yesno question
+    ans = String.new
+    until ans =~ /^\s*(?:y(?:es)?|no?)\s*$/i
+        STDOUT.print question + '? [y/n]: '
+        STDOUT.flush
+        ans = STDIN.gets.chomp
+    end
+    ans =~ /y(?:es)?/
 end
 
 # Object#instance_eval can't pass arguments to the block. Ruby 1.9 will define
@@ -278,7 +289,7 @@ class Resources::Base
     end
 
     def request(id, method, args)
-        if id and not args
+        if id and not args and id.is_a?(Hash)
             args = id
             id = nil
         end
@@ -304,8 +315,9 @@ class RFile
     end
 
     # parse a file argument, if `-' STDIN is used.
-    def parse fd
-        data = fd.read
+    def parse path
+        fd    = if path == '-' then STDIN else File.open(path) end
+        data  = fd.read
         @head = Hash.new
         @body = nil
         data.split("\n").each do |line|
@@ -355,12 +367,13 @@ class Resources::All::Category < Resources::Base
     alias_resource :category
 
     # always display a list of Category.
-    #   show category|categories
+    #   show category
+    #   show category id
     accept :show do |h|
-        case response = get
+        id = h[:argv].first rescue nil
+
+        case response = get(id)
         when ::Net::HTTPOK
-            puts 'Categories:'
-            puts '==========>'
             JSON.parse(response.body).each { |h| display h['category'] }
         else
             error response.class
@@ -375,8 +388,9 @@ class Resources::All::Category < Resources::Base
     #   load from file:
     #       create category /path/to/stub/file
     accept :create do |h|
-        if h[:file]
-            rf = RFile.new.parse(h[:file])
+        file = h[:argv].first rescue nil
+        if file
+            rf = RFile.new.parse(file)
             case response = post(rf.head)
             when ::Net::HTTPCreated
                 puts 'new Category created.'
@@ -394,6 +408,33 @@ class Resources::All::Category < Resources::Base
                 "   #{$0} #{h[:operation]} #{h[:resource]} #{path}"
         end
         name = rf.head[Keys::DISPLAY_NAME]
+    end
+
+    # destroy a category.
+    #   destroy category
+    #   destroy category 1
+    accept :destroy do |h|
+        id = h[:argv].first rescue nil
+        unless id
+            # display categories
+            self.apply  :operation => :show,
+                        :resource  => h[:resource]
+            id = ask 'target Category id to destroy: '
+        end
+        case response = get(id)
+        when ::Net::HTTPOK
+            c = JSON.parse(response.body)['category']
+        else
+            error response.class
+        end
+        if yesno("destroy Category `#{c['display_name']}'")
+            case response = delete(id)
+            when ::Net::HTTPOK
+                puts "Category `#{c['display_name']}' destroyed."
+            else
+                error response.class
+            end
+        end
     end
 
     # print category on stdout

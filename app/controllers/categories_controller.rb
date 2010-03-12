@@ -52,10 +52,16 @@ class CategoriesController < ApplicationController
   # DELETE /categories/1.json
   def destroy
     @category = Category.find(params[:id])
-    @category.destroy
 
     respond_to do |format|
-      format.json { head :ok }
+      if @category.destroy
+        format.json { head :ok }
+      else
+        format.json do
+          # FIXME: hack!
+          render :json => [['posts', 'is not empty']], :status => :unprocessable_entity
+        end
+      end
     end
   end
 end

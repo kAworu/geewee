@@ -487,7 +487,10 @@ class Resources::All::Category < Resources::Base
             when ::Net::HTTPOK
                 puts "Category `#{c['display_name']}' destroyed."
             else
-                error response.class
+                msg = JSON.parse(response.body).collect do |err|
+                    err.join(' ')
+                end.join("\n")
+                error msg
             end
         end
     end

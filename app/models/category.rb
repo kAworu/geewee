@@ -18,4 +18,9 @@ class Category < ActiveRecord::Base
   # validations
   validates_presence_of   :display_name
   validates_uniqueness_of :name
+
+  # ensure that there is no posts in the category before destroying it.
+  def before_destroy
+    self.posts.count.zero?
+  end
 end

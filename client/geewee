@@ -369,7 +369,7 @@ end
 # }}}
 
 # Category Resource {{{
-#   TODO
+#   show, create, edit and destroy operations are allowed.
 #
 class Resources::All::Category < Resources::Base
     private
@@ -498,6 +498,43 @@ class Resources::All::Category < Resources::Base
     # print category on stdout
     def display category
         puts "#{category['id']}. #{category['display_name']}"
+    end
+end
+# }}}
+
+# Posts Resource {{{
+#   TODO
+#
+class Resources::All::Post < Resources::Base
+    private
+    # keys for the geewee API.
+    module Keys
+        TITLE     = '[post]title'
+        PUBLISHED = '[post]published'
+    end
+
+    # accept plural form
+    named_resource :posts
+
+    # display a list of Posts.
+    #   show posts
+    #   show categories id TODO
+    accept :show do |h|
+        id = h[:argv].first rescue nil
+
+        case response = get(id)
+        when ::Net::HTTPOK
+            if id
+                post = JSON.parse(response.body)
+            else
+                JSON.parse(response.body).each do |h|
+                    post = h['post']
+                    puts "#{post['id']}. #{post['title']} #{'(unpublished)' unless post['published']}"
+                end
+            end
+        else
+            error response.class
+        end
     end
 end
 # }}}

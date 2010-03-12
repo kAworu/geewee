@@ -12,6 +12,10 @@ class Post < ActiveRecord::Base
   named_scope   :published,
                 lambda { { :conditions => ['published = ?', true] } }
 
+  # get only the non-published Posts.
+  named_scope   :unpublished,
+                lambda { { :conditions => ['published = ?', false] } }
+
   # filter only the Posts created after a given date.
   named_scope   :created_after,
                 lambda { |date| { :conditions => ['created_at > ?', date] } }

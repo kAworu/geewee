@@ -8,12 +8,14 @@ class PostsController < ApplicationController
 
   # GET /posts
   # GET /posts.atom
+  # GET /posts.json
   def index
-    @posts = Post.published
-
     respond_to do |format|
-      format.html # index.html.haml
-      format.atom # index.atom.builder
+      format.html { @posts = Post.published } # index.html.haml
+      format.atom { @posts = Post.published } # index.atom.builder
+      format.json do
+        render :json => Post.find(:all, :select => 'id, title, published')
+      end
     end
   end
 

@@ -21,6 +21,7 @@ class PostsController < ApplicationController
 
   # GET /posts/1
   # GET /posts/1.atom
+  # GET /posts/1.json
   def show
     @post = Post.find(params[:id])
     @comment = flash[:comment] || Comment.new
@@ -28,6 +29,7 @@ class PostsController < ApplicationController
     respond_to do |format|
       format.html # show.html.haml
       format.atom # show.atom.builder
+      format.json { render :json => @post }
     end
   end
 

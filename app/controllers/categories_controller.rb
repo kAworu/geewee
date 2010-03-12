@@ -34,6 +34,21 @@ class CategoriesController < ApplicationController
     end
   end
 
+  # PUT /categories/1.json
+  def update
+    @category = Category.find(params[:id])
+
+    respond_to do |format|
+      if @category.update_attributes(params[:category])
+        format.json { head :ok }
+      else
+        format.json do
+          render :json => @category.errors, :status => :unprocessable_entity
+        end
+      end
+    end
+  end
+
   # DELETE /categories/1.json
   def destroy
     @category = Category.find(params[:id])

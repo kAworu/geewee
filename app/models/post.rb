@@ -38,16 +38,16 @@ class Post < ActiveRecord::Base
   validates_presence_of :author, :category
   validates_presence_of :title,  :intro
 
-  # str_tag is a virtual attribute, it represent all the tags associated to self.
-  def str_tags
+  # tag_list is a virtual attribute, it represent all the tags associated to self.
+  def tag_list
     ts = Array.new
     self.tags.each { |t| ts << t.display_name }
     ts.join(' ')
   end
 
-  # create all tags found in str_tag
+  # create all tags found in tag_list
   # FIXME: Tags should be saved on Post db creation, not instance creation.
-  def str_tags= tags
+  def tag_list= tags
     unless tags.blank?
       tags.split.each do |tname|
         unless t = Tag.find_by_name(tname.downcase)

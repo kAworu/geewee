@@ -29,7 +29,7 @@ rescue LoadError => e
 end
 
 # Extending ruby for greater justice. {{{
-#   main / usage / error function.
+#   TODO
 #
 
 # main procedure called if this script is executed.
@@ -38,10 +38,10 @@ def main
     # basic config setup.
     $config = YAML.load(DATA.read)
     unless $config and $config['base_url']
-        error "Config is missing `base_url'"
+        err "Config is missing `base_url'"
     end
     unless $config['editor'] or $config['editor'] = ENV['EDITOR']
-        error "please set `editor' in config or $EDITOR in env."
+        err "please set `editor' in config or $EDITOR in env."
     end
 
     if ARGV.size < 2
@@ -59,16 +59,20 @@ def main
     r = rclass.new Geewee::REST::Connection.new($config['base_url'])
     begin
         r.apply :operation  => operation.downcase.to_sym,
-                :resource   => resource,
                 :argv       => argv
     rescue Errno::ECONNREFUSED
-        error "#{$config['base_url']} #$!"
+        err "#{$config['base_url']} #$!"
+    rescue ArgumentError
+        usage $!
+    rescue Geewee::RequestError, Geewee::RFile::Error
+        err $!
     end
 end
 
 
 # dynamic usage function.
 def usage message
+    STDERR.puts
     STDERR.puts "#{__FILE__}: #{message}"
     STDERR.puts
     STDERR.puts "usage: #{__FILE__} operation ressource [arguments...]"
@@ -103,14 +107,24 @@ def usage message
 end
 
 # really simple error function.
-def error message
+def err message
     STDERR.puts "#{__FILE__}: #{message}"
     exit 1
 end
 
+# TODO
+def info message
+    puts "===> #{message}"
+end
+
+# TODO
+def warn message
+    STDERR.puts "!!!> #{message}"
+end
+
 # ask the user.
 def ask question
-    STDOUT.print question
+    STDOUT.print "???> #{question}"
     STDOUT.flush
     STDIN.gets.chomp
 end
@@ -248,10 +262,7 @@ class Resources::Base
     def apply h
         ops = self.class.operations
         unless ops.key?(h[:operation])
-            raise ArgumentError.new(
-                "#{h[:operation]}: operation not supported by #{self.class}\n" +
-                "Supported operations are: #{ops.keys.join(', ')}"
-            )
+            raise ArgumentError.new("#{h[:operation]}: operation not supported by #{self.class}")
         else
             f = ops[h[:operation]]
             instance_exec(h, &f)
@@ -307,6 +318,12 @@ end
 #   Handle a human readable Resource description.
 #   RFile looks like email, a header of key:values, an empty line and a body.
 class RFile
+    # TODO
+    class Error < StandardError
+    end
+    class ParseError < Error
+    end
+
     attr_accessor :head, :body, :path
 
     # crate a new RFile with a path to load.
@@ -339,7 +356,7 @@ class RFile
                 elsif line =~ /^(.+?):(.*)$/
                     @head[$1.strip] = $2.strip
                 else
-                    raise SyntaxError.new("#@path: bad RFile header line: #{line}")
+                    raise ParseError.new("#@path: bad RFile header line: #{line}")
                 end
             else
                 @body << line << "\n"
@@ -351,19 +368,36 @@ class RFile
     def to_s
         s = String.new
         @head.each { |k,v| s << "#{k}: #{v}\n" }
+        s << "\n"
         s << @body
     end
 
-    # call editor to edit self. return self if all went well, nil if the editor
-    # returned a non-zero status.
+    # call editor to edit self. return self if all went well, raise a
+    # RuntimeError if the editor returned a non-zero status.
     def edit!
         @path = "/tmp/#{File.basename(__FILE__)}_#{Time.now.to_i}#$$"
         File.open(@path, 'w') { |fd| fd << self.to_s }
         if system "#{$config['editor']} #@path" then
             self.parse!
         else
-            nil
+            raise Error.new("editor aborded (file was #{@path})")
         end
+    end
+end
+
+
+# thrown when the server give a bad error.
+class RequestError < StandardError
+    attr_reader :response, :rfile
+
+    def initialize(response, rfile=nil)
+        @response = response
+        @rfile    = rfile
+    end
+
+    def to_s
+        s = super + ": #@response"
+        s << " (file was #{@rfile.path})" rescue s
     end
 end
 # }}}
@@ -396,7 +430,7 @@ class Resources::All::Category < Resources::Base
             end
             cs.each { |h| display h['category'] }
         else
-            error response.class
+            raise RequestError.new(response)
         end
     end
 
@@ -412,18 +446,17 @@ class Resources::All::Category < Resources::Base
         if file
             rf = RFile.load(file)
         else
-            rf = RFile.new([Keys::DISPLAY_NAME])
-            error "editor aborded\nfile was #{rf.path}" unless rf.edit!
+            rf = RFile.new([Keys::DISPLAY_NAME]).edit!
         end
         case response = post(rf.head)
         when ::Net::HTTPCreated
-            puts 'new Category created.'
+            info 'new Category created:'
             display JSON.parse(response.body)['category']
         else
             msg = JSON.parse(response.body).collect do |err|
                 err.join(' ')
             end.join("\n")
-            error "#{msg}\nfile was #{rf.path}"
+            raise RequestError.new(msg, rf)
         end
     end
 
@@ -436,32 +469,30 @@ class Resources::All::Category < Resources::Base
 
         unless id = h[:argv].shift
             # show categories and ask for id.
-            self.apply  :operation => :show,
-                        :resource  => h[:resource]
+            self.apply  :operation => :show
             id = ask('target Category id to update: ')
         end
         case response = get(id)
         when ::Net::HTTPOK
             c = JSON.parse(response.body)['category']
         else
-            error response.class
+            raise RequestError.new(response)
         end
 
         if file = h[:argv].shift
             rf = RFile.load(file)
         else
-            rf = RFile.new(Keys::DISPLAY_NAME => c['display_name'])
-            error "editor aborded\nfile was #{rf.path}" unless rf.edit!
+            rf = RFile.new(Keys::DISPLAY_NAME => c['display_name']).edit!
         end
 
         case response = put(c['id'], rf.head)
         when ::Net::HTTPOK
-            puts 'new Category updated.'
+            info 'Category updated.'
         else
             msg = JSON.parse(response.body).collect do |err|
                 err.join(' ')
             end.join("\n")
-            error "#{msg}\nfile was #{rf.path}"
+            raise RequestError.new(msg, rf)
         end
     end
 
@@ -472,32 +503,31 @@ class Resources::All::Category < Resources::Base
         id = h[:argv].first rescue nil
         unless id
             # show categories and ask for id.
-            self.apply  :operation => :show,
-                        :resource  => h[:resource]
+            self.apply  :operation => :show
             id = ask('target Category id to destroy: ')
         end
         case response = get(id)
         when ::Net::HTTPOK
             c = JSON.parse(response.body)['category']
         else
-            error response.class
+            raise RequestError.new(response)
         end
         if yesno("destroy Category `#{c['display_name']}'")
             case response = delete(id)
             when ::Net::HTTPOK
-                puts "Category `#{c['display_name']}' destroyed."
+                info "Category `#{c['display_name']}' destroyed."
             else
                 msg = JSON.parse(response.body).collect do |err|
                     err.join(' ')
-                end.join("\n")
-                error msg
+                end.join(", ")
+                raise RequestError.new(msg)
             end
         end
     end
 
     # print category on stdout
     def display category
-        puts "#{category['id']}. #{category['display_name']}"
+        puts '%3d. %s' % [category['id'], category['display_name']]
     end
 end
 # }}}
@@ -507,46 +537,113 @@ end
 #
 class Resources::All::Post < Resources::Base
     private
+    # for displaying and asking category on create.
+    Category = Resources::All::Category
+
     # keys for the geewee API.
     module Keys
         TITLE     = '[post]title'
+        TAGS      = '[post]tag_list'
         PUBLISHED = '[post]published'
+        CATEGORY  = '[post]category_id'
+        INTRO     = '[post]intro'
+        BODY      = '[post]body'
     end
 
     # accept plural form
     named_resource :posts
 
-    # display a list of Posts.
+    # display a list of posts, or a post.
     #   show posts
-    #   show categories id
+    #   show posts id
     accept :show do |h|
         id = h[:argv].first rescue nil
 
         case response = get(id)
         when ::Net::HTTPOK
             if id
-                post = JSON.parse(response.body)['post']
-                %w[id created_at updated_at published title].each do |k|
-                    puts "#{k}: #{post[k]}"
-                end
-                puts
-                puts post['intro']
-                if post['body']
-                    puts
-                    puts "%..."
-                    puts
-                    puts post['body']
-                end
+                display JSON.parse(response.body)['post']
             else
                 JSON.parse(response.body).each do |h|
                     post = h['post']
-                    puts "#{post['id']}. #{post['title']} " +
-                         "#{'(unpublished)' unless post['published']}"
+                    puts '%3d. %s%s' % [post['id'], post['title'],
+                                        post['published'] ? '' : ' (unpublished)']
                 end
             end
         else
-            error response.class
+            raise RequestError.new(response)
         end
+    end
+
+    # create a new post.
+    #   generate a stub file and call editor:
+    #       create posts
+    #   load from STDIN:
+    #       create posts -
+    #   load from file:
+    #       create posts /path/to/stub/file
+    accept :create do |h|
+        file = h[:argv].first rescue nil
+        if file
+            rf = RFile.load(file)
+        else
+            rf = stubize.edit!
+            rf.head[Keys::PUBLISHED] = (yesno('publish now') ? '1' : '0')
+        end
+        fill_intro_n_body(rf)
+        case response = post(rf.head)
+        when ::Net::HTTPCreated
+            info "new Post created: #{response['Location']}"
+        else
+            msg = JSON.parse(response.body).collect do |err|
+                err.join(' ')
+            end.join(", ")
+            raise RequestError.new(msg, rf)
+        end
+    end
+
+    # print post on stdout
+    def display post
+        %w[id created_at updated_at published title].each do |k|
+            puts "#{k}: #{post[k]}"
+        end
+        puts
+        puts post['intro']
+        if post['body']
+            puts
+            puts "%..."
+            puts
+            puts post['body']
+        end
+    end
+
+    # create a stub RFile.
+    def stubize
+        cid = String.new
+        c = Category.new(@conn)
+        c.apply :operation => :show
+        until cid =~ /^\d+$/
+            cid = ask('Choose a Category id (n to create a new one): ')
+            if cid == 'n'
+                c.apply :operation => :create rescue warn $!
+                c.apply :operation => :show
+            end
+        end
+        head = {
+            Keys::TITLE     => nil,
+            Keys::TAGS      => nil,
+            Keys::CATEGORY  => cid
+        }
+        rf = RFile.new(head, "*Intro*\n\n%...\n\n*Body*")
+    end
+
+    # TODO
+    def fill_intro_n_body rf
+        s = rf.body
+        rf.body = ""
+        a = s.split(/^%\.\.\.\s*$/)
+        rf.head[Keys::INTRO] = a[0]
+        rf.head[Keys::BODY]  = a[1]
     end
 end
 # }}}

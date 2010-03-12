@@ -45,21 +45,21 @@
             - Author.find(:all).each do |author|
               %li
                 = link_to h(author.name), archives_by_author_url(author)
-                %em= "(#{author.posts.count})"
+                %em= "(#{author.posts.published.count})"
           <!-- archives by Category -->
           %h3= link_to 'Catégories', archives_by_category_url
           %ul
             - Category.all.each do |category|
               %li
                 = link_to h(category.display_name), archives_by_category_url(category)
-                %em= "(#{category.posts.count})"
+                %em= "(#{category.posts.published.count})"
           <!-- archives by Tag -->
           %h3= link_to 'Mots-clefs', archives_by_tag_url
           %ul
             %li
               - Tag.all.each do |tag|
                 = link_to h(tag.display_name), archives_by_tag_url(tag),                  |
-                  :style => "font-size: #{6 + tag.posts.count}pt; text-decoration: none;" |
+                  :style => "font-size: #{6 + tag.posts.published.count}pt; text-decoration: none;" |
           <!-- archives by month and year -->
           %h3= link_to 'Archives', archives_by_month_and_year_url
           %ul

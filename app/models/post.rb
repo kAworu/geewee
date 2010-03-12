@@ -10,15 +10,15 @@ class Post < ActiveRecord::Base
 
   # get only the published Posts.
   named_scope   :published,
-                lambda { { :conditions => [ 'published = ?', true ] } }
+                lambda { { :conditions => ['published = ?', true] } }
 
   # filter only the Posts created after a given date.
   named_scope   :created_after,
-                lambda { |date| { :conditions => ["created_at > ?", date] } }
+                lambda { |date| { :conditions => ['created_at > ?', date] } }
 
   # filter only the Posts created before a given date.
   named_scope   :created_before,
-                lambda { |date| { :conditions => ["created_at < ?", date] } }
+                lambda { |date| { :conditions => ['created_at < ?', date] } }
 
   # friendly_id, use the Post's title.
   has_friendly_id :title, :use_slug => true

@@ -518,18 +518,30 @@ class Resources::All::Post < Resources::Base
 
     # display a list of Posts.
     #   show posts
-    #   show categories id TODO
+    #   show categories id
     accept :show do |h|
         id = h[:argv].first rescue nil
 
         case response = get(id)
         when ::Net::HTTPOK
             if id
-                post = JSON.parse(response.body)
+                post = JSON.parse(response.body)['post']
+                %w[id created_at updated_at published title].each do |k|
+                    puts "#{k}: #{post[k]}"
+                end
+                puts
+                puts post['intro']
+                if post['body']
+                    puts
+                    puts "%..."
+                    puts
+                    puts post['body']
+                end
             else
                 JSON.parse(response.body).each do |h|
                     post = h['post']
-                    puts "#{post['id']}. #{post['title']} #{'(unpublished)' unless post['published']}"
+                    puts "#{post['id']}. #{post['title']} " +
+                         "#{'(unpublished)' unless post['published']}"
                 end
             end
         else

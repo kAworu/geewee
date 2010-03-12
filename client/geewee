@@ -329,12 +329,13 @@ class RFile
         fd    = if @path == '-' then STDIN else File.open(@path) end
         data  = fd.read
         @head = Hash.new
-        @body = nil
+        @body = String.new
+
+        parse_head = true
         data.split("\n").each do |line|
-            if @body.nil?
-                # parsing head.
+            if parse_head
                 if line.empty?
-                    @body = String.new
+                    parse_head = false
                 elsif line =~ /^(.+?):(.*)$/
                     @head[$1.strip] = $2.strip
                 else
@@ -381,8 +382,8 @@ class Resources::All::Category < Resources::Base
     named_resource :categories
 
     # always display a list of Category.
-    #   show category
-    #   show category id
+    #   show categories
+    #   show categories id
     accept :show do |h|
         id = h[:argv].first rescue nil
 
@@ -401,11 +402,11 @@ class Resources::All::Category < Resources::Base
 
     # create a new category.
     #   generate a stub file and call editor:
-    #       create category
+    #       create categories
     #   load from STDIN:
-    #       create category -
+    #       create categories -
     #   load from file:
-    #       create category /path/to/stub/file
+    #       create categories /path/to/stub/file
     accept :create do |h|
         file = h[:argv].first rescue nil
         if file
@@ -426,9 +427,47 @@ class Resources::All::Category < Resources::Base
         end
     end
 
+    # update a category.
+    #   update categories
+    #   update categories 1
+    #   update categories 1 /path/to/file
+    accept :update do |h|
+        h[:argv] ||= Hash.new
+
+        unless id = h[:argv].shift
+            # show categories and ask for id.
+            self.apply  :operation => :show,
+                        :resource  => h[:resource]
+            id = ask('target Category id to update: ')
+        end
+        case response = get(id)
+        when ::Net::HTTPOK
+            c = JSON.parse(response.body)['category']
+        else
+            error response.class
+        end
+
+        if file = h[:argv].shift
+            rf = RFile.load(file)
+        else
+            rf = RFile.new(Keys::DISPLAY_NAME => c['display_name'])
+            error "editor aborded\nfile was #{rf.path}" unless rf.edit!
+        end
+
+        case response = put(c['id'], rf.head)
+        when ::Net::HTTPOK
+            puts 'new Category updated.'
+        else
+            msg = JSON.parse(response.body).collect do |err|
+                err.join(' ')
+            end.join("\n")
+            error "#{msg}\nfile was #{rf.path}"
+        end
+    end
+
     # destroy a category.
-    #   destroy category
-    #   destroy category 1
+    #   destroy categories
+    #   destroy categories 1
     accept :destroy do |h|
         id = h[:argv].first rescue nil
         unless id

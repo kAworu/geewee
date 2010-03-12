@@ -89,8 +89,11 @@
     </note>
     <note priority="high" time="1268005298">
         client
-        <note priority="veryhigh" time="1268062003">
+        <note priority="veryhigh" time="1268062003" done="1268353090">
             manage categories
+            <comment>
+                done!
+            </comment>
         </note>
         <note priority="high" time="1268062028">
             manage posts

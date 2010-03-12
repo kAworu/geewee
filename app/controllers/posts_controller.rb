@@ -34,7 +34,7 @@ class PostsController < ApplicationController
   end
 
   # POST /posts
-  # POST /posts.xml
+  # POST /posts.json
   def create
     @post = Post.new(params[:post])
 
@@ -42,10 +42,10 @@ class PostsController < ApplicationController
       if @post.save
         flash[:notice] = 'Post was successfully created.'
         format.html { redirect_to(@post) }
-        format.xml  { render :xml => @post, :status => :created, :location => @post }
+        format.json  { render :json => @post, :status => :created, :location => @post }
       else
         format.html { render :action => "new" }
-        format.xml  { render :xml => @post.errors, :status => :unprocessable_entity }
+        format.json  { render :json => @post.errors, :status => :unprocessable_entity }
       end
     end
   end

@@ -90,6 +90,9 @@
             done
         </comment>
     </note>
+    <note priority="veryhigh" time="1268511203">
+        sexy routes http://api.rubyonrails.org/classes/ActionController/Routing.html
+    </note>
     <note priority="high" time="1268304837">
         css http://notes.jimlindley.com/
     </note>
@@ -144,7 +147,7 @@
             timezone
         </note>
         <note priority="verylow" time="1268013516">
-            localization
+            i18n http://guides.rubyonrails.org/i18n.html
         </note>
     </note>
     <note priority="low" time="1268093339">

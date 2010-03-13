@@ -548,7 +548,7 @@ class Resources::All::Post < Resources::Base
     # keys for the geewee API.
     module Keys
         TITLE     = '[post]title'
-        TAGS      = '[post]tag_list'
+        TAGS      = '[post]ttag_list'
         PUBLISHED = '[post]published'
         CATEGORY  = '[post]category_id'
         INTRO     = '[post]intro'
@@ -630,7 +630,7 @@ class Resources::All::Post < Resources::Base
             rf = RFile.load(file)
         else
             rf = RFile.new Keys::TITLE      => p['title'],
-                           Keys::TAGS       => p['tag_list'],
+                           Keys::TAGS       => p['ttag_list'],
                            Keys::PUBLISHED  => (p['published'] ? '1' : '0'),
                            Keys::CATEGORY   => p['category_id']
             rf.body = p['intro']

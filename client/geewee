@@ -503,19 +503,14 @@ class Resources::All::Category < Resources::Base
         id = h[:argv].first rescue nil
         unless id
             # show categories and ask for id.
-            self.apply  :operation => :show
+            self.apply :operation => :show
             id = ask('target Category id to destroy: ')
         end
-        case response = get(id)
-        when ::Net::HTTPOK
-            c = JSON.parse(response.body)['category']
-        else
-            raise RequestError.new(response)
-        end
-        if yesno("destroy Category `#{c['display_name']}'")
+        self.apply :operation => :show, :argv => [id]
+        if yesno('destroy')
             case response = delete(id)
             when ::Net::HTTPOK
-                info "Category `#{c['display_name']}' destroyed."
+                info 'destroyed.'
             else
                 msg = JSON.parse(response.body).collect do |err|
                     err.join(' ')
@@ -599,6 +594,30 @@ class Resources::All::Post < Resources::Base
                 err.join(' ')
             end.join(", ")
             raise RequestError.new(msg, rf)
+        end
+    end
+
+    # destroy a category.
+    #   destroy posts
+    #   destroy posts 1
+    accept :destroy do |h|
+        id = h[:argv].first rescue nil
+        unless id
+            # show posts and ask for id.
+            self.apply :operation => :show
+            id = ask('target Post id to destroy: ')
+        end
+        self.apply :operation => :show, :argv => [id]
+        if yesno('destroy')
+            case response = delete(id)
+            when ::Net::HTTPOK
+                info 'destroyed.'
+            else
+                msg = JSON.parse(response.body).collect do |err|
+                    err.join(' ')
+                end.join(", ")
+                raise RequestError.new(msg)
+            end
         end
     end
 

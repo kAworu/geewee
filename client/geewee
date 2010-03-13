@@ -335,10 +335,10 @@ class RFile
 
     # create a new RFile.
     #   if head is an Array, it is a list of empty header keys.
-    def initialize(head=nil, body=String.new)
-        @body = body
+    def initialize head=nil
         @head = Hash.new
         head.each { |k,v| @head[k] = v } if head
+        @body = String.new
     end
 
     # parse a file argument, if `-' STDIN is used.
@@ -465,7 +465,7 @@ class Resources::All::Category < Resources::Base
     #   update categories 1
     #   update categories 1 /path/to/file
     accept :update do |h|
-        h[:argv] ||= Hash.new
+        h[:argv] ||= Array.new
 
         unless id = h[:argv].shift
             # show categories and ask for id.
@@ -597,7 +597,50 @@ class Resources::All::Post < Resources::Base
         end
     end
 
-    # destroy a category.
+    # update a post.
+    #   update posts
+    #   update posts 1
+    #   update posts 1 /path/to/file
+    accept :update do |h|
+        h[:argv] ||= Array.new
+
+        unless id = h[:argv].shift
+            # show posts and ask for id.
+            self.apply  :operation => :show
+            id = ask('target Post id to update: ')
+        end
+        case response = get(id)
+        when ::Net::HTTPOK
+            p = JSON.parse(response.body)['post']
+        else
+            raise RequestError.new(response)
+        end
+
+        if file = h[:argv].shift
+            rf = RFile.load(file)
+        else
+            rf = RFile.new Keys::TITLE      => p['title'],
+                           Keys::TAGS       => p['tag_list'],
+                           Keys::PUBLISHED  => (p['published'] ? '1' : '0'),
+                           Keys::CATEGORY   => p['category_id']
+            rf.body = p['intro']
+            rf.body << "%...\n" << p['body'] if p['body']
+            rf.edit!
+        end
+        fill_intro_n_body(rf)
+
+        case response = put(p['id'], rf.head)
+        when ::Net::HTTPOK
+            info 'Post updated.'
+        else
+            msg = JSON.parse(response.body).collect do |err|
+                err.join(' ')
+            end.join("\n")
+            raise RequestError.new(msg, rf)
+        end
+    end
+
+    # destroy a post.
     #   destroy posts
     #   destroy posts 1
     accept :destroy do |h|

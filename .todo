@@ -120,6 +120,9 @@
     <note priority="medium" time="1268273739">
         http://github.com/jviney/acts_as_taggable_on_steroids
     </note>
+    <note priority="medium" time="1268304837">
+        css http://notes.jimlindley.com/
+    </note>
     <note priority="medium" time="1268360954">
         TODO|FIXME|XXX
     </note>
@@ -128,9 +131,6 @@
     </note>
     <note priority="low" time="1268095064">
         tests
-    </note>
-    <note priority="low" time="1268304837">
-        css http://notes.jimlindley.com/
     </note>
     <note priority="verylow" time="1267999859">
         gravatar!

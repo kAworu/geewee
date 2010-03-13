@@ -1,6 +1,6 @@
 # Post controller, the most used.
 # 
-#   * index and show are public via HTML UI. FIXME cleanup
+#   * index and show are public via HTML UI.
 #   * index and show are public via Atom.
 #   * all are private via JSON API. TODO
 #
@@ -51,7 +51,7 @@ class PostsController < ApplicationController
   end
 
   # PUT /posts/1
-  # PUT /posts/1.xml
+  # PUT /posts/1.json
   def update
     @post = Post.find(params[:id])
 
@@ -59,10 +59,12 @@ class PostsController < ApplicationController
       if @post.update_attributes(params[:post])
         flash[:notice] = 'Post was successfully updated.'
         format.html { redirect_to(@post) }
-        format.xml  { head :ok }
+        format.json { head :ok }
       else
         format.html { render :action => "edit" }
-        format.xml  { render :xml => @post.errors, :status => :unprocessable_entity }
+        format.json do
+          render :json => @post.errors, :status => :unprocessable_entity
+        end
       end
     end
   end

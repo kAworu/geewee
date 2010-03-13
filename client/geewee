@@ -567,7 +567,7 @@ class Resources::All::Post < Resources::Base
                 JSON.parse(response.body).each do |h|
                     post = h['post']
                     puts '%3d. %s%s' % [post['id'], post['title'],
-                                        post['published'] ? '' : ' (unpublished)']
+                            post['published'] ? '' : ' (unpublished)']
                 end
             end
         else

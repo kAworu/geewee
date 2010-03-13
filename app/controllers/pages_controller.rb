@@ -4,6 +4,8 @@
 #   * all are private via JSON API. TODO
 #
 class PagesController < ApplicationController
+  skip_before_filter :verify_authenticity_token
+
   # require auth for all methods.
   before_filter :require_author, :except => :show
 

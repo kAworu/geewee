@@ -3,6 +3,8 @@
 #   * all methods are private via JSON API.
 #
 class CategoriesController < ApplicationController
+  skip_before_filter :verify_authenticity_token
+
   # require auth for all methods.
   before_filter :require_author
 

@@ -113,6 +113,7 @@ def usage message
         rsstr = rs.collect { |r| r.resources.join('|') }.join(', ')
         STDERR.puts '- %10s: %s' % [op, rsstr]
     end
+    exit
 end
 
 # really simple error function.

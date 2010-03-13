@@ -5,6 +5,8 @@
 #   * all but index and show are private via JSON API.
 #
 class PostsController < ApplicationController
+  skip_before_filter :verify_authenticity_token
+
   # require auth for all methods.
   before_filter :require_author, :except => [:index, :show]
 

@@ -4,8 +4,9 @@
   %head
     %meta{ :content => 'text/html; charset=UTF-8', 'http-equiv' => 'Content-Type' }
     %title
-      TODO fork while fork:
-      =h '@post.title TODO'
+      fork while fork
+      - if html_title
+        =h ": #{html_title}"
 
     = stylesheet_link_tag 'application'
     = javascript_include_tag :all

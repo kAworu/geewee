@@ -43,4 +43,13 @@ module ApplicationHelper
   def comment_url comment
     post_url comment.post, :anchor => "comment_#{comment.id}"
   end
+
+  # guess the <title> of the page.
+  def html_title
+    if @post
+      @post.title
+    elsif @page
+      @page.title
+    end
+  end
 end

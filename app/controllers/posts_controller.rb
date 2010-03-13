@@ -84,11 +84,19 @@ class PostsController < ApplicationController
   # PUT /posts/publish/1.json
   def publish
     @post = Post.find(params[:id])
-    @post.published = true
-    @post.save!
 
     respond_to do |format|
-      format.json { head :ok }
+      if @post.published?
+        # FIXME: hack
+        e = [['post', 'is already published']]
+        format.json do
+          render :json => e, :status => :unprocessable_entity
+        end
+      else
+        @post.published = true
+        @post.save!
+        format.json { head :ok }
+      end
     end
   end
 end

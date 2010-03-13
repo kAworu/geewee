@@ -66,6 +66,9 @@ def main
         usage $!
     rescue Geewee::RequestError, Geewee::RFile::Error
         err $!
+    rescue Interrupt
+        puts
+        warn 'Interupted! bye bye.'
     end
 end
 
@@ -661,6 +664,27 @@ class Resources::All::Post < Resources::Base
                 end.join(", ")
                 raise RequestError.new(msg)
             end
+        end
+    end
+
+    # publish a post.
+    #   publish posts
+    #   publish posts 1
+    accept :publish do |h|
+        id = h[:argv].first rescue nil
+        unless id
+            # show posts and ask for id.
+            self.apply :operation => :show
+            id = ask('target Post id to publish: ')
+        end
+        case response = put("publish/#{id}")
+        when ::Net::HTTPOK
+            info 'published.'
+        else
+            msg = JSON.parse(response.body).collect do |err|
+                err.join(' ')
+            end.join(", ")
+            raise RequestError.new(msg)
         end
     end
 

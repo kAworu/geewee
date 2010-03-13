@@ -4,6 +4,10 @@ class CreateAuthors < ActiveRecord::Migration
       t.string :name
       t.string :email
 
+      # authlogic stuff
+      t.string :persistence_token,    :null => false  # required
+      t.string :single_access_token,  :null => false  # optional, see Authlogic::Session::Params
+
       t.string :cached_slug
       t.timestamps
     end

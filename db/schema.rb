@@ -14,6 +14,8 @@ ActiveRecord::Schema.define(:version => 20100308143555) do
   create_table "authors", :force => true do |t|
     t.string   "name"
     t.string   "email"
+    t.string   "persistence_token",   :null => false
+    t.string   "single_access_token", :null => false
     t.string   "cached_slug"
     t.datetime "created_at"
     t.datetime "updated_at"

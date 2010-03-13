@@ -90,7 +90,19 @@
             done
         </comment>
     </note>
-    <note priority="high" time="1268005298">
+    <note priority="veryhigh" time="1268064126">
+        auth
+        <note priority="high" time="1268495318">
+            token
+        </note>
+        <note priority="low" time="1268495306">
+            via basic http
+        </note>
+    </note>
+    <note priority="high" time="1268304837">
+        css http://notes.jimlindley.com/
+    </note>
+    <note priority="medium" time="1268005298">
         client
         <note priority="veryhigh" time="1268062003" done="1268353090">
             manage categories
@@ -106,9 +118,6 @@
             <note priority="medium" time="1268488334" done="0">
                 publish action
             </note>
-        </note>
-        <note priority="high" time="1268064126">
-            auth
         </note>
         <note priority="medium" time="1268062085">
             manage static
@@ -128,9 +137,6 @@
         <note priority="veryhigh" time="1268489004">
             fix update posts tag_list
         </note>
-    </note>
-    <note priority="medium" time="1268304837">
-        css http://notes.jimlindley.com/
     </note>
     <note priority="medium" time="1268360954">
         TODO|FIXME|XXX

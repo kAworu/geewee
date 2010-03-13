@@ -80,4 +80,15 @@ class PostsController < ApplicationController
       format.json { head :ok }
     end
   end
+
+  # PUT /posts/publish/1.json
+  def publish
+    @post = Post.find(params[:id])
+    @post.published = true
+    @post.save!
+
+    respond_to do |format|
+      format.json { head :ok }
+    end
+  end
 end

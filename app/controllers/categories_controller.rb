@@ -1,8 +1,10 @@
 # Controller to manage Categories.
 #
-#   * all methods are private via JSON API. TODO
+#   * all methods are private via JSON API.
 #
 class CategoriesController < ApplicationController
+  # require auth for all methods.
+  before_filter :require_author
 
   # GET /categories.json
   def index

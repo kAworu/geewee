@@ -4,6 +4,8 @@
 #   * all are private via JSON API. TODO
 #
 class PagesController < ApplicationController
+  # require auth for all methods.
+  before_filter :require_author, :except => :show
 
   # GET /pages/1
   def show

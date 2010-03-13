@@ -5,6 +5,8 @@
 #   * all are private via JSON API. TODO
 #
 class PostsController < ApplicationController
+  # require auth for all methods.
+  before_filter :require_author, :except => [:index, :show]
 
   # GET /posts
   # GET /posts.atom
@@ -33,50 +35,42 @@ class PostsController < ApplicationController
     end
   end
 
-  # POST /posts
   # POST /posts.json
   def create
     @post = Post.new(params[:post])
 
     respond_to do |format|
-      if @post.save
-        flash[:notice] = 'Post was successfully created.'
-        format.html { redirect_to(@post) }
-        format.json  { render :json => @post, :status => :created, :location => @post }
-      else
-        format.html { render :action => "new" }
-        format.json  { render :json => @post.errors, :status => :unprocessable_entity }
-      end
-    end
-  end
-
-  # PUT /posts/1
-  # PUT /posts/1.json
-  def update
-    @post = Post.find(params[:id])
-
-    respond_to do |format|
-      if @post.update_attributes(params[:post])
-        flash[:notice] = 'Post was successfully updated.'
-        format.html { redirect_to(@post) }
-        format.json { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.json do
+      format.json do
+        if @post.save
+          render :json => @post, :status => :created, :location => @post
+        else
           render :json => @post.errors, :status => :unprocessable_entity
         end
       end
     end
   end
 
-  # DELETE /posts/1
+  # PUT /posts/1.json
+  def update
+    @post = Post.find(params[:id])
+
+    respond_to do |format|
+      format.json do
+        if @post.update_attributes(params[:post])
+          head :ok
+        else
+            render :json => @post.errors, :status => :unprocessable_entity
+        end
+      end
+    end
+  end
+
   # DELETE /posts/1.json
   def destroy
     @post = Post.find(params[:id])
     @post.destroy
 
     respond_to do |format|
-      format.html { redirect_to(posts_url) }
       format.json { head :ok }
     end
   end
@@ -86,16 +80,15 @@ class PostsController < ApplicationController
     @post = Post.find(params[:id])
 
     respond_to do |format|
-      if @post.published?
-        # FIXME: hack
-        e = [['post', 'is already published']]
-        format.json do
+      format.json do
+        if @post.published?
+          e = [['post', 'is already published']] # FIXME: hack
           render :json => e, :status => :unprocessable_entity
+        else
+          @post.published = true
+          @post.save!
+          head :ok
         end
-      else
-        @post.published = true
-        @post.save!
-        format.json { head :ok }
       end
     end
   end

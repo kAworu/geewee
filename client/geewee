@@ -29,7 +29,7 @@ rescue LoadError => e
 end
 
 # Extending ruby for greater justice. {{{
-#   TODO
+#   TODO doc
 #
 
 # main procedure called if this script is executed.
@@ -42,6 +42,9 @@ def main
     end
     unless $config['editor'] or $config['editor'] = ENV['EDITOR']
         err "please set `editor' in config or $EDITOR in env."
+    end
+    unless $config['geewee_api_key']
+        err "please set `geewee_api_key' in config."
     end
 
     if ARGV.size < 2
@@ -56,13 +59,14 @@ def main
     # find the resource wanted.
     rclass = Geewee::Resources::detect(resource.downcase.to_sym)
     usage "couldn't find resource #{resource}" unless rclass
-    r = rclass.new Geewee::REST::Connection.new($config['base_url'])
+    r = rclass.new Geewee::REST::Connection.new($config['base_url'],
+     :default_args => { :geewee_api_key => $config['geewee_api_key'] })
     begin
         r.apply :operation  => operation.downcase.to_sym,
                 :argv       => argv
     rescue Errno::ECONNREFUSED
         err "#{$config['base_url']} #$!"
-    rescue ArgumentError
+    rescue Geewee::Resources::BadOperation
         usage $!
     rescue Geewee::RequestError, Geewee::RFile::Error
         err $!
@@ -115,12 +119,12 @@ def err message
     exit 1
 end
 
-# TODO
+# TODO doc
 def info message
     puts "===> #{message}"
 end
 
-# TODO
+# TODO doc
 def warn message
     STDERR.puts "!!!> #{message}"
 end
@@ -181,18 +185,17 @@ module REST
             @base_url = base_url
             @username = args[:username]
             @password = args[:password]
+            @default_args = args[:default_args] || Hash.new
         end
 
         # send the HTTP request, method should be a key of Methods.
         def request(resource, method, args)
             url = URI.join(@base_url, resource)
 
-            if args
-                # TODO: What about keys without value?
-                url.query = args.map do |k,v|
-                    '%s=%s' % [URI.encode(k), URI.encode(v || '')]
-                end.join('&')
-            end
+            # TODO: What about keys without value?
+            url.query = @default_args.merge(args || Hash.new).map do |k,v|
+                '%s=%s' % [URI.encode(k.to_s), URI.encode((v || '').to_s)]
+            end.join('&')
 
             req = Methods[method].new(url.request_uri)
 
@@ -218,6 +221,10 @@ end
 module Resources
     # This is where all Resources classes belongs.
     module All end
+
+    #TODO doc
+    class BadOperation < Exception
+    end
 
     # return all Resources in the All module, as Class objects.
     def self.all
@@ -265,7 +272,7 @@ class Resources::Base
     def apply h
         ops = self.class.operations
         unless ops.key?(h[:operation])
-            raise ArgumentError.new("#{h[:operation]}: operation not supported by #{self.class}")
+            raise BadOperation.new("#{h[:operation]}: operation not supported by #{self.class}")
         else
             f = ops[h[:operation]]
             instance_exec(h, &f)
@@ -321,7 +328,7 @@ end
 #   Handle a human readable Resource description.
 #   RFile looks like email, a header of key:values, an empty line and a body.
 class RFile
-    # TODO
+    # TODO doc
     class Error < StandardError
     end
     class ParseError < Error
@@ -338,7 +345,7 @@ class RFile
 
     # create a new RFile.
     #   if head is an Array, it is a list of empty header keys.
-    def initialize head=nil
+    def initialize(head=nil)
         @head = Hash.new
         head.each { |k,v| @head[k] = v } if head
         @body = String.new
@@ -531,7 +538,7 @@ end
 # }}}
 
 # Posts Resource {{{
-#   TODO
+#   TODO doc
 #
 class Resources::All::Post < Resources::Base
     private
@@ -720,10 +727,12 @@ class Resources::All::Post < Resources::Base
             Keys::TAGS      => nil,
             Keys::CATEGORY  => cid
         }
-        rf = RFile.new(head, "*Intro*\n\n%...\n\n*Body*")
+        rf = RFile.new(head)
+        rf.body << "*Intro*\n\n%...\n\n*Body*"
+        rf
     end
 
-    # TODO
+    # TODO doc
     def fill_intro_n_body rf
         s = rf.body
         rf.body = ""
@@ -745,15 +754,15 @@ main if $0 == __FILE__
 =begin
 
 ---
-base_url:   http://my.sexy.geewee/blog/path
-editor:     vim
-user:       username
-password:   secret
+base_url:       http://my.sexy.geewee/blog/path
+editor:         vim
+geewee_api_key: my_secret_single_access_token
 
 =end
 
 
 __END__
 ---
-base_url: http://localhost:3000
-editor:   vim
+base_url:       http://localhost:3000
+editor:         vim
+geewee_api_key: PLs_gVBZwd5EudsRMObO

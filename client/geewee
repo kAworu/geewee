@@ -32,6 +32,8 @@ end
 #   TODO doc
 #
 
+F = File.basename($0)
+
 # main procedure called if this script is executed.
 def main
     # FIXME: UGLY UGLY UGLY
@@ -80,21 +82,21 @@ end
 # dynamic usage function.
 def usage message
     STDERR.puts
-    STDERR.puts "#{__FILE__}: #{message}"
+    STDERR.puts "#{F}: #{message}"
     STDERR.puts
-    STDERR.puts "usage: #{__FILE__} operation ressource [arguments...]"
+    STDERR.puts "usage: #{F} operation ressource [arguments...]"
     STDERR.puts
     STDERR.puts "CRUD operations:"
     STDERR.puts "===============>"
-    STDERR.puts "\t#{__FILE__} create ressource"
-    STDERR.puts "\t#{__FILE__} create ressource /path/to/file"
-    STDERR.puts "\t#{__FILE__} show resource"
-    STDERR.puts "\t#{__FILE__} show resource id"
-    STDERR.puts "\t#{__FILE__} update ressource"
-    STDERR.puts "\t#{__FILE__} update ressource id"
-    STDERR.puts "\t#{__FILE__} update ressource id /path/to/file"
-    STDERR.puts "\t#{__FILE__} destroy ressource"
-    STDERR.puts "\t#{__FILE__} destroy ressource id"
+    STDERR.puts "\t#{F} create ressource"
+    STDERR.puts "\t#{F} create ressource /path/to/file"
+    STDERR.puts "\t#{F} show resource"
+    STDERR.puts "\t#{F} show resource id"
+    STDERR.puts "\t#{F} update ressource"
+    STDERR.puts "\t#{F} update ressource id"
+    STDERR.puts "\t#{F} update ressource id /path/to/file"
+    STDERR.puts "\t#{F} destroy ressource"
+    STDERR.puts "\t#{F} destroy ressource id"
 
     # Build the operation -> resource help.
     h = Hash.new
@@ -115,7 +117,7 @@ end
 
 # really simple error function.
 def err message
-    STDERR.puts "#{__FILE__}: #{message}"
+    STDERR.puts "#{F}: #{message}"
     exit 1
 end
 
@@ -385,7 +387,7 @@ class RFile
     # call editor to edit self. return self if all went well, raise a
     # RuntimeError if the editor returned a non-zero status.
     def edit!
-        @path = "/tmp/#{File.basename(__FILE__)}_#{Time.now.to_i}#$$"
+        @path = "/tmp/#{F}_#{Time.now.to_i}#$$"
         File.open(@path, 'w') { |fd| fd << self.to_s }
         if system "#{$config['editor']} #@path" then
             self.parse!

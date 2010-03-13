@@ -90,15 +90,6 @@
             done
         </comment>
     </note>
-    <note priority="veryhigh" time="1268064126">
-        auth
-        <note priority="high" time="1268495318">
-            token
-        </note>
-        <note priority="low" time="1268495306">
-            via basic http
-        </note>
-    </note>
     <note priority="high" time="1268304837">
         css http://notes.jimlindley.com/
     </note>
@@ -141,19 +132,7 @@
     <note priority="medium" time="1268360954">
         TODO|FIXME|XXX
     </note>
-    <note priority="low" time="1268093339">
-        good errors messages for comments
-    </note>
-    <note priority="low" time="1268095064">
-        tests
-    </note>
-    <note priority="verylow" time="1267999859">
-        gravatar!
-    </note>
-    <note priority="verylow" time="1268009587">
-        paginate
-    </note>
-    <note priority="verylow" time="1268047294">
+    <note priority="low" time="1268047294">
         blog config
         <note priority="high" time="1268103084">
             JSON API versioning
@@ -168,10 +147,34 @@
             localization
         </note>
     </note>
-    <note priority="verylow" time="1268058504">
-        cache system ?
+    <note priority="low" time="1268093339">
+        good errors messages for comments
     </note>
-    <note priority="verylow" time="1268059127">
-        static link in sidebar ?
+    <note priority="verylow" time="1267999859">
+        gravatar!
+    </note>
+    <note priority="verylow" time="1268009587">
+        paginate
+    </note>
+    <note priority="verylow" time="1268507957">
+        new features?
+        <note priority="high" time="1268059127">
+            static link in sidebar?
+        </note>
+        <note priority="low" time="1268064126">
+            authentication
+            <note priority="high" time="1268495318" done="1268507875">
+                token
+                <comment>
+                    done
+                </comment>
+            </note>
+            <note priority="medium" time="1268508114">
+                basic http?
+            </note>
+        </note>
+        <note priority="verylow" time="1268058504">
+            cache system?
+        </note>
     </note>
 </todo>

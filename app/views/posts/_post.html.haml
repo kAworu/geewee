@@ -4,7 +4,7 @@
     Posté par
     %span.fn
       = link_to h(post.author.name), archives_by_author_url(post.author)
-  %abbr.published{ :title => I18n.localize(post.created_at) }
+  %abbr.published{ :title => l(post.created_at) }
     il y a
     = time_ago_in_words(post.created_at)
   %br.clear

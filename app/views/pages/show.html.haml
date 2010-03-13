@@ -10,11 +10,11 @@
         Meta:
         = link_to 'Lien permanent', @page
       %li
-        %abbr{ :title => I18n.localize(@page.created_at) }
+        %abbr{ :title => l(@page.created_at) }
           Créée il y a
           = time_ago_in_words(@page.created_at)
         - if @page.modified_since_created?
           ,
-          %abbr{ :title => I18n.localize(@page.updated_at) }
+          %abbr{ :title => l(@page.updated_at) }
             mise à jours il y a
             = time_ago_in_words(@page.updated_at)

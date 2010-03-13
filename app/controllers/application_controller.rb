@@ -8,10 +8,15 @@ class ApplicationController < ActionController::Base
   # Scrub sensitive parameters from your log
   # filter_parameter_logging :password
 
-  helper_method :check_single_access_token, :current_author, :require_author
-  before_filter :check_single_access_token
+  before_filter :check_single_access_token, :set_locale
+  helper_method :check_single_access_token, :set_locale,
+                :current_author, :require_author
 
   private
+  def set_locale
+    # if params[:locale] is nil then I18n.default_locale will be used
+    I18n.locale = params[:locale]
+  end
 
   # find the current author.
   def check_single_access_token

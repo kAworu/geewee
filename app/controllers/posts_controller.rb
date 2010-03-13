@@ -1,8 +1,8 @@
 # Post controller, the most used.
-# 
+#
 #   * index and show are public via HTML UI.
 #   * index and show are public via Atom.
-#   * all are private via JSON API. TODO
+#   * all but index and show are private via JSON API.
 #
 class PostsController < ApplicationController
   # require auth for all methods.
@@ -38,6 +38,7 @@ class PostsController < ApplicationController
   # POST /posts.json
   def create
     @post = Post.new(params[:post])
+    @post.author = current_author
 
     respond_to do |format|
       format.json do

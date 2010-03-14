@@ -2,12 +2,11 @@
 
 %h5
   %a{ :name => 'comments' }
-    = @post.comments.count
-    - if @post.comments.count > 1
-      Commentaires:
-    - else
-      Commentaire:
-    %em=h @post.title
+  = @post.comments.count
+  - if @post.comments.count > 1
+    Commentaires
+  - else
+    Commentaire
 %p
   %a{ :href => '#new_comment' } Écrire un commentaire
 

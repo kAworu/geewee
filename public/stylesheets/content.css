@@ -134,7 +134,7 @@
 #content .hentry .entry-title a:hover,
 #content .hentry .entry-title a:active { 
   background: transparent;
-  text-decoration: underline;
+  color: #000;
 }
 
 #content .hentry .entry-title .comment_count { color: #eee; }

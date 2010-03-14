@@ -90,6 +90,15 @@
             done
         </comment>
     </note>
+    <note priority="medium" time="1268273739" done="1268582871">
+        http://github.com/jviney/acts_as_taggable_on_steroids
+        <comment>
+            done!
+        </comment>
+        <note priority="veryhigh" time="1268489004" done="0">
+            fix update posts tag_list
+        </note>
+    </note>
     <note priority="veryhigh" time="1268511203">
         sexy routes http://api.rubyonrails.org/classes/ActionController/Routing.html
     </note>
@@ -125,6 +134,9 @@
         <note priority="low" time="1268062042">
             remove comment
         </note>
+        <note priority="low" time="1268583209">
+            clean /tmp
+        </note>
         <note priority="verylow" time="1268062166">
             manage users
         </note>
@@ -135,14 +147,11 @@
             render Markdown and code in console
         </note>
     </note>
-    <note priority="medium" time="1268273739">
-        http://github.com/jviney/acts_as_taggable_on_steroids
-        <note priority="veryhigh" time="1268489004">
-            fix update posts tag_list
-        </note>
-    </note>
     <note priority="medium" time="1268360954">
         TODO|FIXME|XXX
+    </note>
+    <note priority="medium" time="1268583266">
+        public/ files support
     </note>
     <note priority="low" time="1268047294">
         blog config

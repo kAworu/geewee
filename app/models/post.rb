@@ -30,6 +30,9 @@ class Post < ActiveRecord::Base
   # acts_as_taggable_on_steroids plugin.
   acts_as_taggable
 
+  # hooks
+  before_save :reset_empty_body
+
   # relations
   belongs_to  :author
   belongs_to  :category
@@ -39,6 +42,13 @@ class Post < ActiveRecord::Base
   validates_associated  :author, :category
   validates_presence_of :author, :category
   validates_presence_of :title,  :intro
+
+  # before save hook.
+  def reset_empty_body
+    if self.body and self.body.blank?
+      self.body = nil
+    end
+  end
 
   # used for group_by
   def month_and_year

@@ -131,6 +131,9 @@
         <note priority="veryhigh" time="1268514193">
             check that URL is valid and a geewee
         </note>
+        <note priority="veryhigh" time="1268594198">
+            locale
+        </note>
         <note priority="medium" time="1268062085">
             manage static
         </note>

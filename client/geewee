@@ -759,7 +759,7 @@ main if $0 == __FILE__
 
 ---
 base_url:       http://my.sexy.geewee/blog/path
-editor:         vim
+editor:         ee
 geewee_api_key: my_secret_single_access_token
 
 =end

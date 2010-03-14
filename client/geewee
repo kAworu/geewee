@@ -193,17 +193,11 @@ module REST
 
         # send the HTTP request, method should be a key of Methods.
         def request(resource, method, args)
-            url = URI.join(@base_url, resource)
-
-            # TODO: What about keys without value?
-            url.query = @default_args.merge(args || Hash.new).map do |k,v|
-                '%s=%s' % [URI.encode(k.to_s), URI.encode((v || '').to_s)]
-            end.join('&')
+            args = @default_args.merge(args || Hash.new)
+            url  = URI.join(@base_url, resource)
 
             req = Methods[method].new(url.request_uri)
-
-            # set Content-Length to make nginx happy.
-            req.add_field('Content-Length', '0')
+            req.form_data = args
 
             if @username and @password
                 req.basic_auth(@username, @password)

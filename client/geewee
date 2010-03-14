@@ -202,6 +202,9 @@ module REST
 
             req = Methods[method].new(url.request_uri)
 
+            # set Content-Length to make nginx happy.
+            req.add_field('Content-Length', '0')
+
             if @username and @password
                 req.basic_auth(@username, @password)
             end

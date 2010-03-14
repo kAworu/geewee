@@ -68,7 +68,7 @@ def main
                 :argv       => argv
     rescue Errno::ECONNREFUSED
         err "#{$config['base_url']} #$!"
-    rescue Geewee::Resources::BadOperation
+    rescue Geewee::Resources::Base::BadOperation
         usage $!
     rescue Geewee::RequestError, Geewee::RFile::Error
         err $!
@@ -222,10 +222,6 @@ module Resources
     # This is where all Resources classes belongs.
     module All end
 
-    #TODO doc
-    class BadOperation < Exception
-    end
-
     # return all Resources in the All module, as Class objects.
     def self.all
         self::All.constants.collect { |const| eval "self::All::#{const}" }
@@ -244,6 +240,10 @@ end
 # Base class for Resources.
 class Resources::Base
     All = [:create, :show, :update, :destroy]
+
+    #TODO doc
+    class BadOperation < Exception
+    end
 
     # conn is a REST::Connection instance.
     def initialize conn

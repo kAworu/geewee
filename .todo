@@ -93,6 +93,9 @@
     <note priority="veryhigh" time="1268511203">
         sexy routes http://api.rubyonrails.org/classes/ActionController/Routing.html
     </note>
+    <note priority="veryhigh" time="1268575173">
+        categories order by popularity in layout
+    </note>
     <note priority="high" time="1268304837">
         css http://notes.jimlindley.com/
     </note>

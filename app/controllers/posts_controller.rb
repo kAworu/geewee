@@ -7,6 +7,15 @@
 class PostsController < ApplicationController
   skip_before_filter :verify_authenticity_token
 
+  # used for the JSON API, to include the posts count.
+  JSON_OPTS = {
+    :include => {
+      :category => {:only => [:display_name]},
+      :author   => {:only => [:name]},
+      :tags     => {:only => [:name]},
+    }
+  }
+
   # require auth for all methods.
   before_filter :require_author, :except => [:index, :show]
 
@@ -18,7 +27,8 @@ class PostsController < ApplicationController
       format.html { @posts = Post.published } # index.html.haml
       format.atom { @posts = Post.published } # index.atom.builder
       format.json do
-        render :json => Post.find(:all, :select => 'id, title, published')
+        opts = JSON_OPTS.merge(:except => [:intro, :body])
+        render :json => Post.all.to_json(opts)
       end
     end
   end
@@ -33,7 +43,7 @@ class PostsController < ApplicationController
     respond_to do |format|
       format.html # show.html.haml
       format.atom # show.atom.builder
-      format.json { render :json => @post }
+      format.json { render :json => @post.to_json(JSON_OPTS) }
     end
   end
 
@@ -60,7 +70,7 @@ class PostsController < ApplicationController
     respond_to do |format|
       format.json do
         if @post.update_attributes(params[:post])
-          head :ok
+          head :ok, :location => url_for(@post)
         else
             render :json => @post.errors, :status => :unprocessable_entity
         end

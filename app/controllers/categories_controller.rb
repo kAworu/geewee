@@ -5,6 +5,14 @@
 class CategoriesController < ApplicationController
   skip_before_filter :verify_authenticity_token
 
+  # used for the JSON API, to include the posts count.
+  JSON_OPTS = {
+    :include => {
+      :posts => {:only => [:id]}
+    }
+  }
+
+
   # require auth for all methods.
   before_filter :require_author
 
@@ -12,7 +20,7 @@ class CategoriesController < ApplicationController
   def index
     @categories = Category.all
     respond_to do |format|
-      format.json { render :json => @categories }
+      format.json { render :json => @categories.to_json(JSON_OPTS) }
     end
   end
 
@@ -20,7 +28,7 @@ class CategoriesController < ApplicationController
   def show
     @category = Category.find(params[:id])
     respond_to do |format|
-      format.json { render :json => @category }
+      format.json { render :json => @category.to_json(JSON_OPTS) }
     end
   end
 
@@ -29,7 +37,9 @@ class CategoriesController < ApplicationController
     @category = Category.new(params[:category])
     respond_to do |format|
       if @category.save
-        format.json { render :json => @category, :status => :created }
+        format.json do
+          render :json => @category.to_json(JSON_OPTS), :status => :created
+        end
       else
         format.json do
           render :json => @category.errors, :status => :unprocessable_entity

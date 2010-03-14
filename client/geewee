@@ -531,8 +531,8 @@ class Resources::All::Category < Resources::Base
     end
 
     # print category on stdout
-    def display category
-        puts '%3d. %s' % [category['id'], category['display_name']]
+    def display c
+        puts '%3d. %s (%d)' % [c['id'], c['display_name'], c['posts'].size]
     end
 end
 # }}}
@@ -571,8 +571,11 @@ class Resources::All::Post < Resources::Base
             else
                 JSON.parse(response.body).each do |h|
                     post = h['post']
-                    puts '%3d. %s%s' % [post['id'], post['title'],
-                            post['published'] ? '' : ' (unpublished)']
+                    pubstr = (post['published'] ? '' : '[unpublished] ')
+                    tagstr = post['tags'].collect { |t| t['name'] }.join(', ')
+                    print '%3d. %s"%s"' % [post['id'], pubstr, post['title']]
+                    puts ' by %s in %s (%s)' % [post['author']['name'],
+                        post['category']['display_name'], tagstr]
                 end
             end
         else
@@ -629,8 +632,9 @@ class Resources::All::Post < Resources::Base
         if file = h[:argv].shift
             rf = RFile.load(file)
         else
+            tagstr = p['tags'].collect { |t| t['name'] }.join(', ')
             rf = RFile.new Keys::TITLE      => p['title'],
-                           Keys::TAGS       => p['tag_list'],
+                           Keys::TAGS       => tagstr,
                            Keys::PUBLISHED  => (p['published'] ? '1' : '0'),
                            Keys::CATEGORY   => p['category_id']
             rf.body = p['intro']
@@ -641,7 +645,7 @@ class Resources::All::Post < Resources::Base
 
         case response = put(p['id'], rf.head)
         when ::Net::HTTPOK
-            info 'Post updated.'
+            info "Post updated: #{response['Location']}"
         else
             msg = JSON.parse(response.body).collect do |err|
                 err.join(' ')

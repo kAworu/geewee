@@ -141,18 +141,15 @@
 
 #content .hentry .vcard,
 #content .hentry .published {
+  font-weight:bold;
   color: #a9a9a9;
   font:16px/14px "lucidamac bold","lucida grande",arial,verdana,sans-serif;
   letter-spacing:-1px;
   float: left;
-  /*
-  letter-spacing: -1px;
-  */
   margin: 1px 0 0.6em 2px;
 }
 
 #content .hentry .fn {
-  font-weight:bold;
   margin-right: 5px;
 }
 

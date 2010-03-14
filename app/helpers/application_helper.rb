@@ -1,5 +1,7 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
+  # from acts_as_taggable_on_steroids
+  include TagsHelper
 
   # our own markdown function that support coderay.
   # FIXME: it's ugly.

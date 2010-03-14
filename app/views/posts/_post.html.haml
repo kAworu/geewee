@@ -23,7 +23,7 @@
     %li.tags
       Mots-clefs:
       - post.tags.each do |tag|
-        =link_to h(tag.display_name), archives_by_tag_url(tag)
+        =link_to h(tag.name), archives_by_tag_url(tag.name)
     %li
       Meta:
       = link_to "#{(c = post.comments.count).zero? ? 'aucun' : c} commentaire#{'s' if post.comments.count > 1}", :action => :show, :id => post, :anchor => :comments

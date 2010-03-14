@@ -8,7 +8,7 @@ class ArchivesController < ApplicationController
   # order posts by author.
   def by_author
     if params[:id]
-      @authors = [ Author.find(params[:id]) ]
+      @authors = [Author.find(params[:id])]
     else
       @authors = Author.all
     end
@@ -17,7 +17,7 @@ class ArchivesController < ApplicationController
   # order posts by category.
   def by_category
     if params[:id]
-      @categories = [ Category.find(params[:id]) ]
+      @categories = [Category.find(params[:id])]
     else
       @categories = Category.all
     end
@@ -26,9 +26,9 @@ class ArchivesController < ApplicationController
   # order posts by tag.
   def by_tag
     if params[:id]
-      @tags = [ Tag.find(params[:id]) ]
+      @tags = [Tag.find_by_name(params[:id])]
     else
-      @tags = Tag.all
+      @tags = Post.tag_counts
     end
   end
 

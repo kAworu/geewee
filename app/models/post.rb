@@ -27,36 +27,18 @@ class Post < ActiveRecord::Base
   # friendly_id, use the Post's title.
   has_friendly_id :title, :use_slug => true
 
+  # acts_as_taggable_on_steroids plugin.
+  acts_as_taggable
+
   # relations
   belongs_to  :author
   belongs_to  :category
   has_many    :comments, :dependent => :destroy
-  has_and_belongs_to_many :tags
 
   # validations
-  validates_associated  :author, :category, :tags
+  validates_associated  :author, :category
   validates_presence_of :author, :category
   validates_presence_of :title,  :intro
-
-  # ttag_list is a virtual attribute, it represent all the tags associated to self.
-  def ttag_list
-    ts = Array.new
-    self.tags.each { |t| ts << t.display_name }
-    ts.join(' ')
-  end
-
-  # create all tags found in ttag_list
-  # FIXME: Tags should be saved on Post db creation, not instance creation.
-  def ttag_list= tags
-    unless tags.blank?
-      tags.split.each do |tname|
-        unless t = Tag.find_by_name(tname.downcase)
-           t = Tag.create!(:display_name => tname)
-        end
-        self.tags << t
-      end
-    end
-  end
 
   # used for group_by
   def month_and_year

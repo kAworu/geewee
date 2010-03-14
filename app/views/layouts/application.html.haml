@@ -58,9 +58,9 @@
           %h3= link_to 'Mots-clefs', archives_by_tag_url
           %ul
             %li
-              - Tag.all.each do |tag|
-                = link_to h(tag.display_name), archives_by_tag_url(tag),                  |
-                  :style => "font-size: #{6 + tag.posts.published.count}pt; text-decoration: none;" |
+              - tag_cloud Post.tag_counts, %w[tag1 tag2 tag3 tag4 tag5 tag6 tag7 tag8 tag9] do |tag, css_class|
+                = link_to h(tag.name), archives_by_tag_url(tag.name), :class => css_class
+
           <!-- archives by month and year -->
           %h3= link_to 'Archives', archives_by_month_and_year_url
           %ul

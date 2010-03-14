@@ -32,7 +32,7 @@
           <!-- Atom feed link -->
           %p
             = image_tag '/images/feed-icon16x16.png'
-            = link_to 'Abonne toi à mon beau flux Atom', posts_path(:atom)
+            = link_to 'Abonne toi à mon beau flux Atom <3', posts_path(:atom)
 
           <!-- static Pages -->
           %h3 Pages
@@ -56,10 +56,9 @@
                 %em= "(#{category.posts.published.count})"
           <!-- archives by Tag -->
           %h3= link_to 'Mots-clefs', archives_by_tag_url
-          %ul
-            %li
-              - tag_cloud Post.tag_counts, %w[tag1 tag2 tag3 tag4 tag5 tag6 tag7 tag8 tag9] do |tag, css_class|
-                = link_to h(tag.name), archives_by_tag_url(tag.name), :class => css_class
+          %p#tag-cloud{ :style => 'overflow:hidden' }
+            - tag_cloud Post.tag_counts, %w[tag1 tag2 tag3 tag4 tag5 tag6 tag7 tag8 tag9] do |tag, css_class|
+              = link_to h(tag.name), archives_by_tag_url(tag.name), :class => css_class
 
           <!-- archives by month and year -->
           %h3= link_to 'Archives', archives_by_month_and_year_url

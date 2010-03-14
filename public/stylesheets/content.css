@@ -42,8 +42,8 @@
 #content h3,
 #content h4,
 #content h5 { 
-  font-family: georgia, times;
-  font-weight: normal;
+  font-family:"lucidamac bold","lucida grande",arial,sans-serif;
+  font-weight: bold;
   letter-spacing: -1px;
 }
 
@@ -120,15 +120,14 @@
 }
 
 #content .hentry .entry-title {
-  font-size: 30px;
-  line-height: 99%;
-  letter-spacing: -1.5px; 
+  font-size:28px;
+  letter-spacing:-1.5px;
+  line-height:94%;
   margin: 0;
 }
 
 #content .hentry .entry-title a:link,
 #content .hentry .entry-title a:visited { 
-  color: #111;
   text-decoration: none;
 }
 
@@ -142,10 +141,13 @@
 
 #content .hentry .vcard,
 #content .hentry .published {
-  float: left;
   color: #a9a9a9;
-  font: normal 16px/14px helvetica, arial, verdana, sans-serif;
+  font:16px/14px "lucidamac bold","lucida grande",arial,verdana,sans-serif;
+  letter-spacing:-1px;
+  float: left;
+  /*
   letter-spacing: -1px;
+  */
   margin: 1px 0 0.6em 2px;
 }
 

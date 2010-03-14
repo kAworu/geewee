@@ -119,7 +119,7 @@ fr:
         one:   "environ un an"
         other: "environ {{count}} ans"
       over_x_years:
-        one:   "plus d'un year"
+        one:   "plus d'un an"
         other: "plus de {{count}} ans"
       almost_x_years:
         one:   "presque un an"

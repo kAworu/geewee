@@ -8,7 +8,7 @@
       - if html_title
         =h ": #{html_title}"
 
-    = stylesheet_link_tag 'application'
+    = stylesheet_link_tag 'application', :cache => true
     = javascript_include_tag :all
     = auto_discovery_link_tag :atom, posts_path(:atom)
     = yield :head

@@ -1,8 +1,8 @@
 .hentry{ :id => "post-#{post.id}" }
   %h2.entry-title= link_to h(post.title), post
-  .vcard
+  .author
     Posté par
-    %span.fn
+    %span.author-name
       = link_to h(post.author.name), archives_by_author_url(post.author)
   %abbr.published{ :title => l(post.created_at) }
     il y a

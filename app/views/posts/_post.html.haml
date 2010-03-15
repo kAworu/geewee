@@ -15,18 +15,19 @@
         .more= link_to 'Lire la suite...', post
       - else
         .extended= markdown post.body
-  %ul.meta
-    %li.categories
-      Catégorie:
-      = link_to h(post.category.display_name), archives_by_category_url(post.category)
-    %li.tags
-      Mots-clefs:
-      - post.tags.each do |tag|
-        =link_to h(tag.name), archives_by_tag_url(tag.name)
-    %li
-      Meta:
-      = link_to "#{(c = post.comments.count).zero? ? 'aucun' : c} commentaire#{'s' if post.comments.count > 1}", :action => :show, :id => post, :anchor => :comments
-      \-
-      = link_to 'flux Atom', post_path(post, :atom)
-      \-
-      = link_to 'Lien permanent', post
+  - unless controller.action_name == 'index'
+    %ul.meta
+      %li.categories
+        Catégorie:
+        = link_to h(post.category.display_name), archives_by_category_url(post.category)
+      %li.tags
+        Mots-clefs:
+        - post.tags.each do |tag|
+          =link_to h(tag.name), archives_by_tag_url(tag.name)
+      %li
+        Meta:
+        = link_to "#{(c = post.comments.count).zero? ? 'aucun' : c} commentaire#{'s' if post.comments.count > 1}", :action => :show, :id => post, :anchor => :comments
+        \-
+        = link_to 'flux Atom', post_path(post, :atom)
+        \-
+        = link_to 'Lien permanent', post

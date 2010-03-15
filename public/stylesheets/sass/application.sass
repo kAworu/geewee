@@ -1,5 +1,7 @@
-// the dark red used by the theme
-!DARK_RED = #930
+!LINK_COLOR       = #930
+!LINK_HOVER_COLOR = #662
+!TITLE_DARK       = !LINK_HOVER_COLOR - #111
+!LINK_HOVER_BG    = #ffc
 
 
 // the font used for titles.
@@ -34,10 +36,10 @@ a
     +reset_padding_margin
     border: none
   &:link, &:visited
-    color = !DARK_RED
+    color      = !LINK_COLOR
   &:hover, &:active
-    color:      white
-    background: black
+    color      = !LINK_HOVER_COLOR
+    background = !LINK_HOVER_BG
 
 /* http://longren.org/2006/09/27/wrapping-text-inside-pre-tags */
 pre

@@ -572,10 +572,9 @@ class Resources::All::Post < Resources::Base
                 JSON.parse(response.body).each do |h|
                     post = h['post']
                     pubstr = (post['published'] ? '' : '[unpublished] ')
-                    tagstr = post['tags'].collect { |t| t['name'] }.join(', ')
                     print '%3d. %s"%s"' % [post['id'], pubstr, post['title']]
                     puts ' by %s in %s (%s)' % [post['author']['name'],
-                        post['category']['display_name'], tagstr]
+                        post['category']['display_name'], tags_to_s(post['tags'])]
                 end
             end
         else
@@ -632,9 +631,8 @@ class Resources::All::Post < Resources::Base
         if file = h[:argv].shift
             rf = RFile.load(file)
         else
-            tagstr = p['tags'].collect { |t| t['name'] }.join(', ')
             rf = RFile.new Keys::TITLE      => p['title'],
-                           Keys::TAGS       => tagstr,
+                           Keys::TAGS       => tags_to_s(p['tags']),
                            Keys::PUBLISHED  => (p['published'] ? '1' : '0'),
                            Keys::CATEGORY   => p['category_id']
             rf.body = p['intro']
@@ -701,17 +699,21 @@ class Resources::All::Post < Resources::Base
 
     # print post on stdout
     def display post
-        %w[id created_at updated_at published title].each do |k|
-            puts "#{k}: #{post[k]}"
-        end
+        puts "created_at: #{post['created_at']}"
+        puts "updated_at: #{post['updated_at']}"
+        puts "id:       #{post['id']}"
+        puts "author:   #{post['author']['name']}"
+        puts "category: #{post['category']['display_name']}"
+        puts "tags:     #{tags_to_s(post['tags'])}"
+        puts "title:    #{post['title']}"
         puts
         puts post['intro']
-        if post['body']
-            puts
-            puts "%..."
-            puts
-            puts post['body']
-        end
+        puts "\n%...\n" + post['body'] if post['body']
+    end
+
+    # pretty print of tags.
+    def tags_to_s tags
+        tags.collect { |t| t['name'] }.join(', ')
     end
 
     # create a stub RFile.

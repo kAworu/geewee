@@ -12,7 +12,7 @@ module ApplicationHelper
 
     text.split("\n").each do |line|
       if code
-        if line =~ /^\s*%\/code\s*$/
+        if line =~ /^%\/code\s*$/
           result << if lang
                       CodeRay.scan(code, lang.downcase.to_sym).div
                     else
@@ -23,7 +23,7 @@ module ApplicationHelper
           code << line << "\n"
         end
       else
-        if line =~ /^\s*%code\b/
+        if line =~ /^%code\b/
           if line =~ /\s+lang(?:uage)?=(\w+)/
             lang = $1
           end

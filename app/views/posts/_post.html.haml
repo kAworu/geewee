@@ -11,11 +11,10 @@
   .entry-content
     =markdown post.intro
     - if post.body
-      .extended
-        - if controller.action_name == 'index'
-          = link_to 'Lire la suite...', post
-        - else
-          = markdown post.body
+      - if controller.action_name == 'index'
+        .more= link_to 'Lire la suite...', post
+      - else
+        .extended= markdown post.body
   %ul.meta
     %li.categories
       Catégorie:

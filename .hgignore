@@ -3,4 +3,5 @@
 
 # SASS stuff.
 ^public/stylesheets/sass/\.sass-cache/
+^tmp/sass-cache/
 ^public/stylesheets/.*\.css$

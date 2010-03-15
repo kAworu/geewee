@@ -9,12 +9,14 @@ module ApplicationHelper
     result  = String.new
     code    = nil
     lang    = nil
+    opts    = nil
 
     text.split("\n").each do |line|
       if code
         if line =~ /^%\/code\s*$/
           result << if lang
-                      CodeRay.scan(code, lang.downcase.to_sym).div
+                      tokens = CodeRay.scan(code, lang.downcase.to_sym)
+                      tokens.div(opts)
                     else
                       "<div class=\"code\"><pre>#{code}</pre></div>"
                     end
@@ -24,8 +26,17 @@ module ApplicationHelper
         end
       else
         if line =~ /^%code\b/
-          if line =~ /\s+lang(?:uage)?=(\w+)/
+          opts = Hash.new
+          if line =~ /\s+lang(?:uage)?=(\w+)\b/
             lang = $1
+          end
+          if line =~ /\s+(?:ln|line_numbers)=(\w+)\b/
+            if %[include table list].include?($1)
+              opts[:line_numbers] = $1.to_sym
+            end
+          end
+          if line =~ /\s+(?:tw|tab_width)=(\d+)\b/
+            opts[:tab_width] = $1.to_i
           end
           code = String.new
         else

@@ -748,6 +748,45 @@ class Resources::All::Post < Resources::Base
     end
 end
 # }}}
+#
+# Static Page Resource {{{
+#   TODO doc
+#
+class Resources::All::Page < Resources::Base
+    private
+
+    # keys for the geewee API.
+    module Keys
+        TITLE = '[page]title'
+        BODY  = '[page]body'
+    end
+
+    # accept plural form
+    named_resource :pages
+
+    # display the list of pages.
+    #   show pages
+    #   show pages id
+    accept :show do |h|
+        id = h[:argv].first rescue nil
+
+        case response = get(id)
+        when ::Net::HTTPOK
+            if id
+                pages = [JSON.parse(response.body)]
+            else
+                pages = JSON.parse(response.body)
+            end
+            pages.each do |page|
+                p = page['page']
+                puts '%3d. %s' % [p['id'], p['title']]
+            end
+        else
+            raise RequestError.new(response)
+        end
+    end
+end
+# }}}
 end # end of Geewee module.
 
 

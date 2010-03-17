@@ -1,6 +1,6 @@
 .hentry{ :id => "post-#{post.id}" }
   %h2.entry-title= link_to h(post.title), post
-  .author
+  .subtitle
     Publié par
     %span.author-name
       = link_to h(post.author.name), archives_by_author_path(post.author)

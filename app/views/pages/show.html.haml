@@ -1,7 +1,7 @@
 .hentry
-  %h2.entry-title=h @page.title
+  %h2.entry-title= link_to h(@page.title), @page
   - if @page.subtitle
-    .vcard=h @page.subtitle
+    .subtitle=h @page.subtitle
     %br.clear
   .entry-content
     = markdown @page.body
@@ -10,11 +10,11 @@
         Meta:
         = link_to 'Lien permanent', @page
       %li
-        %abbr{ :title => l(@page.published_at) }
-          Publié il y a
-          = time_ago_in_words(@page.published_at)
+        %abbr{ :title => l(@page.created_at) }
+          Publiée il y a
+          = time_ago_in_words(@page.created_at)
         - if @page.modified_since_created?
-          ,
+          %br
           %abbr{ :title => l(@page.updated_at) }
             mise à jours il y a
             = time_ago_in_words(@page.updated_at)

@@ -569,7 +569,7 @@ class Resources::All::Post < Resources::Base
             if id
                 display JSON.parse(response.body)['post']
             else
-                JSON.parse(response.body).each do |h|
+                JSON.parse(response.body).reverse.each do |h|
                     post = h['post']
                     pubstr = (post['published'] ? '' : '[unpublished] ')
                     print '%3d. %s"%s"' % [post['id'], pubstr, post['title']]

@@ -37,7 +37,7 @@ class ArchivesController < ApplicationController
     if params[:month] and params[:year]
       start = Time.local(params[:year].to_i, params[:month].to_i)
       stop  = start + 1.month
-      posts = Post.created_after(start).created_before(stop)
+      posts = Post.published_after(start).published_before(stop)
     else
       posts = Post.all
     end

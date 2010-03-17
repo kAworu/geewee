@@ -1,12 +1,12 @@
 .hentry{ :id => "post-#{post.id}" }
   %h2.entry-title= link_to h(post.title), post
   .author
-    Posté par
+    Publié par
     %span.author-name
       = link_to h(post.author.name), archives_by_author_path(post.author)
-  %abbr.published{ :title => l(post.created_at) }
+  %abbr.published{ :title => l(post.published_at) }
     il y a
-    = time_ago_in_words(post.created_at)
+    = time_ago_in_words(post.published_at)
   %br.clear
   .entry-content
     =markdown post.intro

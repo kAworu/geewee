@@ -63,9 +63,9 @@
           <!-- archives by month and year -->
           %h3= link_to 'Archives', :controller => :archives, :action => :by_month
           %ul
-            - Post.all.group_by(&:month_of_the_year).each do |month, posts|
+            - Post.published.group_by(&:month_of_the_year).each do |month, posts|
               %li
-                - d = posts.first.created_at
+                - d = posts.first.published_at
                 = link_to h(month), archives_by_month_path(d.year, d.month)
                 %em= "(#{posts.size})"
         %br{ :style => 'clear:both' }

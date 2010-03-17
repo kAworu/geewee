@@ -1,6 +1,6 @@
 atom_feed do |feed|
   feed.title('fork while fork')
-  feed.updated(@posts.first.created_at)
+  feed.updated(@posts.first.published_at)
 
   @posts.each do |post|
     feed.entry(post) do |entry|

@@ -10,9 +10,9 @@
         Meta:
         = link_to 'Lien permanent', @page
       %li
-        %abbr{ :title => l(@page.created_at) }
-          Créée il y a
-          = time_ago_in_words(@page.created_at)
+        %abbr{ :title => l(@page.published_at) }
+          Publié il y a
+          = time_ago_in_words(@page.published_at)
         - if @page.modified_since_created?
           ,
           %abbr{ :title => l(@page.updated_at) }

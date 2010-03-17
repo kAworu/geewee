@@ -8,6 +8,9 @@ class Comment < ActiveRecord::Base
   # relations
   belongs_to :post
 
+  # we always use the creation order.
+  default_scope :order => 'created_at'
+
   # hook, reset bad URL address.
   # FIXME: better in controller?
   def before_validation

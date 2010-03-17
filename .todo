@@ -135,9 +135,6 @@
             fix update posts tag_list
         </note>
     </note>
-    <note priority="veryhigh" time="1268838160">
-        fix object name for partial _line_post
-    </note>
     <note priority="medium" time="1268005298">
         client
         <note priority="veryhigh" time="1268062003" done="1268353090">

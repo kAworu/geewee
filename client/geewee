@@ -773,13 +773,19 @@ class Resources::All::Page < Resources::Base
         case response = get(id)
         when ::Net::HTTPOK
             if id
-                pages = [JSON.parse(response.body)]
+                page = JSON.parse(response.body)['page']
+                puts "id: #{page['id']}"
+                puts "created_at: #{page['created_at']}"
+                puts "updated_at: #{page['updated_at']}"
+                puts "title:      #{page['title']}"
+                puts "subtitle:   #{page['subtitle']}"
+                puts "\n" + \
+                    page['body']
             else
-                pages = JSON.parse(response.body)
-            end
-            pages.each do |page|
-                p = page['page']
-                puts '%3d. %s' % [p['id'], p['title']]
+                JSON.parse(response.body).each do |page|
+                    p = page['page']
+                    puts '%3d. %s' % [p['id'], p['title']]
+                end
             end
         else
             raise RequestError.new(response)

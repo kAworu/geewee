@@ -35,7 +35,7 @@
             = link_to 'Abonne toi à mon beau flux Atom <3', posts_path(:atom)
 
           <!-- static Pages -->
-          %h3= link_to h('Pages'), '#'
+          %h3= link_to h('Pages'), pages_path
           %ul
             - Page.all.each do |page|
               %li= link_to h(page.title), page

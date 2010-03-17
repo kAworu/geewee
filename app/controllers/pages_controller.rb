@@ -6,13 +6,17 @@
 class PagesController < ApplicationController
   skip_before_filter :verify_authenticity_token
 
-  # require auth for all methods but show.
-  before_filter :require_author, :except => :show
+  # require auth for all methods but show and index.
+  before_filter :require_author, :except => [:index, :show]
 
+  # GET /pages
   # GET /pages.json
   def index
     respond_to do |format|
-      format.json { render :json => Page.all }
+      @pages = Page.all
+
+      format.html # index.html.haml
+      format.json { render :json => @pages }
     end
   end
 

@@ -16,7 +16,7 @@ class PostsController < ApplicationController
     }
   }
 
-  # require auth for all methods.
+  # require auth for all methods but show and index.
   before_filter :require_author, :except => [:index, :show]
 
   # GET /posts

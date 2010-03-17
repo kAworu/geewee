@@ -65,6 +65,11 @@ class Post < ActiveRecord::Base
     end
   end
 
+  # always return a valid date.
+  def published_at
+    super || Time.now
+  end
+
   # used for group_by
   def month_of_the_year
       I18n.localize(self.published_at, :format => :month_of_the_year)

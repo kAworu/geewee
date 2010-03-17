@@ -1,10 +1,4 @@
 ActionController::Routing::Routes.draw do |map|
-  map.root      :controller => 'posts'
-  map.resources :pages
-  map.resources :categories
-
-  map.resources :posts, :has_many => :comments
-
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:
@@ -44,7 +38,29 @@ ActionController::Routing::Routes.draw do |map|
   # Install the default routes as the lowest priority.
   # Note: These default routes make all actions in every controller accessible via GET requests. You should
   # consider removing or commenting them out if you're using named routes and resources.
-  map.connect 'archives/by_month_and_year/:year/:month', :controller => :archives, :action => :by_month_and_year
+  map.root      :controller => 'posts'
+
+  map.resources :pages
+  map.resources :categories
+  map.resources :posts, :has_many => :comments
+
+  map.archives_by_month 'archives/by_month/:year/:month',
+    :conditions => { :method => :get },
+    :controller => :archives,
+    :action     => :by_month
+  map.archives_by_author 'archives/by_author/:id',
+    :conditions => { :method => :get },
+    :controller => :archives,
+    :action     => :by_author
+  map.archives_by_category 'archives/by_category/:id',
+    :conditions => { :method => :get },
+    :controller => :archives,
+    :action     => :by_category
+  map.archives_by_tag 'archives/by_tag/:id',
+    :conditions => { :method => :get },
+    :controller => :archives,
+    :action     => :by_tag
+
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
 end

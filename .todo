@@ -42,6 +42,18 @@
             hacked.
         </comment>
     </note>
+    <note priority="veryhigh" time="1268511203" done="1268696684">
+        sexy routes http://api.rubyonrails.org/classes/ActionController/Routing.html
+        <comment>
+            done
+        </comment>
+    </note>
+    <note priority="veryhigh" time="1268575173" done="1268696849">
+        categories order by popularity in layout
+        <comment>
+            done
+        </comment>
+    </note>
     <note priority="high" time="1267997341" done="1268017036">
         comment in markdown
         <comment>
@@ -78,6 +90,12 @@
             done!
         </comment>
     </note>
+    <note priority="high" time="1268304837" done="1268689564">
+        css http://notes.jimlindley.com/
+        <comment>
+            done!
+        </comment>
+    </note>
     <note priority="medium" time="1268010554" done="1268061870">
         static pages
         <comment>
@@ -99,20 +117,14 @@
             fix update posts tag_list
         </note>
     </note>
-    <note priority="veryhigh" time="1268511203">
-        sexy routes http://api.rubyonrails.org/classes/ActionController/Routing.html
-    </note>
-    <note priority="veryhigh" time="1268575173">
-        categories order by popularity in layout
-    </note>
     <note priority="veryhigh" time="1268587569">
         code overflow
     </note>
-    <note priority="high" time="1268304837" done="1268689564">
-        css http://notes.jimlindley.com/
-        <comment>
-            done!
-        </comment>
+    <note priority="veryhigh" time="1268699851">
+        HTML escape with %code without args
+    </note>
+    <note priority="high" time="1268743836">
+        published_at
     </note>
     <note priority="medium" time="1268005298">
         client
@@ -154,9 +166,6 @@
         </note>
         <note priority="verylow" time="1268308695">
             alias in config
-        </note>
-        <note priority="verylow" time="1268540346">
-            render Markdown and code in console
         </note>
     </note>
     <note priority="medium" time="1268360954">
@@ -211,6 +220,9 @@
         </note>
         <note priority="verylow" time="1268058504">
             cache system?
+        </note>
+        <note priority="verylow" time="1268540346">
+            render Markdown and code in console?
         </note>
     </note>
 </todo>

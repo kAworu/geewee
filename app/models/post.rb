@@ -55,7 +55,7 @@ class Post < ActiveRecord::Base
   end
 
   # used for group_by
-  def month_and_year
-      I18n.localize(self.created_at, :format => :month_and_year)
+  def month_of_the_year
+      I18n.localize(self.created_at, :format => :month_of_the_year)
   end
 end

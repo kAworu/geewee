@@ -33,7 +33,7 @@ class ArchivesController < ApplicationController
   end
 
   # order posts by month
-  def by_month_and_year
+  def by_month
     if params[:month] and params[:year]
       start = Time.local(params[:year].to_i, params[:month].to_i)
       stop  = start + 1.month
@@ -41,6 +41,6 @@ class ArchivesController < ApplicationController
     else
       posts = Post.all
     end
-    @posts = posts.group_by(&:month_and_year)
+    @posts = posts.group_by(&:month_of_the_year)
   end
 end

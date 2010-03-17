@@ -41,31 +41,32 @@
               %li= link_to h(page.title), page
 
           <!-- archives by Author -->
-          %h3= link_to 'Auteurs', archives_by_author_url
+          %h3= link_to 'Auteurs', archives_by_author_path
           %ul
             - Author.find(:all).each do |author|
               %li
-                = link_to h(author.name), archives_by_author_url(author)
+                = link_to h(author.name), archives_by_author_path(author)
                 %em= "(#{author.posts.published.count})"
           <!-- archives by Category -->
-          %h3= link_to 'Catégories', archives_by_category_url
+          %h3= link_to 'Catégories', archives_by_category_path
           %ul
-            - Category.all.each do |category|
+            - Category.all.sort_by { |c| -(c.posts.published.count) }.each do |category|
               %li
-                = link_to h(category.display_name), archives_by_category_url(category)
+                = link_to h(category.display_name), archives_by_category_path(category)
                 %em= "(#{category.posts.published.count})"
           <!-- archives by Tag -->
-          %h3= link_to 'Mots-clefs', archives_by_tag_url
+          %h3= link_to 'Mots-clefs', archives_by_tag_path
           %p#tag-cloud{ :style => 'overflow:hidden' }
             - tag_cloud Post.tag_counts, %w[tag1 tag2 tag3 tag4 tag5 tag6 tag7 tag8 tag9] do |tag, css_class|
-              = link_to h(tag.name), archives_by_tag_url(tag.name), :class => css_class
+              = link_to h(tag.name), archives_by_tag_path(tag.name), :class => css_class
 
           <!-- archives by month and year -->
-          %h3= link_to 'Archives', archives_by_month_and_year_url
+          %h3= link_to 'Archives', :controller => :archives, :action => :by_month
           %ul
-            - Post.all.group_by(&:month_and_year).each do |month, posts|
+            - Post.all.group_by(&:month_of_the_year).each do |month, posts|
               %li
-                = link_to h(month), archives_by_month_and_year_url(posts.first.created_at)
+                - d = posts.first.created_at
+                = link_to h(month), archives_by_month_path(d.year, d.month)
                 %em= "(#{posts.size})"
         %br{ :style => 'clear:both' }
       <!-- end sidebar -->

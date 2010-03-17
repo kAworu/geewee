@@ -96,6 +96,12 @@
             done!
         </comment>
     </note>
+    <note priority="high" time="1268743836" done="1268831620">
+        published_at
+        <comment>
+            done
+        </comment>
+    </note>
     <note priority="medium" time="1268010554" done="1268061870">
         static pages
         <comment>
@@ -120,11 +126,11 @@
     <note priority="veryhigh" time="1268587569">
         code overflow
     </note>
-    <note priority="veryhigh" time="1268699851">
+    <note priority="veryhigh" time="1268699851" done="1268832640">
         HTML escape with %code without args
-    </note>
-    <note priority="high" time="1268743836">
-        published_at
+        <comment>
+            done!
+        </comment>
     </note>
     <note priority="medium" time="1268005298">
         client

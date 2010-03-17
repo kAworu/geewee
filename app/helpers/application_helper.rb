@@ -18,7 +18,7 @@ module ApplicationHelper
                       tokens = CodeRay.scan(code, lang.downcase.to_sym)
                       tokens.div(opts)
                     else
-                      "<div class=\"code\"><pre>#{code}</pre></div>"
+                      "<div class=\"code\"><pre>#{h code}</pre></div>"
                     end
           code = lang = nil
         else

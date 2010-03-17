@@ -54,6 +54,12 @@
             done
         </comment>
     </note>
+    <note priority="veryhigh" time="1268587569" done="1268833508">
+        code overflow
+        <comment>
+            done!
+        </comment>
+    </note>
     <note priority="veryhigh" time="1268699851" done="1268832640">
         HTML escape with %code without args
         <comment>
@@ -129,12 +135,6 @@
             fix update posts tag_list
         </note>
     </note>
-    <note priority="veryhigh" time="1268587569" done="1268833508">
-        code overflow
-        <comment>
-            done!
-        </comment>
-    </note>
     <note priority="medium" time="1268005298">
         client
         <note priority="veryhigh" time="1268062003" done="1268353090">
@@ -152,11 +152,11 @@
                 publish action
             </note>
         </note>
-        <note priority="veryhigh" time="1268514193">
-            check that URL is valid and a geewee
-        </note>
-        <note priority="veryhigh" time="1268594198">
+        <note priority="veryhigh" time="1268594198" done="1268833722">
             locale
+            <comment>
+                done!
+            </comment>
         </note>
         <note priority="high" time="1268689558">
             order of id, inverted
@@ -185,6 +185,9 @@
     </note>
     <note priority="low" time="1268047294">
         blog config
+        <note priority="veryhigh" time="1268514193">
+            check that URL is valid and a geewee
+        </note>
         <note priority="high" time="1268103084">
             JSON API versioning
         </note>

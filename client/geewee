@@ -62,7 +62,7 @@ def main
     rclass = Geewee::Resources::detect(resource.downcase.to_sym)
     usage "couldn't find resource #{resource}" unless rclass
     r = rclass.new Geewee::REST::Connection.new($config['base_url'],
-     :default_args => { :geewee_api_key => $config['geewee_api_key'] })
+     :default_args => { :geewee_api_key => $config['geewee_api_key'], :locale => :en })
     begin
         r.apply :operation  => operation.downcase.to_sym,
                 :argv       => argv

@@ -54,6 +54,12 @@
             done
         </comment>
     </note>
+    <note priority="veryhigh" time="1268699851" done="1268832640">
+        HTML escape with %code without args
+        <comment>
+            done!
+        </comment>
+    </note>
     <note priority="high" time="1267997341" done="1268017036">
         comment in markdown
         <comment>
@@ -123,11 +129,8 @@
             fix update posts tag_list
         </note>
     </note>
-    <note priority="veryhigh" time="1268587569">
+    <note priority="veryhigh" time="1268587569" done="1268833508">
         code overflow
-    </note>
-    <note priority="veryhigh" time="1268699851" done="1268832640">
-        HTML escape with %code without args
         <comment>
             done!
         </comment>

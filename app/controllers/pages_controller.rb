@@ -1,82 +1,69 @@
 # Controller for static Page management.
 #
-#   * show is public via HTML UI. FIXME cleanup
-#   * all are private via JSON API. TODO
+#   * show is public via HTML UI.
+#   * all are private via JSON API.
 #
 class PagesController < ApplicationController
   skip_before_filter :verify_authenticity_token
 
-  # require auth for all methods.
+  # require auth for all methods but show.
   before_filter :require_author, :except => :show
 
+  # GET /pages.json
+  def index
+    respond_to do |format|
+      format.json { render :json => Page.all }
+    end
+  end
+
   # GET /pages/1
+  # GET /pages/1.json
   def show
     @page = Page.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.haml
+      format.json { render :json => @page }
     end
   end
 
-  # GET /pages/new
-  # GET /pages/new.xml
-  def new
-    @page = Page.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @page }
-    end
-  end
-
-  # GET /pages/1/edit
-  def edit
-    @page = Page.find(params[:id])
-  end
-
-  # POST /pages
-  # POST /pages.xml
+  # POST /pages.json
   def create
     @page = Page.new(params[:page])
 
     respond_to do |format|
-      if @page.save
-        flash[:notice] = 'Page was successfully created.'
-        format.html { redirect_to(@page) }
-        format.xml  { render :xml => @page, :status => :created, :location => @page }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @page.errors, :status => :unprocessable_entity }
+      format.json do
+        if @page.save
+          render :json => @page, :status => :created, :location => @page
+        else
+          render :json => @page.errors, :status => :unprocessable_entity
+        end
       end
     end
   end
 
-  # PUT /pages/1
-  # PUT /pages/1.xml
+  # PUT /pages/1.json
   def update
     @page = Page.find(params[:id])
 
     respond_to do |format|
-      if @page.update_attributes(params[:page])
-        flash[:notice] = 'Page was successfully updated.'
-        format.html { redirect_to(@page) }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @page.errors, :status => :unprocessable_entity }
+      format.json do
+        if @page.update_attributes(params[:page])
+          head :ok
+        else
+          render :json => @page.errors, :status => :unprocessable_entity
+        end
       end
     end
   end
 
-  # DELETE /pages/1
-  # DELETE /pages/1.xml
+  # DELETE /pages/1.json
   def destroy
     @page = Page.find(params[:id])
     @page.destroy
 
     respond_to do |format|
-      format.html { redirect_to(pages_path) }
-      format.xml  { head :ok }
+      format.json { head :ok }
     end
   end
 end

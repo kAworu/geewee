@@ -39,7 +39,7 @@ class ArchivesController < ApplicationController
       stop  = start + 1.month
       posts = Post.published_after(start).published_before(stop)
     else
-      posts = Post.all
+      posts = Post.published
     end
     @posts = posts.group_by(&:month_of_the_year)
   end

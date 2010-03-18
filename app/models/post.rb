@@ -56,18 +56,14 @@ class Post < ActiveRecord::Base
 
   # set published_at when needed.
   def set_published_at_if_needed
-    if self.new_record?
-      self.published_at = Time.now if self.published?
-    else
-      if self.published_at.nil? and self.published? and not self.class.find(self.id).published?
-        self.published_at = Time.now
-      end
+    if self.published? and not self.published_at?
+      self.published_at = Time.now
     end
   end
 
-  # always return a valid date.
+  # always return a valid date, for preview.
   def published_at
-    super || Time.now
+    super or (Time.now + 1.minute)
   end
 
   # used for group_by

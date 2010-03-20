@@ -31,7 +31,7 @@ module ApplicationHelper
             lang = $1
           end
           if line =~ /\s+(?:ln|line_numbers)=(\w+)\b/
-            if %[include table list].include?($1)
+            if %[table inline list].include?($1)
               opts[:line_numbers] = $1.to_sym
             end
           end

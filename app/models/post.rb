@@ -8,10 +8,6 @@ class Post < ActiveRecord::Base
   # we always use the published order.
   default_scope :order => 'published_at DESC'
 
-  # get the last x posts.
-  named_scope   :last,
-                lambda { |x| { :limit => x } }
-
   # get only the published Posts.
   named_scope   :published,
                 lambda { { :conditions => ['published = ?', true] } }

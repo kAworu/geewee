@@ -24,8 +24,8 @@ class PostsController < ApplicationController
   # GET /posts.json
   def index
     respond_to do |format|
-      format.html { @posts = Post.published.last(6) } # index.html.haml
-      format.atom { @posts = Post.published.last(6) } # index.atom.builder
+      format.html { @posts = Post.published.first(6) } # index.html.haml
+      format.atom { @posts = Post.published.first(6) } # index.atom.builder
       format.json do
         opts = JSON_OPTS.merge(:except => [:intro, :body])
         render :json => Post.all.to_json(opts)

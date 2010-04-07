@@ -66,6 +66,12 @@
             done!
         </comment>
     </note>
+    <note priority="veryhigh" time="1269033644" done="1269108028">
+        fix ln=inline
+        <comment>
+            done!
+        </comment>
+    </note>
     <note priority="high" time="1267997341" done="1268017036">
         comment in markdown
         <comment>
@@ -180,12 +186,6 @@
             alias in config
         </note>
     </note>
-    <note priority="veryhigh" time="1269033644" done="1269108028">
-        fix ln=inline
-        <comment>
-            done!
-        </comment>
-    </note>
     <note priority="high" time="1268009587">
         paginate
     </note>
@@ -197,6 +197,9 @@
     </note>
     <note priority="high" time="1268879175">
         email non mendatory for comment
+    </note>
+    <note priority="high" time="1270631997">
+        use http://github.com/mbleigh/acts-as-taggable-on
     </note>
     <note priority="medium" time="1268047294">
         blog config

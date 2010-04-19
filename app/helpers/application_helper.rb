@@ -14,12 +14,9 @@ module ApplicationHelper
     text.split("\n").each do |line|
       if code
         if line =~ /^%\/code\s*$/
-          result << if lang
-                      tokens = CodeRay.scan(code, lang.downcase.to_sym)
-                      tokens.div(opts)
-                    else
-                      "<div class=\"code\"><pre>#{h code}</pre></div>\n"
-                    end
+          lang ||= '__none__'
+          tokens = CodeRay.scan(code, lang.downcase.to_sym)
+          result << tokens.div(opts)
           code = lang = nil
         else
           code << line << "\n"

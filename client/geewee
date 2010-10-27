@@ -394,7 +394,7 @@ class RFile
 end
 
 
-# thrown when the server give a bad error.
+# raised when the server return a request error.
 class RequestError < StandardError
     attr_reader :response, :rfile
 
@@ -788,6 +788,43 @@ class Resources::All::Page < Resources::Base
         else
             raise RequestError.new(response)
         end
+    end
+
+    # create a new page.
+    #   generate a stub file and call editor:
+    #       create pages
+    #   load from STDIN:
+    #       create pages -
+    #   load from file:
+    #       create pages /path/to/stub/file
+    accept :create do |h|
+        file = h[:argv].first rescue nil
+        if file
+            rf = RFile.load(file)
+        else
+            rf = RFile.new([Keys::TITLE]).edit!
+        end
+        # load the body into the proper header key.
+        rf.head[Keys::BODY] = rf.body
+        rf.body = ""
+        case response = post(rf.head)
+        when ::Net::HTTPCreated
+            info "new Post created: #{response['Location']}"
+        else
+            msg = JSON.parse(response.body).collect do |err|
+                err.join(' ')
+            end.join(", ")
+            raise RequestError.new(msg, rf)
+        end
+    end
+
+    # parse rf.body to split into the intro and body part of the post.
+    def fill_body rf
+        s = rf.body
+        rf.body = ""
+        a = s.split(/^%\.\.\.\s*$/)
+        rf.head[Keys::INTRO] = a[0]
+        rf.head[Keys::BODY]  = a[1]
     end
 end
 # }}}

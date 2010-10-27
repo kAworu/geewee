@@ -804,9 +804,8 @@ class Resources::All::Page < Resources::Base
         else
             rf = RFile.new([Keys::TITLE]).edit!
         end
-        # load the body into the proper header key.
-        rf.head[Keys::BODY] = rf.body
-        rf.body = ""
+        fill_body(rf)
+
         case response = post(rf.head)
         when ::Net::HTTPCreated
             info "new Post created: #{response['Location']}"
@@ -818,13 +817,49 @@ class Resources::All::Page < Resources::Base
         end
     end
 
-    # parse rf.body to split into the intro and body part of the post.
+    # update a page.
+    #   update pages
+    #   update pages 1
+    #   update pages 1 /path/to/file
+    accept :update do |h|
+        h[:argv] ||= Array.new
+
+        unless id = h[:argv].shift
+            # show page and ask for id.
+            self.apply  :operation => :show
+            id = ask('target Page id to update: ')
+        end
+        case response = get(id)
+        when ::Net::HTTPOK
+            p = JSON.parse(response.body)['page']
+        else
+            raise RequestError.new(response)
+        end
+
+        if file = h[:argv].shift
+            rf = RFile.load(file)
+        else
+            rf = RFile.new(Keys::TITLE => p['title'])
+            rf.body = p['body']
+            rf.edit!
+        end
+        fill_body(rf)
+
+        case response = put(p['id'], rf.head)
+        when ::Net::HTTPOK
+            info "Page updated: #{response['Location']}"
+        else
+            msg = JSON.parse(response.body).collect do |err|
+                err.join(' ')
+            end.join("\n")
+            raise RequestError.new(msg, rf)
+        end
+    end
+
+    # load the body into the proper header key.
     def fill_body rf
-        s = rf.body
-        rf.body = ""
-        a = s.split(/^%\.\.\.\s*$/)
-        rf.head[Keys::INTRO] = a[0]
-        rf.head[Keys::BODY]  = a[1]
+        rf.head[Keys::BODY] = rf.body
+        rf.body             = ""
     end
 end
 # }}}

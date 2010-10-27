@@ -53,7 +53,7 @@ class PagesController < ApplicationController
     respond_to do |format|
       format.json do
         if @page.update_attributes(params[:page])
-          head :ok
+          head :ok, :location => url_for(@page)
         else
           render :json => @page.errors, :status => :unprocessable_entity
         end

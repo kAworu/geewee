@@ -43,6 +43,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :pages
   map.resources :categories
   map.resources :posts, :has_many => :comments
+  map.resources :comments
 
   map.archives_by_month 'archives/by_month/:year/:month',
     :conditions => { :method => :get },

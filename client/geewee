@@ -746,7 +746,7 @@ class Resources::All::Post < Resources::Base
     end
 end
 # }}}
-#
+
 # Static Page Resource {{{
 #   TODO doc
 #
@@ -884,6 +884,70 @@ class Resources::All::Page < Resources::Base
     def fill_body rf
         rf.head[Keys::BODY] = rf.body
         rf.body             = ""
+    end
+end
+# }}}
+
+# Comment Resource {{{
+#   TODO doc
+#
+class Resources::All::Comment < Resources::Base
+    private
+
+    # accept plural form
+    named_resource :comments
+
+    # display the list of comments.
+    #   show comments
+    #   show comments id
+    accept :show do |h|
+        id = h[:argv].first rescue nil
+
+        case response = get(id)
+        when ::Net::HTTPOK
+            if id
+                comment = JSON.parse(response.body)['comment']
+                puts "id: #{comment['id']}"
+                puts "created_at: #{comment['created_at']}"
+                puts "on post:    #{comment['post']['title']}"
+                puts "author:     #{comment['name']}"
+                puts "  email:    #{comment['email']}"
+                puts "  website:  #{comment['url']}" if (comment['url'] and comment['url'].size > 0)
+                puts "\n" + \
+                    comment['body']
+            else
+                JSON.parse(response.body).each do |comment|
+                    c = comment['comment']
+                    puts '%3d[%s] by %s on %s' % [c['id'], c['created_at'], c['name'], c['post']['title']]
+                end
+            end
+        else
+            raise RequestError.new(response)
+        end
+    end
+
+    # destroy a comment.
+    #   destroy comments
+    #   destroy comments 1
+    accept :destroy do |h|
+        id = h[:argv].first rescue nil
+        unless id
+            # show pages and ask for id.
+            self.apply :operation => :show
+            id = ask('target Comment id to destroy: ')
+        end
+        self.apply :operation => :show, :argv => [id]
+        if yesno('destroy')
+            case response = delete(id)
+            when ::Net::HTTPOK
+                info 'destroyed.'
+            else
+                msg = JSON.parse(response.body).collect do |err|
+                    err.join(' ')
+                end.join(", ")
+                raise RequestError.new(msg)
+            end
+        end
     end
 end
 # }}}

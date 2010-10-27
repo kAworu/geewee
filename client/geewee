@@ -910,6 +910,7 @@ class Resources::All::Comment < Resources::Base
                 puts "id: #{comment['id']}"
                 puts "created_at: #{comment['created_at']}"
                 puts "on post:    #{comment['post']['title']}"
+                puts "status:     #{if comment['read'] then 'readed' else 'new' end}"
                 puts "author:     #{comment['name']}"
                 puts "  email:    #{comment['email']}"
                 puts "  website:  #{comment['url']}" if (comment['url'] and comment['url'].size > 0)
@@ -918,7 +919,7 @@ class Resources::All::Comment < Resources::Base
             else
                 JSON.parse(response.body).each do |comment|
                     c = comment['comment']
-                    puts '%3d[%s] by %s on %s' % [c['id'], c['created_at'], c['name'], c['post']['title']]
+                    puts '%3d[%s] by %s on %s' % [c['id'], (c['read'] ? '-' : '!'), c['name'], c['post']['title']]
                 end
             end
         else

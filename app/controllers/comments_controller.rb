@@ -15,7 +15,7 @@ class CommentsController < ApplicationController
   }
 
   # require auth for destroy and mark_as_read methods.
-  before_filter :require_author, :only => [:destroy, :mark_as_read]
+  before_filter :require_author, :only => [:destroy, :next_unread]
 
   # GET /comments.json
   def index
@@ -73,6 +73,22 @@ class CommentsController < ApplicationController
                     :anchor => :new_comment
       end
       format.js
+    end
+  end
+
+  # PUT /next_unread.json
+  def next_unread
+    @comment = Comment.unread.first
+
+    respond_to do |format|
+      format.json do
+        if @comment
+          @comment.update_attribute(:read, true)
+          render :json => @comment.to_json(JSON_OPTS)
+        else
+          render :json => nil, :status => 204 # 204 - HTTPNoContent
+        end
+      end
     end
   end
 

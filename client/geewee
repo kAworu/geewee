@@ -130,6 +130,10 @@ def err message
     exit 1
 end
 
+def debug message
+  STDERR.puts message if $DEBUG
+end
+
 # ask the user.
 def ask question
     STDOUT.print "???> #{question}"
@@ -204,6 +208,7 @@ module REST
             http = Net::HTTP.new(url.host, url.port)
             http.use_ssl = (url.port == 443)
 
+            debug "#{method} #{url}"
             res = http.start { |conn| conn.request(req) }
             res
         end
@@ -387,6 +392,9 @@ class RFile
         File.open(@path, 'w') { |fd| fd << self.to_s }
         if system "#{$config['editor']} #@path" then
             self.parse!
+            # the file was temporary for geewee use, we can remove it safely now.
+            File.remove(@path)
+            self
         else
             raise Error.new("editor aborded (file was #{@path})")
         end
@@ -907,21 +915,28 @@ class Resources::All::Comment < Resources::Base
         when ::Net::HTTPOK
             if id
                 comment = JSON.parse(response.body)['comment']
-                puts "id: #{comment['id']}"
-                puts "created_at: #{comment['created_at']}"
-                puts "on post:    #{comment['post']['title']}"
-                puts "status:     #{if comment['read'] then 'readed' else 'new' end}"
-                puts "author:     #{comment['name']}"
-                puts "  email:    #{comment['email']}"
-                puts "  website:  #{comment['url']}" if (comment['url'] and comment['url'].size > 0)
-                puts "\n" + \
-                    comment['body']
+                display(comment)
             else
                 JSON.parse(response.body).each do |comment|
                     c = comment['comment']
                     puts '%3d[%s] by %s on %s' % [c['id'], (c['read'] ? '-' : '!'), c['name'], c['post']['title']]
                 end
             end
+        else
+            raise RequestError.new(response)
+        end
+    end
+
+    # display and mark as read the next unread comment.
+    #   next comments
+    #   next comments id
+    accept :next do |h|
+        case response = put('next_unread')
+        when ::Net::HTTPOK
+            comment = JSON.parse(response.body)['comment']
+            display(comment)
+        when ::Net::HTTPNoContent
+          info 'no new comments.'
         else
             raise RequestError.new(response)
         end
@@ -949,6 +964,18 @@ class Resources::All::Comment < Resources::Base
                 raise RequestError.new(msg)
             end
         end
+    end
+
+    def display comment
+        puts "id: #{comment['id']}"
+        puts "created_at: #{comment['created_at']}"
+        puts "on post:    #{comment['post']['title']} @ #{$config['base_url']}/posts/#{comment['post_id']}"
+        puts "status:     #{if comment['read'] then 'readed' else 'new' end}"
+        puts "author:     #{comment['name']}"
+        puts "  email:    #{comment['email']}"
+        puts "  website:  #{comment['url']}" if (comment['url'] and comment['url'].size > 0)
+        puts "\n" + \
+            comment['body']
     end
 end
 # }}}

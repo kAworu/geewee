@@ -11,6 +11,10 @@ class Comment < ActiveRecord::Base
   # we always use the creation order.
   default_scope :order => 'created_at'
 
+  # get only the unread Comments.
+  named_scope   :unread,
+                lambda { { :conditions => ['read = ?', false] } }
+
   # hook, reset bad URL address.
   # FIXME: better in controller?
   def before_validation

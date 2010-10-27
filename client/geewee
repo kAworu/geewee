@@ -28,12 +28,6 @@ rescue LoadError => e
     exit 1
 end
 
-# Extending ruby for greater justice. {{{
-#   TODO doc
-#
-
-F = File.basename($0)
-
 # main procedure called if this script is executed.
 def main
     # FIXME: UGLY UGLY UGLY
@@ -79,6 +73,12 @@ def main
 end
 
 
+# Extending ruby for greater justice. {{{
+#   some handy functions that would end in a utils.rb file.
+#
+
+F = File.basename($0)
+
 # dynamic usage function.
 def usage message
     STDERR.puts
@@ -116,20 +116,18 @@ def usage message
     exit
 end
 
-# really simple error function.
-def err message
-    STDERR.puts "#{F}: #{message}"
-    exit 1
-end
-
-# TODO doc
+# really simple error familiy functions.
 def info message
     puts "===> #{message}"
 end
 
-# TODO doc
 def warn message
     STDERR.puts "!!!> #{message}"
+end
+
+def err message
+    STDERR.puts "#{F}: #{message}"
+    exit 1
 end
 
 # ask the user.
@@ -241,7 +239,7 @@ end
 class Resources::Base
     All = [:create, :show, :update, :destroy]
 
-    #TODO doc
+    # raised when an operation is not supported by a ressource instance.
     class BadOperation < Exception
     end
 
@@ -328,7 +326,7 @@ end
 #   Handle a human readable Resource description.
 #   RFile looks like email, a header of key:values, an empty line and a body.
 class RFile
-    # TODO doc
+    # RFile exceptions classes.
     class Error < StandardError
     end
     class ParseError < Error
@@ -538,7 +536,7 @@ end
 # }}}
 
 # Posts Resource {{{
-#   TODO doc
+#   show, create, update, destroy, and publish operations are allowed.
 #
 class Resources::All::Post < Resources::Base
     private
@@ -738,7 +736,7 @@ class Resources::All::Post < Resources::Base
         rf
     end
 
-    # TODO doc
+    # parse rf.body to split into the intro and body part of the post.
     def fill_intro_n_body rf
         s = rf.body
         rf.body = ""
@@ -806,7 +804,7 @@ main if $0 == __FILE__
 
 ---
 base_url:       http://my.sexy.geewee/blog/path
-editor:         ee
+editor:         vi
 geewee_api_key: my_secret_single_access_token
 
 =end

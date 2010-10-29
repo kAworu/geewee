@@ -25,8 +25,7 @@
           =link_to h(tag.name), archives_by_tag_path(tag.name)
       %li
         = t('meta.meta')
-        - key = case post.comments.count when 0 then 'meta.no_comments' when 1 then 'meta.one_comment' else 'meta.many_comments' end
-        = link_to t(key, :count => post.comments.count), :action => :show, :id => post, :anchor => :comments
+        = comments_count(post.comments.count)
         \-
         = link_to t('meta.atom'), post_path(post, :atom)
         \-

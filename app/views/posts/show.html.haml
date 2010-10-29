@@ -2,8 +2,7 @@
 
 %h5
   %a{ :name => 'comments' }
-  - key = case @post.comments.count when 0 then 'meta.no_comments' when 1 then 'meta.one_comment' else 'meta.many_comments' end
-  = t(key, :count => @post.comments.count)
+  = comments_count(@post.comments.count)
 
 %p
   %a{ :href => '#new_comment' }= t('comments.write_a_comment')

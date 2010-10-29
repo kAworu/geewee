@@ -1,33 +1,33 @@
 .hentry{ :id => "post-#{post.id}" }
   %h2.entry-title= link_to h(post.title), post
   .subtitle
-    Publié par
+    = t('posts.published_by')
     %span.author-name
       = link_to h(post.author.name), archives_by_author_path(post.author)
   %abbr.published{ :title => l(post.published_at) }
-    il y a
-    = time_ago_in_words(post.published_at)
+    = time_ago_sentance(post.published_at)
   %br.clear
   .entry-content
     =markdown post.intro
     - if post.body
       - if controller.action_name == 'index'
-        .more= link_to 'Lire la suite...', post
+        .more= link_to t('posts.read_more') + '...', post
       - else
         .extended= markdown post.body
   - unless controller.action_name == 'index'
     %ul.meta
       %li.categories
-        Catégorie:
+        = t('meta.category')
         = link_to h(post.category.display_name), archives_by_category_path(post.category)
       %li.tags
-        Mots-clefs:
+        = t('meta.tags')
         - post.tags.each do |tag|
           =link_to h(tag.name), archives_by_tag_path(tag.name)
       %li
-        Meta:
-        = link_to "#{(c = post.comments.count).zero? ? 'aucun' : c} commentaire#{'s' if post.comments.count > 1}", :action => :show, :id => post, :anchor => :comments
+        = t('meta.meta')
+        - key = case post.comments.count when 0 then 'meta.no_comments' when 1 then 'meta.one_comment' else 'meta.many_comments' end
+        = link_to t(key, :count => post.comments.count), :action => :show, :id => post, :anchor => :comments
         \-
-        = link_to 'flux Atom', post_path(post, :atom)
+        = link_to t('meta.atom'), post_path(post, :atom)
         \-
-        = link_to 'Lien permanent', post
+        = link_to t('meta.permalink'), post

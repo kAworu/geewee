@@ -7,14 +7,14 @@
     = markdown @page.body
     %ul.meta
       %li
-        = t('meta')
-        = link_to t('permalink'), @page
+        = t('meta.meta')
+        = link_to t('meta.permalink'), @page
       %li
         %abbr{ :title => l(@page.created_at) }
-          = t('published')
+          = t('meta.published')
           = time_ago_sentance(@page.created_at)
         - if @page.modified_since_created?
           %br
           %abbr{ :title => l(@page.updated_at) }
-            = t('updated')
+            = t('meta.updated')
             = time_ago_sentance(@page.updated_at)

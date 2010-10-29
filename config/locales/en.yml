@@ -20,6 +20,16 @@ en:
     invalid_captcha: "Please prove me you're human, fill the captcha"
     comment_is_valid: "You comment is valid."
     comment_created: "Thank you! Your comment has been created :)"
+    write_a_comment: "write a comment"
+    preview: preview
+    name: name
+    email: email
+    used_for_gravatar_wont_be_displayed: "used for gravatar, won't be displayed"
+    url: URL
+    comment: comment
+    you_can_use_the_foo_syntax_markup: "You can use the %{markup} syntax markup :)"
+    captcha: "prove me you're not a vilain robot, write fourty-two (in number)"
+    submit: "Submit!"
 
   archives:
     by_author:   'archives by author'
@@ -29,9 +39,21 @@ en:
     somepost_by_someone_in_somecategory: "%{post} by %{author} in %{category}"
 
   pages:
-    title: 'pages'
+    title: pages
 
-  published: 'published'
-  updated: 'updated'
-  meta: 'meta'
-  permalink: 'permalink'
+  posts:
+    published_by: 'published by'
+    read_more: 'read more'
+
+  # shared between posts and pages
+  meta:
+    category: 'category:'
+    tags: 'tags:'
+    published: 'published:'
+    updated: 'updated:'
+    meta: 'meta:'
+    permalink: 'permalink'
+    atom: 'atom feed'
+    no_comments: 'no comments'
+    one_comment: 'one comment'
+    many_comments: '%{count} comments'

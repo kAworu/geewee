@@ -2,13 +2,11 @@
 
 %h5
   %a{ :name => 'comments' }
-  = @post.comments.count
-  - if @post.comments.count > 1
-    Commentaires
-  - else
-    Commentaire
+  - key = case @post.comments.count when 0 then 'meta.no_comments' when 1 then 'meta.one_comment' else 'meta.many_comments' end
+  = t(key, :count => @post.comments.count)
+
 %p
-  %a{ :href => '#new_comment' } Écrire un commentaire
+  %a{ :href => '#new_comment' }= t('comments.write_a_comment')
 
 #comment_div
   %ol#comments.comments
@@ -19,50 +17,50 @@
 %a{ :name => 'new_comment' }
 - remote_form_for [@post, @comment] do |f|
   %fieldset
-    %legend Écrire un commentaire
+    %legend= t('comments.write_a_comment').capitalize + ':'
     %p#flash-notice= flash[:notice]
     %p#flash-error=  flash[:error]
     - if flash[:error].blank? and flash[:comment] # display errors.
       %div
         = error_messages_for 'comment'
     #preview{ :style => 'display:none;' }
-      %h3 Prévisualisation
+      %h3= t('comments.preview')
       %ul
         %li#preview-comment
     %p
-      = f.label :name, 'nom:'
+      = f.label :name, t('comments.name')
       %br
       = f.text_field :name
     %p
-      = f.label :email, 'email:'
-      (utilisé pour gravatar, ne sera pas affiché)
+      = f.label :email, t('comments.email')
+      (#{t 'comments.used_for_gravatar_wont_be_displayed'})
       %br
       = f.text_field :email
     %p
-      = f.label :url, 'URL:'
+      = f.label :url, t('comments.url')
       %br
       = f.text_field :url, :value => 'http://'
     %p
-      = f.label :body, 'commentaire:'
+      = f.label :body, t('comments.comment')
       %br
-      Tu peux utiliser la syntaxe
-      %a{ :href => 'http://daringfireball.net/projects/markdown/syntax' } Markdown.
+      - mkduri = 'http://daringfireball.net/projects/markdown/syntax'
+      = t('comments.you_can_use_the_foo_syntax_markup', :markup => link_to('markdown', mkduri))
       = f.text_area :body
     %p#js-preview{ :style => 'display:none;' }
-      = label :option, :preview, 'prévisualiser'
+      = label :option, :preview, t('comments.preview')
       %br
       = check_box :option, :preview
     %p
-      = label :option, :captcha, 'écris quarante-deux (en chiffres)'
-      (anti spam bot)
+      = label :option, :captcha, t('comments.captcha')
       %br
       = text_field :option, :captcha
     %p
-      = f.submit 'Envoyer', :onclick => '$("spinner").style.display = "block";'
+      = f.submit t('comments.submit'), :onclick => '$("spinner").style.display = "block";'
       = image_tag '/images/theme/spinner.gif', :id => 'spinner', :style => 'display:none;'
 
 %script{ :type => 'text/javascript' }
   \//<![CDATA[
+  // preview works only with JS
   window.onload = js_preview_show;
   function js_preview_show() { $("js-preview").style.display = "block"; }
   \//]]>

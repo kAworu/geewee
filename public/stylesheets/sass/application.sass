@@ -1,7 +1,7 @@
-!LINK_COLOR       = #930
-!LINK_HOVER_COLOR = #662
-!TITLE_DARK       = !LINK_HOVER_COLOR - #111
-!LINK_HOVER_BG    = #ffc
+$LINK_COLOR:       #930
+$LINK_HOVER_COLOR: #662
+$TITLE_DARK:       $LINK_HOVER_COLOR - #111
+$LINK_HOVER_BG:    #ffc
 
 
 // the font used for titles.
@@ -36,10 +36,10 @@ a
     +reset_padding_margin
     border: none
   &:link, &:visited
-    color      = !LINK_COLOR
+    color:      $LINK_COLOR
   &:hover, &:active
-    color      = !LINK_HOVER_COLOR
-    background = !LINK_HOVER_BG
+    color:      $LINK_HOVER_COLOR
+    background: $LINK_HOVER_BG
 
 /* http://longren.org/2006/09/27/wrapping-text-inside-pre-tags */
 pre
@@ -49,12 +49,13 @@ pre
 
 
 // tagN class generation, for the tag_cloud display.
-!NTAG = 9
-!i    = 0
-@while !i < !NTAG
-  !i = !i + 1
-  .tag#{!i}
-    font-size = 0.6em + (0.2 * !i)
+$NTAG: 12
+$i:    0
+@while $i < $NTAG
+  $i: $i + 1
+  .tag#{$i}
+    font-size: 0.5em + (0.3 * $i)
+    text-decoration: none
 
 @import layout.sass
 @import content.sass

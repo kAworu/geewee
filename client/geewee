@@ -393,7 +393,7 @@ class RFile
         if system "#{$config['editor']} #@path" then
             self.parse!
             # the file was temporary for geewee use, we can remove it safely now.
-            File.remove(@path)
+            File.delete(@path)
             self
         else
             raise Error.new("editor aborded (file was #{@path})")

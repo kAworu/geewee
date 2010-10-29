@@ -3,11 +3,11 @@
 
   a
     &:link, &:visited
-      color = !LINK_HOVER_BG - #444
+      color: $LINK_HOVER_BG - #444
       text-decoration: none
 
     &:hover, &:active
-      color = !TITLE_DARK
+      color: $TITLE_DARK
       background: transparent
       text-decoration: none
 
@@ -19,7 +19,7 @@
     float: left
 
   h2
-    color = !TITLE_DARK
+    color: $TITLE_DARK
     text-shadow: #aaa 1px 0px 1px
     font: normal 14px verdana, arial, sans-serif
     margin: 2.35em 0.2em 0 0
@@ -28,7 +28,7 @@
 
 #content
   h1, h2, h3, h4, h5
-    color = !TITLE_DARK
+    color: $TITLE_DARK
     +title_font
     text-shadow: #aaa 0px 1px 1px
     font-weight: bold
@@ -124,7 +124,7 @@
         text-decoration: none
 
         &:hover
-          color = !LINK_COLOR
+          color: $LINK_COLOR
 
     .clear
       clear: both
@@ -236,7 +236,7 @@
 
     a
       &:link, &:visited
-        color = !TITLE_DARK
+        color: $TITLE_DARK
         text-decoration: none
       &:hover, &:active
         background: transparent

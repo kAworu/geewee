@@ -7,14 +7,14 @@
     = markdown @page.body
     %ul.meta
       %li
-        Meta:
-        = link_to 'Lien permanent', @page
+        = t('meta')
+        = link_to t('permalink'), @page
       %li
         %abbr{ :title => l(@page.created_at) }
-          Publiée il y a
-          = time_ago_in_words(@page.created_at)
+          = t('published')
+          = time_ago_sentance(@page.created_at)
         - if @page.modified_since_created?
           %br
           %abbr{ :title => l(@page.updated_at) }
-            mise à jours il y a
-            = time_ago_in_words(@page.updated_at)
+            = t('updated')
+            = time_ago_sentance(@page.updated_at)

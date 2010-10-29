@@ -22,8 +22,16 @@ en:
     comment_created: "Thank you! Your comment has been created :)"
 
   archives:
-    by_author:   'Archives by author'
-    by_category: 'Archives by category'
-    by_tag:      'Archives by tag'
-    by_month:    'Archives by month'
+    by_author:   'archives by author'
+    by_category: 'archives by category'
+    by_tag:      'archives by tag'
+    by_month:    'archives by month'
     somepost_by_someone_in_somecategory: "%{post} by %{author} in %{category}"
+
+  pages:
+    title: 'pages'
+
+  published: 'published'
+  updated: 'updated'
+  meta: 'meta'
+  permalink: 'permalink'

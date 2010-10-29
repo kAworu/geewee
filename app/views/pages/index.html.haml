@@ -1,6 +1,5 @@
-%h1 Pages:
+%h1= t('pages.title')
 
 %ul
   - @pages.each do |page|
     %li= link_to h(page.title), page
-

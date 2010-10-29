@@ -967,9 +967,12 @@ class Resources::All::Comment < Resources::Base
     end
 
     def display comment
+        comment_uri = "#{$config['base_url']}/posts/#{comment['post_id']}#comment_#{comment['id']}"
         puts "id: #{comment['id']}"
         puts "created_at: #{comment['created_at']}"
-        puts "on post:    #{comment['post']['title']} @ #{$config['base_url']}/posts/#{comment['post_id']}"
+        puts "on post:    #{comment['post']['title']}"
+        puts "link:       #{comment_uri}"
+        puts "status:     #{if comment['read'] then 'readed' else 'new' end}"
         puts "status:     #{if comment['read'] then 'readed' else 'new' end}"
         puts "author:     #{comment['name']}"
         puts "  email:    #{comment['email']}"

@@ -15,9 +15,6 @@
     - if @post.comments.any?
       - @post.comments.each do |comment|
         = render :partial => comment
-    - else
-      %li.dummy_comment{ :style => 'display:none' }
-        Aucun commentaires.
 
 %a{ :name => 'new_comment' }
 - remote_form_for [@post, @comment] do |f|
@@ -25,21 +22,18 @@
     %legend Écrire un commentaire
     %p#flash-notice= flash[:notice]
     %p#flash-error=  flash[:error]
+    - if flash[:error].blank? and flash[:comment] # display errors.
+      %div
+        = error_messages_for 'comment'
     #preview{ :style => 'display:none;' }
       %h3 Prévisualisation
       %ul
         %li#preview-comment
     %p
-      les champs avec une étoile rouge (
-      %span{ :style => 'color:red' } *
-      ) sont obligatoires.
-    %p
-      %span{ :style => 'color:red' } *
       = f.label :name, 'nom:'
       %br
       = f.text_field :name
     %p
-      %span{ :style => 'color:red' } *
       = f.label :email, 'email:'
       (utilisé pour gravatar, ne sera pas affiché)
       %br
@@ -49,7 +43,6 @@
       %br
       = f.text_field :url, :value => 'http://'
     %p
-      %span{ :style => 'color:red' } *
       = f.label :body, 'commentaire:'
       %br
       Tu peux utiliser la syntaxe
@@ -65,8 +58,8 @@
       %br
       = text_field :option, :captcha
     %p
-      = f.submit 'Envoyer'
-      = image_tag '/images/theme/spinner.gif', :id => 'spinner', :style => 'display:none' # FIXME unused.
+      = f.submit 'Envoyer', :onclick => '$("spinner").style.display = "block";'
+      = image_tag '/images/theme/spinner.gif', :id => 'spinner', :style => 'display:none;'
 
 %script{ :type => 'text/javascript' }
   \//<![CDATA[

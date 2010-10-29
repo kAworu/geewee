@@ -55,7 +55,6 @@ class Post < ActiveRecord::Base
     end
   end
 
-  # set published_at when needed.
   def set_published_at_if_needed
     if self.published? and not self.published_at?
       self.published_at = Time.now

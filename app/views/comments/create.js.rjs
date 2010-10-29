@@ -1,9 +1,13 @@
+if @captcha_valid and not @comment.valid?
+  flash[:error] = error_messages_for 'comment'
+end
+
 page.replace_html 'flash-error', flash[:error]
 page['flash-error'].visual_effect :highlight unless flash[:error].blank?
 page.replace_html 'flash-notice', flash[:notice]
 page['flash-notice'].visual_effect :highlight unless flash[:notice].blank?
 
-if @captcha and @comment.valid?
+if @captcha_valid and @comment.valid?
   if @preview
     page.replace_html 'preview-comment', :partial => @comment
     page['preview-comment'].visual_effect :highlight
@@ -15,3 +19,5 @@ if @captcha and @comment.valid?
     page['preview'].hide
   end
 end
+
+page['spinner'].hide

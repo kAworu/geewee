@@ -56,10 +56,11 @@ module ApplicationHelper
 
   # guess the <title> of the page.
   def html_title
-    if @post
+    if defined?(@post)
       @post.title
-    elsif @page
+    elsif defined?(@page)
       @page.title
     end
+    nil
   end
 end

@@ -2,4 +2,20 @@
 # See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  hello: "Hello world"
+  time:
+    formats:
+      default: "%A %e %B %Y at %Hh%M"
+      month_of_the_year: "%B %Y"
+
+  activerecord:
+    errors:
+      email_doesnt_match_name: "Your email doesn't match the author name."
+
+  paginate:
+    previous: previous
+    next: next
+
+  comments:
+    invalid_captcha: "Please prove me you're human, fill the captcha"
+    comment_is_valid: "You comment is valid."
+    comment_created: "Thank you! Your comment has been created :)"

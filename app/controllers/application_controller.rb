@@ -25,6 +25,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # method used by authlogic.
   def current_author
     return @current_author if defined?(@current_author)
     nil

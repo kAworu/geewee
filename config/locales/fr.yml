@@ -134,6 +134,7 @@ fr:
 
   activerecord:
     errors:
+      email_doesnt_match_name: "TODO"
       template:
         header:
           one:    "une erreur à empêché ce {{model}} d'être enregistré"

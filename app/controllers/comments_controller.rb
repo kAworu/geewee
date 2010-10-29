@@ -36,43 +36,41 @@ class CommentsController < ApplicationController
     end
   end
 
-  # FIXME: i'm (very) ulgy
   # POST /comments
   def create
     @post = Post.find(params[:post_id])
     @comment = @post.comments.build(params[:comment])
     @preview = params[:option][:preview] == '1'
-    @captcha = params[:option][:captcha].to_i == 42
+    @captcha_valid = params[:option][:captcha].to_i == 42 # FIXME
 
-    flash[:comment] = @comment
-    respond_to do |format|
-      if @captcha
-        if @comment.valid?
-          flash[:error]  = ''
-          if @preview
-            flash[:notice] = 'commentaire valide.'
-            # hack for the partial
-            @comment.created_at = Time.now
-          else
-            @comment.save!
-            flash[:comment] = nil
-            flash[:notice] = 'commentaire enregistré!'
-          end
-        else
-          flash[:notice] = ''
-          flash[:error]  = 'commentaire invalide'
-        end
+    flash[:error] = flash[:notice] = ''
+    catch :done do
+      # check captcha
+      unless @captcha_valid
+        flash[:error] =I18n.translate('comments.invalid_captcha')
+        throw :done
+      end
+      # check comment
+      throw :done unless @comment.valid?
+
+      if @preview
+        flash[:notice] = I18n.translate('comments.comment_is_valid')
+        @comment.created_at = Time.now # hack for the partial
       else
-        flash[:notice] = ''
-        flash[:error]  = 'et ma captcha alors?'
+        @comment.save!
+        flash[:notice] = I18n.translate('comments.comment_created')
       end
+    end
+
+    respond_to do |format|
       format.html do
+        flash[:comment] = @comment if @comment.id.nil? # save it for editing.
         redirect_to :controller => :posts,
-                    :action => :show,
-                    :id => @post,
-                    :anchor => :new_comment
+                    :action     => :show,
+                    :id         => @post,
+                    :anchor     => :new_comment
       end
-      format.js
+      format.js # create.js.rjs
     end
   end
 

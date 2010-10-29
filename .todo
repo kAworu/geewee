@@ -47,8 +47,11 @@
         <comment>
             done
         </comment>
-        <note priority="verylow" time="1268013516">
+        <note priority="verylow" time="1268013516" done="1288392812">
             i18n http://guides.rubyonrails.org/i18n.html
+            <comment>
+                done
+            </comment>
         </note>
     </note>
     <note priority="veryhigh" time="1268575173" done="1268696849">
@@ -150,6 +153,12 @@
             fix update posts tag_list
         </note>
     </note>
+    <note priority="low" time="1268093339" done="1288383856">
+        good errors messages for comments
+        <comment>
+            done
+        </comment>
+    </note>
     <note priority="veryhigh" time="1268005298">
         client
         <note priority="veryhigh" time="1268062003" done="1268353090">
@@ -248,12 +257,6 @@
     </note>
     <note priority="low" time="1267999859">
         gravatar!
-    </note>
-    <note priority="low" time="1268093339" done="1288383856">
-        good errors messages for comments
-        <comment>
-            done
-        </comment>
     </note>
     <note priority="verylow" time="1268507957">
         new features?

@@ -105,5 +105,5 @@ en:
     '100': hundred
     '100s': hundred
     one_hundred: one hundred
-    dozen_to_one_sep: '-'
     dozen_to_digit_sep: '-'
+    dozen_to_one_sep: '-'

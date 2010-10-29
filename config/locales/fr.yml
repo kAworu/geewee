@@ -194,7 +194,7 @@ fr:
     atom: 'flux atom'
     no_comments: 'aucun commentaire'
     one_comment: 'un commentaire'
-    many_comments: '%{count} commentaires'
+    comments: 'commentaires'
 
   menu:
     atom_subscribe: 'Abonnes-toi à mon beau flux atom <3'

@@ -6,11 +6,13 @@ en:
     formats:
       default: "%A %e %B %Y at %Hh%M"
       month_of_the_year: "%B %Y"
-  time_ago: "%{time} ago"
 
   activerecord:
     errors:
       email_doesnt_match_name: "Your email doesn't match the author name."
+
+# geewee
+  time_ago: "%{time} ago"
 
   paginate:
     previous: previous

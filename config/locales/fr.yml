@@ -134,7 +134,7 @@ fr:
 
   activerecord:
     errors:
-      email_doesnt_match_name: "TODO"
+      email_doesnt_match_name: "l'adresse email ne correspond pas à l'auteur."
       template:
         header:
           one:    "une erreur à empêché ce {{model}} d'être enregistré"
@@ -146,3 +146,64 @@ fr:
     select:
       # default value for :prompt => true in FormOptionsHelper
       prompt: "faire un choix"
+
+# geewee
+  time_ago: "il y a %{time}"
+
+  paginate:
+    previous: précédent
+    next: suivant
+
+  comments:
+    invalid_captcha: "Prouves que t'es un homme, rempli la captcha."
+    comment_is_valid: "Ton commentaire est valide."
+    comment_created: "Merci! Ton commentaire a été ajouté :)"
+    write_a_comment: "écrire un commentaire"
+    preview: prévisualiser
+    name: name
+    email: email
+    used_for_gravatar_wont_be_displayed: "utilisé pour gravatar, ne sera pas affiché"
+    url: URL
+    comment: commentaire
+    you_can_use_the_foo_syntax_markup: "tu peux utiliser la syntaxe %{markup} :)"
+    captcha: "écris quarante-deux (en chiffres)"
+    submit: "Ajouter!"
+
+  archives:
+    by_author:   'archives par auteur'
+    by_category: 'archives par categories'
+    by_tag:      'archives par tag'
+    by_month:    'archives par mois'
+    somepost_by_someone_in_somecategory: "%{post} par %{author} dans %{category}"
+
+  pages:
+    title: pages
+
+  posts:
+    published_by: 'publié par'
+    read_more: 'lire la suite'
+
+  # shared between posts and pages
+  meta:
+    category: 'categorie:'
+    tags: 'tags:'
+    published: 'publication:'
+    updated: 'mis à jour:'
+    meta: 'meta:'
+    permalink: 'lien permanent'
+    atom: 'flux atom'
+    no_comments: 'aucun commentaire'
+    one_comment: 'un commentaire'
+    many_comments: '%{count} commentaires'
+
+  menu:
+    atom_subscribe: 'Abonnes-toi à mon beau flux atom <3'
+    pages: 'Pages'
+    authors: 'Auteurs'
+    categories: 'Categories'
+    tags_cloud: 'Tags'
+    archives: 'Archives'
+
+  footer:
+    powered_by: 'Propulsé par'
+    design: 'Design'

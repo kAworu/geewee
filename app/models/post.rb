@@ -30,6 +30,11 @@ class Post < ActiveRecord::Base
   # acts_as_taggable_on_steroids plugin.
   acts_as_taggable
 
+  # will_paginate configuration
+  def self.per_page
+    5
+  end
+
   # hooks
   before_save :reset_empty_body, :set_published_at_if_needed
 

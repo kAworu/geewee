@@ -5,8 +5,7 @@
     %meta{ :content => 'text/html; charset=UTF-8', 'http-equiv' => 'Content-Type' }
     %title
       fork while fork
-      - if html_title
-        =h ": #{html_title}"
+      =h ": #{html_title}" if html_title
 
     = stylesheet_link_tag 'application'
     = javascript_include_tag :all
@@ -32,36 +31,36 @@
           <!-- Atom feed link -->
           %p
             = image_tag '/images/feed-icon16x16.png'
-            = link_to 'Abonne toi à mon beau flux Atom <3', posts_path(:atom)
+            = link_to t('menu.atom_subscribe'), posts_path(:atom)
 
           <!-- static Pages -->
-          %h3= link_to h('Pages'), pages_path
+          %h3= link_to t('menu.pages'), pages_path
           %ul
             - Page.all.each do |page|
               %li= link_to h(page.title), page
 
           <!-- archives by Author -->
-          %h3= link_to 'Auteurs', archives_by_author_path
+          %h3= link_to t('menu.authors'), archives_by_author_path
           %ul
             - Author.find(:all).each do |author|
               %li
                 = link_to h(author.name), archives_by_author_path(author)
                 %em= "(#{author.posts.published.count})"
           <!-- archives by Category -->
-          %h3= link_to 'Catégories', archives_by_category_path
+          %h3= link_to t('menu.categories'), archives_by_category_path
           %ul
             - Category.all.sort_by { |c| -(c.posts.published.count) }.each do |category|
               %li
                 = link_to h(category.display_name), archives_by_category_path(category)
                 %em= "(#{category.posts.published.count})"
           <!-- archives by Tag -->
-          %h3= link_to 'Mots-clefs', archives_by_tag_path
+          %h3= link_to t('menu.tags_cloud'), archives_by_tag_path
           %p#tag-cloud{ :style => 'overflow:hidden' }
             - tag_cloud Post.tag_counts, ([].tap { |ary| 1.upto(12) { |i| ary << "tag#{i}" } }) do |tag, css_class|
               = link_to h(tag.name), archives_by_tag_path(tag.name), :class => css_class
 
           <!-- archives by month and year -->
-          %h3= link_to 'Archives', :controller => :archives, :action => :by_month
+          %h3= link_to t('menu.archives'), :controller => :archives, :action => :by_month
           %ul
             - Post.published.group_by(&:month_of_the_year).each do |month, posts|
               %li
@@ -79,8 +78,8 @@
             = link_to 'fork while fork', root_url
           %ul
             %li
-              Propulsé par:
+              = t('footer.powered_by')
               %a{ :href => 'http://hg.kaworu.ch/rails-geewee' } geewee
-              \/ Design:
+              \/ #{t 'footer.design'}:
               %a{ :href => 'http://quotedprintable.com/pages/scribbish' } scribbish
       <!-- end footer -->

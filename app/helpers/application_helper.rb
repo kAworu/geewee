@@ -60,8 +60,9 @@ module ApplicationHelper
       @post.title
     elsif defined?(@page)
       @page.title
+    else
+      nil
     end
-    nil
   end
 
   # translate and create a true sentance for

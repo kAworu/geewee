@@ -57,3 +57,15 @@ en:
     no_comments: 'no comments'
     one_comment: 'one comment'
     many_comments: '%{count} comments'
+
+  menu:
+    atom_subscribe: 'subscribe now to my sexy atom feed <3'
+    pages: 'Pages'
+    authors: 'Authors'
+    categories: 'Categories'
+    tags_cloud: 'Tags cloud'
+    archives: 'Archives'
+
+  footer:
+    powered_by: 'Powered by'
+    design: 'Design'

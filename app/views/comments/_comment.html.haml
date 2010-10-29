@@ -1,4 +1,5 @@
 - id = if comment.id.nil? then 'preview-comment' else "comment_#{comment.id}" end
+
 %li.comment{ :id => id }
   .author
     %div
@@ -8,6 +9,6 @@
       - else
         = link_to h(comment.name), comment.url
     %abbr{ :title => l(comment.created_at) }
-      = t('time_ago', :when => time_ago_in_words(comment.created_at))
+      = time_ago_sentance(comment.created_at)
   .content
     = markdown_no_html(comment.body)

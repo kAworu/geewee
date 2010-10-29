@@ -1,6 +1,6 @@
-%h1 Archive par Mot-Clef:
+%h1= t('archives.by_tag')
 
 - @tags.each do |tag|
   %h2=h tag.name
   %ul
-    = render :partial => 'line_post', :collection => Post.published.find_tagged_with(tag.name)
+    = render :partial => 'post', :collection => Post.published.find_tagged_with(tag.name)

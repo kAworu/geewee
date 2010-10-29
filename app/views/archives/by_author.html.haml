@@ -1,6 +1,6 @@
-%h1 Archives par Auteur:
+%h1= t('archives.by_author')
 
 - @authors.each do |author|
   %h2=h author.name
   %ul
-    = render :partial => 'line_post', :collection => author.posts.published
+    = render :partial => 'post', :collection => author.posts.published

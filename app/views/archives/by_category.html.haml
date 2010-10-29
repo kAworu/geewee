@@ -1,6 +1,6 @@
-%h1 Archives par Catégorie:
+%h1= t('archives.by_category')
 
 - @categories.each do |category|
   %h2=h category.display_name
   %ul
-    = render :partial => 'line_post', :collection => category.posts.published
+    = render :partial => 'post', :collection => category.posts.published

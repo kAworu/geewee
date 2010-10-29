@@ -6,6 +6,7 @@ en:
     formats:
       default: "%A %e %B %Y at %Hh%M"
       month_of_the_year: "%B %Y"
+  time_ago: "%{time} ago"
 
   activerecord:
     errors:
@@ -19,3 +20,10 @@ en:
     invalid_captcha: "Please prove me you're human, fill the captcha"
     comment_is_valid: "You comment is valid."
     comment_created: "Thank you! Your comment has been created :)"
+
+  archives:
+    by_author:   'Archives by author'
+    by_category: 'Archives by category'
+    by_tag:      'Archives by tag'
+    by_month:    'Archives by month'
+    somepost_by_someone_in_somecategory: "%{post} by %{author} in %{category}"

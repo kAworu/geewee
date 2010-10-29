@@ -63,4 +63,10 @@ module ApplicationHelper
     end
     nil
   end
+
+  # translate and create a true sentance for
+  # time_ago_in_word.
+  def time_ago_sentance time
+    t('time_ago', :time => time_ago_in_words(time))
+  end
 end

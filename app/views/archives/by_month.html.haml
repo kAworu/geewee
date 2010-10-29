@@ -1,6 +1,6 @@
-%h1 Archives par Mois:
+%h1= t('archives.by_month')
 
 - @posts.each do |month, posts|
   %h2=h month
   %ul
-    = render :partial => 'line_post', :collection => posts
+    = render :partial => 'post', :collection => posts

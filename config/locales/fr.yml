@@ -239,3 +239,7 @@ fr:
     '80': huitante
     '90': nonante
     '100': cent
+    '100s': cents
+    one_hundred: cent
+    dozen_to_digit_sep: '-'
+    dozen_to_one_sep: ' et '

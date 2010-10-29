@@ -98,19 +98,23 @@ module ApplicationHelper
     left  = left - write * 100  #  Subtract off those hundreds.
 
     if write > 0
-      #  Now here's a really sly trick:
-      hundreds   = number_to_word(write)
-      numString << hundreds + ' ' + t('numbers.100')
-      #  That's called "recursion".  So what did I just do?
-      #  I told this method to call itself, but with "write" instead of
-      #  "number".  Remember that "write" is (at the moment) the number of
-      #  hundreds we have to write out.  After we add "hundreds" to "numString",
-      #  we add the string ' hundred' after it.  So, for example, if
-      #  we originally called englishNumber with 1999 (so "number" = 1999),
-      #  then at this point "write" would be 19, and "left" would be 99.
-      #  The laziest thing to do at this point is to have englishNumber
-      #  write out the 'nineteen' for us, then we write out ' hundred',
-      #  and then the rest of englishNumber writes out 'ninety-nine'.
+      if write == 1
+        numString << t('numbers.one_hundred')
+      else
+        #  Now here's a really sly trick:
+        hundreds   = number_to_word(write)
+        #  That's called "recursion".  So what did I just do?
+        #  I told this method to call itself, but with "write" instead of
+        #  "number".  Remember that "write" is (at the moment) the number of
+        #  hundreds we have to write out.  After we add "hundreds" to "numString",
+        #  we add the string ' hundred' after it.  So, for example, if
+        #  we originally called englishNumber with 1999 (so "number" = 1999),
+        #  then at this point "write" would be 19, and "left" would be 99.
+        #  The laziest thing to do at this point is to have englishNumber
+        #  write out the 'nineteen' for us, then we write out ' hundred',
+        #  and then the rest of englishNumber writes out 'ninety-nine'.
+        numString << hundreds + ' ' + (left.zero? ? t('numbers.100s') : t('numbers.100'))
+      end
 
       if left > 0
         #  So we don't write 'two hundredfifty-one'...
@@ -136,7 +140,7 @@ module ApplicationHelper
 
       if left > 0
         #  So we don't write 'sixtyfour'...
-        numString << '-'
+        numString << (left == 1 ? t('numbers.dozen_to_one_sep') : t('numbers.dozen_to_digit_sep'))
       end
     end
 

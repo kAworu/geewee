@@ -1,3 +1,4 @@
+= render :partial => 'shared/gravatar', :locals => {:author => @post.author}
 = render :partial => @post
 
 %h5
@@ -9,9 +10,7 @@
 
 #comment_div
   %ol#comments.comments
-    - if @post.comments.any?
-      - @post.comments.each do |comment|
-        = render :partial => comment
+    = render :partial => 'comments/comment', :collection => @post.comments
 
 %a{ :name => 'new_comment' }
 - remote_form_for [@post, @comment] do |f|

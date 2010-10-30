@@ -2,7 +2,6 @@
 
 %li.comment{ :id => id }
   .author
-    %div
     %cite
       - if comment.url.nil?
         =h comment.name
@@ -10,5 +9,6 @@
         = link_to h(comment.name), comment.url
     %abbr{ :title => l(comment.created_at) }
       = time_ago_sentance(comment.created_at)
+      = render :partial => 'shared/gravatar', :locals => {:author => comment}
   .content
     = markdown_no_html(comment.body)

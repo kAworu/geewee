@@ -145,8 +145,8 @@ fr:
         comment:
           attributes:
             email:
-              invalid: "ton adresse email à l'air en carton là"
-              blank: "oublies pas ton email!"
+              invalid: "Ton adresse email à l'air en carton là"
+              blank: "Oublies pas ton email!"
             name:
               blank: "Anonyme, rempli ton nom quand même s'il te plait"
             body:

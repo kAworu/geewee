@@ -2,5 +2,6 @@
 
 - @authors.each do |author|
   %h2=h author.name
+  = render :partial => 'shared/gravatar', :locals => {:author => author}
   %ul
     = render :partial => 'post', :collection => author.posts.published

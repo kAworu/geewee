@@ -255,8 +255,11 @@
             timezone
         </note>
     </note>
-    <note priority="low" time="1267999859">
+    <note priority="low" time="1267999859" done="1288464236">
         gravatar!
+        <comment>
+            done!
+        </comment>
     </note>
     <note priority="verylow" time="1268507957">
         new features?

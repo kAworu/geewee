@@ -165,7 +165,7 @@ fr:
     next: suivant
 
   comments:
-    invalid_captcha: "Prouves que t'es pas un vilain robot spammeur"
+    invalid_captcha: "remplis la captcha, prouve moi que t'es un homme un vrai"
     comment_is_valid: "Ton commentaire est valide."
     comment_created: "Merci! Ton commentaire a été ajouté :)"
     write_a_comment: "écrire un commentaire"
@@ -176,7 +176,7 @@ fr:
     url: URL
     comment: commentaire
     you_can_use_the_foo_syntax_markup: "tu peux utiliser la syntaxe %{markup} :)"
-    captcha: "écris quarante-deux (en chiffres)"
+    captcha: "Prouves que t'es pas un vilain robot spammeur"
     submit: "Ajouter!"
 
   archives:

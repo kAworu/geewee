@@ -30,7 +30,7 @@ en:
     url: URL
     comment: comment
     you_can_use_the_foo_syntax_markup: "You can use the %{markup} syntax markup :)"
-    captcha: "prove me you're not a vilain robot, write fourty-two (in number)"
+    captcha: "prove me you're not a vilain spam bot"
     submit: "Submit!"
 
   archives:

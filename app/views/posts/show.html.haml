@@ -48,10 +48,8 @@
       = label :option, :preview, t('comments.preview')
       %br
       = check_box :option, :preview
-    %p
-      = label :option, :captcha, t('comments.captcha')
-      %br
-      = text_field :option, :captcha
+    %p#recaptcha
+      = render :partial => 'shared/recaptcha'
     %p
       = f.submit t('comments.submit'), :onclick => '$("spinner").style.display = "block";'
       = image_tag '/images/theme/spinner.gif', :id => 'spinner', :style => 'display:none;'

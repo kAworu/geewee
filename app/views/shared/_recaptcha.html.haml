@@ -1,0 +1,3 @@
+= label :option, :captcha, t('comments.captcha')
+%br
+= recaptcha_tags :public_key => YAML.load(File.read('config/recaptcha.yml'))['public_key'], :ajax => true

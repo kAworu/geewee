@@ -1,3 +1,5 @@
+page.replace_html 'recaptcha', :partial => 'shared/recaptcha'
+
 if @captcha_valid and not @comment.valid?
   flash[:error] = error_messages_for 'comment'
 end
@@ -19,5 +21,4 @@ if @captcha_valid and @comment.valid?
     page['preview'].hide
   end
 end
-
-page['spinner'].hide
+page[:spinner].hide

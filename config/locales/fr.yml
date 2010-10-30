@@ -165,7 +165,7 @@ fr:
     next: suivant
 
   comments:
-    invalid_captcha: "Prouves que t'es un homme, rempli la captcha."
+    invalid_captcha: "Prouves que t'es pas un vilain robot spammeur"
     comment_is_valid: "Ton commentaire est valide."
     comment_created: "Merci! Ton commentaire a été ajouté :)"
     write_a_comment: "écrire un commentaire"

@@ -41,7 +41,7 @@ class CommentsController < ApplicationController
     @post = Post.find(params[:post_id])
     @comment = @post.comments.build(params[:comment])
     @preview = params[:option][:preview] == '1'
-    @captcha_valid = params[:option][:captcha].to_i == 42 # FIXME
+    @captcha_valid = verify_recaptcha(:private_key => YAML.load(File.read('config/recaptcha.yml'))['private_key'])
 
     flash[:error] = flash[:notice] = ''
     catch :done do

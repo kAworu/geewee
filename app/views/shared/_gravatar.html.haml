@@ -1,1 +1,3 @@
-%img.gravatar{ gravatar_attrs(author, :size => 60, :html => {:alt => h("#{author.name}'s avatar")}) }/
+%img.gravatar{ gravatar_attrs(author, :size => 60,  |
+  :default => 'identicon',                          |
+  :html => {:alt => h("#{author.name}'s avatar")}) }/

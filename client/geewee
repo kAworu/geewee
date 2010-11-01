@@ -28,51 +28,6 @@ rescue LoadError => e
     exit 1
 end
 
-# main procedure called if this script is executed.
-def main
-    # FIXME: UGLY UGLY UGLY
-    # basic config setup.
-    $config = YAML.load(DATA.read)
-    unless $config and $config['base_url']
-        err "Config is missing `base_url'"
-    end
-    unless $config['editor'] or $config['editor'] = ENV['EDITOR']
-        err "please set `editor' in config or $EDITOR in env."
-    end
-    unless $config['geewee_api_key']
-        err "please set `geewee_api_key' in config."
-    end
-
-    if ARGV.size < 2
-        usage 'wrong # of arguments'
-        exit 1
-    end
-
-    operation = ARGV.shift
-    resource  = ARGV.shift
-    argv      = ARGV
-
-    # find the resource wanted.
-    rclass = Geewee::Resources::detect(resource.downcase.to_sym)
-    usage "couldn't find resource #{resource}" unless rclass
-    r = rclass.new Geewee::REST::Connection.new($config['base_url'],
-     :default_args => { :geewee_api_key => $config['geewee_api_key'], :locale => :en })
-    begin
-        r.apply :operation  => operation.downcase.to_sym,
-                :argv       => argv
-    rescue Errno::ECONNREFUSED
-        err "#{$config['base_url']} #$!"
-    rescue Geewee::Resources::Base::BadOperation
-        usage $!
-    rescue Geewee::RequestError, Geewee::RFile::Error
-        err $!
-    rescue Interrupt
-        puts
-        warn 'Interupted! bye bye.'
-    end
-end
-
-
 # Extending ruby for greater justice. {{{
 #   some handy functions that would end in a utils.rb file.
 #
@@ -301,6 +256,27 @@ class Resources::Base
         operations[op] = block
     end
 
+    def generic_destroy h
+        id = h[:argv].first rescue nil
+        unless id
+            # show and ask for id.
+            self.apply :operation => :show
+            id = ask("target id to destroy: ")
+        end
+        self.apply :operation => :show, :argv => [id]
+        if yesno('destroy')
+            case response = delete(id)
+            when ::Net::HTTPOK
+                info 'destroyed.'
+            else
+                msg = JSON.parse(response.body).collect do |err|
+                    err.join(' ')
+                end.join(", ")
+                raise RequestError.new(msg)
+            end
+        end
+    end
+
     # helpers for HTTP request.
     def get(id=nil, args=nil)
         request(id, :GET, args)
@@ -314,6 +290,8 @@ class Resources::Base
     def delete(id=nil, args=nil)
         request(id, :DELETE, args)
     end
+
+    private
 
     def request(id, method, args)
         if id and not args and id.is_a?(Hash)
@@ -515,26 +493,7 @@ class Resources::All::Category < Resources::Base
     # destroy a category.
     #   destroy categories
     #   destroy categories 1
-    accept :destroy do |h|
-        id = h[:argv].first rescue nil
-        unless id
-            # show categories and ask for id.
-            self.apply :operation => :show
-            id = ask('target Category id to destroy: ')
-        end
-        self.apply :operation => :show, :argv => [id]
-        if yesno('destroy')
-            case response = delete(id)
-            when ::Net::HTTPOK
-                info 'destroyed.'
-            else
-                msg = JSON.parse(response.body).collect do |err|
-                    err.join(' ')
-                end.join(", ")
-                raise RequestError.new(msg)
-            end
-        end
-    end
+    accept(:destroy) { |h| generic_destroy(h) }
 
     # print category on stdout
     def display c
@@ -661,26 +620,7 @@ class Resources::All::Post < Resources::Base
     # destroy a post.
     #   destroy posts
     #   destroy posts 1
-    accept :destroy do |h|
-        id = h[:argv].first rescue nil
-        unless id
-            # show posts and ask for id.
-            self.apply :operation => :show
-            id = ask('target Post id to destroy: ')
-        end
-        self.apply :operation => :show, :argv => [id]
-        if yesno('destroy')
-            case response = delete(id)
-            when ::Net::HTTPOK
-                info 'destroyed.'
-            else
-                msg = JSON.parse(response.body).collect do |err|
-                    err.join(' ')
-                end.join(", ")
-                raise RequestError.new(msg)
-            end
-        end
-    end
+    accept(:destroy) { |h| generic_destroy(h) }
 
     # publish a post.
     #   publish posts
@@ -867,26 +807,7 @@ class Resources::All::Page < Resources::Base
     # destroy a page.
     #   destroy pages
     #   destroy pages 1
-    accept :destroy do |h|
-        id = h[:argv].first rescue nil
-        unless id
-            # show pages and ask for id.
-            self.apply :operation => :show
-            id = ask('target Page id to destroy: ')
-        end
-        self.apply :operation => :show, :argv => [id]
-        if yesno('destroy')
-            case response = delete(id)
-            when ::Net::HTTPOK
-                info 'destroyed.'
-            else
-                msg = JSON.parse(response.body).collect do |err|
-                    err.join(' ')
-                end.join(", ")
-                raise RequestError.new(msg)
-            end
-        end
-    end
+    accept(:destroy) { |h| generic_destroy(h) }
 
     # load the body into the proper header key.
     def fill_body rf
@@ -945,26 +866,7 @@ class Resources::All::Comment < Resources::Base
     # destroy a comment.
     #   destroy comments
     #   destroy comments 1
-    accept :destroy do |h|
-        id = h[:argv].first rescue nil
-        unless id
-            # show pages and ask for id.
-            self.apply :operation => :show
-            id = ask('target Comment id to destroy: ')
-        end
-        self.apply :operation => :show, :argv => [id]
-        if yesno('destroy')
-            case response = delete(id)
-            when ::Net::HTTPOK
-                info 'destroyed.'
-            else
-                msg = JSON.parse(response.body).collect do |err|
-                    err.join(' ')
-                end.join(", ")
-                raise RequestError.new(msg)
-            end
-        end
-    end
+    accept(:destroy) { |h| generic_destroy(h) }
 
     def display comment
         comment_uri = "#{$config['base_url']}/posts/#{comment['post_id']}#comment_#{comment['id']}"
@@ -985,7 +887,49 @@ end
 end # end of Geewee module.
 
 
-# run main procedure if we're executed!
+# main procedure called if this script is executed.
+def main
+    # FIXME: UGLY UGLY UGLY
+    # basic config setup.
+    $config = YAML.load(DATA.read)
+    unless $config and $config['base_url']
+        err "Config is missing `base_url'"
+    end
+    unless $config['editor'] or $config['editor'] = ENV['EDITOR']
+        err "please set `editor' in config or $EDITOR in env."
+    end
+    unless $config['geewee_api_key']
+        err "please set `geewee_api_key' in config."
+    end
+
+    if ARGV.size < 2
+        usage 'wrong # of arguments'
+        exit 1
+    end
+
+    operation = ARGV.shift
+    resource  = ARGV.shift
+    argv      = ARGV
+
+    # find the resource wanted.
+    rclass = Geewee::Resources::detect(resource.downcase.to_sym)
+    usage "couldn't find resource #{resource}" unless rclass
+    r = rclass.new Geewee::REST::Connection.new($config['base_url'],
+     :default_args => { :geewee_api_key => $config['geewee_api_key'], :locale => :en })
+    begin
+        r.apply :operation  => operation.downcase.to_sym,
+                :argv       => argv
+    rescue Errno::ECONNREFUSED
+        err "#{$config['base_url']} #$!"
+    rescue Geewee::Resources::Base::BadOperation
+        usage $!
+    rescue Geewee::RequestError, Geewee::RFile::Error
+        err $!
+    rescue Interrupt
+        puts
+        warn 'Interupted! bye bye.'
+    end
+end
 main if $0 == __FILE__
 
 

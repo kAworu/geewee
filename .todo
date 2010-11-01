@@ -132,6 +132,18 @@
             done
         </comment>
     </note>
+    <note priority="high" time="1268879175" done="1288647268">
+        email non mendatory for comment
+        <comment>
+            won't do
+        </comment>
+    </note>
+    <note priority="high" time="1270631997" done="1288647235">
+        use http://github.com/mbleigh/acts-as-taggable-on
+        <comment>
+            won't do
+        </comment>
+    </note>
     <note priority="medium" time="1268010554" done="1268061870">
         static pages
         <comment>
@@ -218,8 +230,11 @@
         <note priority="medium" time="1268062166">
             manage users
         </note>
-        <note priority="low" time="1288219483">
+        <note priority="low" time="1288219483" done="1288650097">
             generic destroy method.
+            <comment>
+                done
+            </comment>
         </note>
         <note priority="verylow" time="1268308695">
             alias in config
@@ -234,16 +249,13 @@
     <note priority="high" time="1268583266">
         public/ files support
     </note>
-    <note priority="high" time="1268879175">
-        email non mendatory for comment
-    </note>
-    <note priority="high" time="1270631997">
-        use http://github.com/mbleigh/acts-as-taggable-on
-    </note>
     <note priority="medium" time="1268047294">
         blog config
-        <note priority="veryhigh" time="1268514193">
+        <note priority="veryhigh" time="1268514193" done="1288647252">
             check that URL is valid and a geewee
+            <comment>
+                wont do
+            </comment>
         </note>
         <note priority="veryhigh" time="1288466601">
             recaptcha keys
@@ -265,6 +277,12 @@
         </note>
         <note priority="medium" time="1268050459">
             timezone
+        </note>
+        <note priority="medium" time="1288647226">
+            locale
+        </note>
+        <note priority="verylow" time="1288647231">
+            first run
         </note>
     </note>
     <note priority="verylow" time="1268507957">

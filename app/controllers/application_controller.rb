@@ -8,9 +8,9 @@ class ApplicationController < ActionController::Base
   # Scrub sensitive parameters from your log
   # filter_parameter_logging :password
 
-  before_filter :check_single_access_token, :set_locale
+  before_filter :check_single_access_token, :set_locale, :geewee_guide_steps
   helper_method :check_single_access_token, :set_locale,
-                :current_author, :require_author
+                :current_author, :require_author, :geewee_guide_steps
 
   private
   def set_locale
@@ -36,6 +36,13 @@ class ApplicationController < ActionController::Base
     unless current_author
       head :unauthorized
       return false
+    end
+  end
+
+  # if Geewee hasn't been configured or no post, render a help page :D
+  def geewee_guide_steps
+    if not GeeweeConfig.already_configured?
+      render :file => "#{RAILS_ROOT}/app/views/shared/config_me.html.haml", :layout => true
     end
   end
 end

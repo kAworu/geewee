@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101027225252) do
+ActiveRecord::Schema.define(:version => 20101102015931) do
 
   create_table "authors", :force => true do |t|
     t.string   "name"
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(:version => 20101027225252) do
     t.string   "cached_slug"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "editor"
   end
 
   create_table "categories", :force => true do |t|
@@ -38,6 +39,18 @@ ActiveRecord::Schema.define(:version => 20101027225252) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "read",       :default => false
+  end
+
+  create_table "geewee_configs", :force => true do |t|
+    t.string   "bloguri"
+    t.string   "blogtitle"
+    t.string   "blogsubtitle"
+    t.boolean  "use_recaptcha",         :default => false
+    t.string   "recaptcha_public_key"
+    t.string   "recaptcha_private_key"
+    t.integer  "post_count_per_page"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "pages", :force => true do |t|

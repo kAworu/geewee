@@ -1,3 +1,4 @@
-= label :option, :captcha, t('comments.captcha')
-%br
-= recaptcha_tags :public_key => YAML.load(File.read('config/recaptcha.yml'))['public_key'], :ajax => true
+- if GeeweeConfig.entry.use_recaptcha?
+  = label :option, :captcha, t('comments.captcha')
+  %br
+  = recaptcha_tags :public_key => GeeweeConfig.entry.recaptcha_public_key, :ajax => true

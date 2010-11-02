@@ -27,6 +27,7 @@ class PostsController < ApplicationController
       format.html do # index.html.haml
         params[:page] ||= 1
         @posts = Post.paginate :page => params[:page]
+        redirect_to :controller => :help if @posts.count.zero?
       end
       format.json do
         opts = JSON_OPTS.merge(:except => [:intro, :body])

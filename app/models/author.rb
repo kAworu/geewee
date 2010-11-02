@@ -16,4 +16,19 @@ class Author < ActiveRecord::Base
 
   # authlogic
   acts_as_authentic
+
+  # return the geewee client as a string, configured for the author. Call save!
+  # method to ensure sync with the db and the generated client.
+  def client!
+    self.save!
+    cfg = {
+      'base_url' => GeeweeConfig.entry.bloguri,
+      'geewee_api_key' => self.single_access_token
+    }
+    if self.editor and not self.editor.blank?
+      cfg['editor'] = self.editor
+    end
+
+    File.read("#{RAILS_ROOT}/client/geewee") + cfg.to_yaml
+  end
 end

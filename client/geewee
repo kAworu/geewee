@@ -946,7 +946,3 @@ geewee_api_key: my_secret_single_access_token
 
 
 __END__
----
-base_url:       http://localhost:3000
-editor:         vim
-geewee_api_key: PLs_gVBZwd5EudsRMObO

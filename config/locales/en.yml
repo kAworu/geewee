@@ -61,7 +61,7 @@ en:
     comments: 'comments'
 
   menu:
-    atom_subscribe: 'subscribe now to my sexy atom feed <3'
+    atom_subscribe: 'subscribe to my sexy atom feed'
     pages: 'Pages'
     authors: 'Authors'
     categories: 'Categories'

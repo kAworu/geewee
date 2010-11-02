@@ -32,7 +32,7 @@ class Post < ActiveRecord::Base
 
   # will_paginate configuration
   def self.per_page
-    5
+    GeeweeConfig.entry.post_count_per_page
   end
 
   # hooks

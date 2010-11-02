@@ -4,7 +4,7 @@
   %head
     %meta{ :content => 'text/html; charset=UTF-8', 'http-equiv' => 'Content-Type' }
     %title
-      fork while fork
+      =h GeeweeConfig.entry.blogtitle
       =h ": #{html_title}" if html_title
 
     = stylesheet_link_tag 'application'
@@ -16,9 +16,9 @@
     #container
       <!-- start header -->
       #header
-        %h1
-          %span= link_to 'fork while fork', root_url
-        %h2 :(){:|:&amp;};:
+        %h1= link_to h(GeeweeConfig.entry.blogtitle), root_url
+        - unless GeeweeConfig.entry.blogsubtitle.blank?
+          %h2=h GeeweeConfig.entry.blogsubtitle
       <!-- end header -->
 
       <!-- start body -->
@@ -75,7 +75,7 @@
       #footer
         %hr
           %p
-            = link_to 'fork while fork', root_url
+            = link_to h(GeeweeConfig.entry.try(:blogtitle)), root_url
           %ul
             %li
               = t('footer.powered_by')

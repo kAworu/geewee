@@ -207,7 +207,7 @@ fr:
     comments: 'commentaires'
 
   menu:
-    atom_subscribe: 'Abonnes-toi à mon beau flux atom <3'
+    atom_subscribe: 'Abonnes-toi à mon beau flux atom'
     pages: 'Pages'
     authors: 'Auteurs'
     categories: 'Categories'

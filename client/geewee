@@ -976,7 +976,7 @@ class Resources::All::GClient < Resources::Base
             else
               bak = "/tmp/#{File.basename me}.bak"
               info "creating a backup file at #{bak}"
-              FileUtils.cp(me, bak, $DEBUG)
+              FileUtils.cp(me, bak)
               info "updating #{me}..."
               File.open(me, 'w') { |fd| fd << neo }
               info 'done!'

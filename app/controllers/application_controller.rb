@@ -14,8 +14,8 @@ class ApplicationController < ActionController::Base
 
   private
   def set_locale
-    # if params[:locale] is nil then I18n.default_locale will be used
-    I18n.locale = params[:locale]
+    I18n.locale = GeeweeConfig.entry.locale.try(:to_sym)
+    I18n.locale = params[:locale] if GeeweeConfig::ACCEPTED_LOCALES.include?(params[:locale])
   end
 
   # find the current author.
@@ -39,7 +39,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # if Geewee hasn't been configured or no post, render a help page :D
+  # if Geewee hasn't been configured, render a help page :D
   def geewee_guide_steps
     if not GeeweeConfig.already_configured?
       render :file => "#{RAILS_ROOT}/app/views/shared/config_me.html.haml", :layout => true

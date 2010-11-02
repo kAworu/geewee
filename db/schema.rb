@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101102015931) do
+ActiveRecord::Schema.define(:version => 20101102023951) do
 
   create_table "authors", :force => true do |t|
     t.string   "name"
@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(:version => 20101102015931) do
     t.integer  "post_count_per_page"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "locale"
   end
 
   create_table "pages", :force => true do |t|

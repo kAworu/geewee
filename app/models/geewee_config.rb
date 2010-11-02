@@ -4,9 +4,12 @@
 # the rake task geewee:config.
 #
 class GeeweeConfig < ActiveRecord::Base
-  validates_presence_of :bloguri, :blogtitle, :post_count_per_page
+  ACCEPTED_LOCALES = %w[en fr]
+
+  validates_presence_of :bloguri, :blogtitle, :post_count_per_page, :locale
   validates_presence_of :recaptcha_public_key, :recaptcha_private_key, :if => :use_recaptcha
   validates_numericality_of :post_count_per_page
+  validates_inclusion_of :locale, :in => ACCEPTED_LOCALES
 
   # hook ensuring to have only one entry.
   def before_create

@@ -18,9 +18,9 @@ class Author < ActiveRecord::Base
   acts_as_authentic
 
   # return the geewee client as a string, configured for the author. Call save!
-  # method to ensure sync with the db and the generated client.
+  # method if needed to ensure sync with the db and the generated client.
   def client!
-    self.save!
+    save! if changed?
     cfg = {
       'base_url' => GeeweeConfig.entry.bloguri,
       'geewee_api_key' => self.single_access_token

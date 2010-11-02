@@ -1,7 +1,7 @@
 # Controller for static Page management.
 #
-#   * show is public via HTML UI.
-#   * all are private via JSON API.
+#   * show and index are public via HTML UI.
+#   * all but show and index are private via JSON API.
 #
 class PagesController < ApplicationController
   skip_before_filter :verify_authenticity_token

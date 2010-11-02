@@ -207,6 +207,12 @@
             done!
         </comment>
     </note>
+    <note priority="high" time="1268360954" done="1288714279">
+        TODO|FIXME|XXX
+        <comment>
+            done
+        </comment>
+    </note>
     <note priority="high" time="1268743836" done="1268831620">
         published_at
         <comment>
@@ -315,14 +321,11 @@
             done
         </comment>
     </note>
-    <note priority="high" time="1268360954" done="1288714279">
-        TODO|FIXME|XXX
+    <note priority="high" time="1268583266" done="1288733090">
+        public/ files support
         <comment>
             done
         </comment>
-    </note>
-    <note priority="high" time="1268583266">
-        public/ files support
     </note>
     <note priority="low" time="1288665306">
         geewee help
@@ -338,6 +341,30 @@
                 done
             </comment>
         </note>
+        <note priority="low" time="1268064126" done="1288714378">
+            authentication
+            <comment>
+                done
+            </comment>
+            <note priority="high" time="1268495318" done="1268507875">
+                token
+                <comment>
+                    done
+                </comment>
+            </note>
+            <note priority="medium" time="1268508114" done="1288714368">
+                basic http?
+                <comment>
+                    won't do
+                </comment>
+            </note>
+        </note>
+        <note priority="verylow" time="1268540346" done="1288714350">
+            render Markdown and code in console?
+            <comment>
+                won't do.
+            </comment>
+        </note>
         <note priority="veryhigh" time="1268585452">
             search?
         </note>
@@ -347,23 +374,8 @@
         <note priority="medium" time="1288361957">
             trackback?
         </note>
-        <note priority="low" time="1268064126">
-            authentication
-            <note priority="high" time="1268495318" done="1268507875">
-                token
-                <comment>
-                    done
-                </comment>
-            </note>
-            <note priority="medium" time="1268508114">
-                basic http?
-            </note>
-        </note>
         <note priority="verylow" time="1268058504">
             cache system?
-        </note>
-        <note priority="verylow" time="1268540346">
-            render Markdown and code in console?
         </note>
     </note>
 </todo>

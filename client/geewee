@@ -410,7 +410,7 @@ class Resources::All::Category < Resources::Base
     end
 
     named_resource :categories
-    alias_resource :categories, :category
+    alias_resource :categories
 
     # always display a list of Category.
     #   show categories
@@ -526,7 +526,7 @@ class Resources::All::Post < Resources::Base
     end
 
     named_resource :posts
-    alias_resource :posts, :post
+    alias_resource :posts
 
     # display a list of posts, or a post.
     #   show posts
@@ -713,7 +713,7 @@ class Resources::All::Page < Resources::Base
     end
 
     named_resource :pages
-    alias_resource :pages, :page
+    alias_resource :pages
 
     # display the list of pages.
     #   show pages
@@ -830,7 +830,7 @@ class Resources::All::Comment < Resources::Base
     private
 
     named_resource :comments
-    alias_resource :comments, :comment
+    alias_resource :comments
 
     # display the list of comments.
     #   show comments
@@ -953,11 +953,12 @@ class Resources::All::Authors < Resources::Base
         end
     end
 end
+#}}}
 
-# GClient Resource {{{
+# Client Resource {{{
 # fake ressource, to auto update the client script.
 #
-class Resources::All::GClient < Resources::Base
+class Resources::All::Client < Resources::Base
     private
 
     # special ressource
@@ -984,6 +985,95 @@ class Resources::All::GClient < Resources::Base
         else
             raise RequestError.new(response)
         end
+    end
+end
+#}}}
+
+# File Resource {{{
+# handle static files.
+#
+class Resources::All::File < Resources::Base
+    require 'base64'
+    private
+
+    # special ressource
+    named_resource :static_files
+    alias_resource :files
+
+    # display all the static files.
+    #   show files
+    accept :show do |h|
+        id = h[:argv].first rescue nil
+        id = File.basename(id) unless id.nil?
+
+        case response = get(id)
+        when ::Net::HTTPOK
+            files = JSON.parse(response.body)
+            if files.size == 0
+              info 'No files.'
+            else
+              files.each { |f| puts f }
+            end
+        when ::Net::HTTPNotFound
+          info "#{id}: Not found."
+        else
+            raise RequestError.new(response)
+        end
+    end
+
+    accept :create do |h|
+      target = check_target(h)
+      bname  = File.basename(target)
+      case get(bname) when ::Net::HTTPOK
+        raise RequestError.new("#{bname}: file already exist, use update.")
+      end
+
+      info "uploading #{target}..."
+      response = post :name => bname,
+                      :data => Base64::encode64(File.read(target))
+      case response when ::Net::HTTPCreated
+        info "completed: #{response['Location']}"
+      else
+        raise RequestError.new(response)
+      end
+    end
+
+    accept :update do |h|
+      target = check_target(h)
+      bname  = File.basename(target)
+      case get(bname) when ::Net::HTTPNotFound
+        raise RequestError.new("#{bname}: file does not exist, use create.")
+      end
+
+      info "uploading #{target}..."
+      response = put(bname, :data => Base64::encode64(File.read(target)))
+      case response when ::Net::HTTPOK
+        info "completed: #{response['Location']}"
+      else
+        raise RequestError.new(response)
+      end
+    end
+
+    accept :destroy do |h|
+      target = h[:argv].first
+      raise BadOperation.new('need a file argument') if target.nil?
+      bname  = File.basename(target)
+
+      case response = delete(bname) when ::Net::HTTPOK
+        info "#{bname}: destroyed."
+      when ::Net::HTTPNotFound
+        raise RequestError.new("#{bname}: file does not exist.")
+      else
+        raise RequestError.new(response)
+      end
+    end
+
+    # check if the target file exist.
+    def check_target(h)
+      target = h[:argv].first
+      raise BadOperation.new('need a file argument') if target.nil?
+      raise Errno::ENOENT.new(target) unless File.exist?(target)
+      target
     end
 end
 # }}}
@@ -1021,7 +1111,7 @@ def main
         err "#{$config['base_url']} #$!"
     rescue Resources::Base::BadOperation
         usage $!
-    rescue RequestError, RFile::Error
+    rescue RequestError, RFile::Error, Errno::EEXIST
         err $!
     rescue Interrupt
         puts

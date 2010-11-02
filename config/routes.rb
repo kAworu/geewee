@@ -44,6 +44,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :pages
   map.resources :categories
   map.resources :posts, :has_many => :comments
+  map.resources :static_files
 
   map.next_unread 'comments/next_unread.:format',
     :conditions => { :method => :put },

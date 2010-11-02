@@ -14,14 +14,14 @@ namespace :geewee do
     answer
   end
 
-  desc "print on stdout the geewee client file. Need AUTHOR=name"
+  desc "print on STDERR the geewee client file. Need AUTHOR=name"
   task :client => :environment do
     name = ENV['AUTHOR']
     if name.blank?
       STDERR.puts '!!!> this task need the AUTHOR env variable.'
       exit 1
     end
-    Author.find(name).client!
+    STDERR.puts Author.find(name).client!
   end
 
   desc "create a new Author"

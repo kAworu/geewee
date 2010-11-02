@@ -505,7 +505,9 @@ end
 # }}}
 
 # Posts Resource {{{
-#   show, create, update, destroy, and publish operations are allowed.
+#   show, create, update and destroy operations are allowed.
+#   has a publish operation to switch the published flags in a more easy way
+#   than update and edit.
 #
 class Resources::All::Post < Resources::Base
     private
@@ -698,7 +700,7 @@ end
 # }}}
 
 # Static Page Resource {{{
-#   TODO doc
+#   show, create, update and destroy operations are allowed.
 #
 class Resources::All::Page < Resources::Base
     private
@@ -820,7 +822,8 @@ end
 # }}}
 
 # Comment Resource {{{
-#   TODO doc
+#   Manage blog comments. Only show and destroy are available, but a next
+#   operation give the next unread comment.
 #
 class Resources::All::Comment < Resources::Base
     private
@@ -886,6 +889,68 @@ class Resources::All::Comment < Resources::Base
     end
 end
 # }}}
+
+# Authors Resource {{{
+# Only index and update are allowed, and can affect only the current user.
+#
+class Resources::All::Authors < Resources::Base
+    private
+
+    # keys for the geewee API.
+    module Keys
+        NAME   = '[author]name'
+        EMAIL  = '[author]email'
+        EDITOR = '[author]editor'
+    end
+
+    # special ressource
+    named_resource :authors
+    alias_resource :me
+
+    # display the current author.
+    #   show authors|me
+    accept :show do |h|
+        case response = get
+        when ::Net::HTTPOK
+            author = JSON.parse(response.body)['author']
+            puts "name:   #{author['name']}"
+            puts "email:  #{author['email']}"
+            puts "editor: #{author['editor']}"
+        else
+            raise RequestError.new(response)
+        end
+    end
+
+    # update the current author.
+    #   update authors|me
+    accept :update do |h|
+        case response = get
+        when ::Net::HTTPOK
+            me = JSON.parse(response.body)['author']
+        else
+            raise RequestError.new(response)
+        end
+
+        if file = h[:argv].shift
+            rf = RFile.load(file)
+        else
+            rf = RFile.new Keys::NAME   => me['name'],
+                           Keys::EMAIL  => me['email'],
+                           Keys::EDITOR => me['editor']
+            rf.edit!
+        end
+        case response = put(me['id'], rf.head)
+        when ::Net::HTTPOK
+            info 'Authors info updated!'
+        else
+            msg = JSON.parse(response.body).collect do |err|
+                err.join(' ')
+            end.join("\n")
+            raise RequestError.new(msg, rf)
+        end
+    end
+end
+# }}}
 end # end of Client module.
 end # end of Geewee module.
 
@@ -948,6 +1013,5 @@ editor:         vi
 geewee_api_key: my_secret_single_access_token
 
 =end
-
 
 __END__

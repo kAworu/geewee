@@ -40,6 +40,7 @@ ActionController::Routing::Routes.draw do |map|
   # consider removing or commenting them out if you're using named routes and resources.
   map.root      :controller => 'posts'
 
+  map.resources :authors
   map.resources :pages
   map.resources :categories
   map.resources :posts, :has_many => :comments

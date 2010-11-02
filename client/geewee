@@ -9,6 +9,7 @@
 # geewee client, see http://hg.kaworu.ch/rails-geewee.
 #   this client need json in order to be able to use the geewee JSON API.
 #
+require 'fileutils'
 require 'yaml'
 require 'rubygems'
 
@@ -212,7 +213,6 @@ class Resources::Base
 
     # Array of name matching this Resource.
     #   it's composed of symbols like [:category, :categories] that are alias.
-    #   The first symbol is used as reference name for HTTP request.
     def self.resources
         # NOTE: the current context is class, so it is a class instance
         #       variable.
@@ -241,16 +241,17 @@ class Resources::Base
 
     # declare aliases for the resource.
     def self.alias_resource *list
-        # add them at the end
         (resources << list).flatten!
     end
 
     protected
 
     # declare which name this resource is responsible for, used for HTTP request.
+    def self.resource
+      @resource
+    end
     def self.named_resource name
-        # put it as first element.
-        resources.unshift name
+        @resource = name
     end
 
     # declare which operations are accepted.
@@ -300,7 +301,7 @@ class Resources::Base
             args = id
             id = nil
         end
-        resource =  '/' + self.class.resources.first.to_s
+        resource =  '/' + self.class.resource.to_s
         resource << "/#{id}" if id
         resource << '.json'
         @conn.request(resource, method, args)
@@ -408,8 +409,8 @@ class Resources::All::Category < Resources::Base
         DISPLAY_NAME = '[category]display_name'
     end
 
-    # accept plural form
     named_resource :categories
+    alias_resource :categories, :category
 
     # always display a list of Category.
     #   show categories
@@ -524,8 +525,8 @@ class Resources::All::Post < Resources::Base
         BODY      = '[post]body'
     end
 
-    # accept plural form
     named_resource :posts
+    alias_resource :posts, :post
 
     # display a list of posts, or a post.
     #   show posts
@@ -711,8 +712,8 @@ class Resources::All::Page < Resources::Base
         BODY  = '[page]body'
     end
 
-    # accept plural form
     named_resource :pages
+    alias_resource :pages, :page
 
     # display the list of pages.
     #   show pages
@@ -828,8 +829,8 @@ end
 class Resources::All::Comment < Resources::Base
     private
 
-    # accept plural form
     named_resource :comments
+    alias_resource :comments, :comment
 
     # display the list of comments.
     #   show comments
@@ -903,9 +904,8 @@ class Resources::All::Authors < Resources::Base
         EDITOR = '[author]editor'
     end
 
-    # special ressource
     named_resource :authors
-    alias_resource :me
+    alias_resource :author, :me
 
     # display the current author.
     #   show authors|me
@@ -942,11 +942,47 @@ class Resources::All::Authors < Resources::Base
         case response = put(me['id'], rf.head)
         when ::Net::HTTPOK
             info 'Authors info updated!'
+            if rf.head[Keys::EDITOR] != me['editor']
+              warn 'Your editor setting has been changed, update your client script.'
+            end
         else
             msg = JSON.parse(response.body).collect do |err|
                 err.join(' ')
             end.join("\n")
             raise RequestError.new(msg, rf)
+        end
+    end
+end
+
+# GClient Resource {{{
+# fake ressource, to auto update the client script.
+#
+class Resources::All::GClient < Resources::Base
+    private
+
+    # special ressource
+    named_resource :authors # what a hack ;)
+    alias_resource :client
+
+    # auto update the current client
+    #   update gclient
+    accept :update do |h|
+        me = __FILE__
+        case response = get('client/update') # XXX: update id is not used.
+        when ::Net::HTTPOK
+            neo = JSON.parse(response.body)['client']
+            if File.read(me) == neo
+              info 'Already up to date.'
+            else
+              bak = "/tmp/#{File.basename me}.bak"
+              info "creating a backup file at #{bak}"
+              FileUtils.cp(me, bak, $DEBUG)
+              info "updating #{me}..."
+              File.open(me, 'w') { |fd| fd << neo }
+              info 'done!'
+            end
+        else
+            raise RequestError.new(response)
         end
     end
 end

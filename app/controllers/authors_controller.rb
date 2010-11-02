@@ -29,4 +29,12 @@ class AuthorsController < ApplicationController
       end
     end
   end
+
+  # GET /client/update.json
+  # XXX: the update id is currently not used nor checked.
+  def client
+    respond_to do |format|
+      format.json { render :json => {:client => current_author.client!} }
+    end
+  end
 end

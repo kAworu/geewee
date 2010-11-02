@@ -968,7 +968,7 @@ class Resources::All::GClient < Resources::Base
     #   update gclient
     accept :update do |h|
         me = __FILE__
-        case response = get('client/update') # XXX: update id is not used.
+        case response = get('client/update')
         when ::Net::HTTPOK
             neo = JSON.parse(response.body)['client']
             if File.read(me) == neo
@@ -995,17 +995,9 @@ end # end of Geewee module.
 def main
     include ::Geewee::Client
 
-    # FIXME: UGLY UGLY UGLY
-    # basic config setup.
     $config = YAML.load(DATA.read)
-    unless $config and $config['base_url']
-        err "Config is missing `base_url'"
-    end
     unless $config['editor'] or $config['editor'] = ENV['EDITOR']
-        err "please set `editor' in config or $EDITOR in env."
-    end
-    unless $config['geewee_api_key']
-        err "please set `geewee_api_key' in config."
+        err "please set $EDITOR in env."
     end
 
     if ARGV.size < 2

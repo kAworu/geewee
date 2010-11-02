@@ -16,7 +16,6 @@ class Comment < ActiveRecord::Base
                 lambda { { :conditions => ['read = ?', false] } }
 
   # hook, reset bad URL address.
-  # FIXME: hack it with JS
   def before_validation
     if self.url == 'http://'
       self.url = nil

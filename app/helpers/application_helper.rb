@@ -4,39 +4,40 @@ module ApplicationHelper
   include TagsHelper
 
   # our own markdown function that support coderay.
-  # FIXME: it's ugly.
+  # it's ugly, but now it's commented ;)
   def markdown text
     result  = String.new
-    code    = nil
+    code    = nil # code chunk to give to coderay.
     lang    = nil
     opts    = nil
 
     text.split("\n").each do |line|
-      if code
-        if line =~ /^%\/code\s*$/
-          lang ||= '__none__'
-          tokens = CodeRay.scan(code, lang.downcase.to_sym)
+      if code # we're parsing inside %code
+        if line =~ /^%\/code\s*$/ # reach end of code tag, Coderayize.
+          tokens = CodeRay.scan(code, lang.try(:downcase).try(:to_sym))
           result << tokens.div(opts)
-          code = lang = nil
+          code = lang = nil # we're done dealing with coderay, back to markup.
         else
           code << line << "\n"
         end
-      else
-        if line =~ /^%code\b/
+      else # standard markup.
+        if line =~ /^%code\b/ # hit a %code tag, parse options.
           opts = Hash.new
+          # check for lang= or language= option.
           if line =~ /\s+lang(?:uage)?=(\w+)\b/
             lang = $1
           end
+          # check for ln= or line_numbers= option.
           if line =~ /\s+(?:ln|line_numbers)=(\w+)\b/
-            if %[table inline list].include?($1)
-              opts[:line_numbers] = $1.to_sym
-            end
+            opts[:line_numbers] = $1.to_sym if %[table inline list].include?($1)
           end
+          # check for tw= or tab_width= option.
           if line =~ /\s+(?:tw|tab_width)=(\d+)\b/
             opts[:tab_width] = $1.to_i
           end
+          # okay now opts is setup, create the code string to Coderayize.
           code = String.new
-        else
+        else # markup
           result << line << "\n"
         end
       end
@@ -84,7 +85,7 @@ module ApplicationHelper
   # translate a number into word. see http://pine.fm/LearnToProgram/?Chapter=08.
   # we only need to handle number > 1.
   #
-  # XXX: this implementation sucks when number >= 1000 (as explainted in the
+  # XXX: this implementation sucks when number >= 1000 (as explained in the
   #      link). It's our own version of the "year 2000 bug". If it happens
   #      sometimes, fixing it will be easy though ;)
   def number_to_word number

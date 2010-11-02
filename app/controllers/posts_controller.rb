@@ -98,7 +98,7 @@ class PostsController < ApplicationController
     respond_to do |format|
       format.json do
         if @post.published?
-          e = [['post', 'is already published']] # FIXME: hack
+          e = [['post', 'is already published']]
           render :json => e, :status => :unprocessable_entity
         else
           @post.published = true

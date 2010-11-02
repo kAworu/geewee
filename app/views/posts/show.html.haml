@@ -54,9 +54,9 @@
       = f.submit t('comments.submit'), :onclick => '$("spinner").style.display = "block";'
       = image_tag '/images/theme/spinner.gif', :id => 'spinner', :style => 'display:none;'
 
-%script{ :type => 'text/javascript' }
-  \//<![CDATA[
+:javascript
   // preview works only with JS
   window.onload = js_preview_show;
-  function js_preview_show() { $("js-preview").style.display = "block"; }
-  \//]]>
+  function js_preview_show() {
+    $("js-preview").style.display = "block";
+  }

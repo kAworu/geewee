@@ -108,6 +108,87 @@
             done with friendly_id
         </comment>
     </note>
+    <note priority="high" time="1268005298" done="1288712904">
+        client
+        <comment>
+            done!
+        </comment>
+        <note priority="veryhigh" time="1268062003" done="1268353090">
+            manage categories
+            <comment>
+                done!
+            </comment>
+        </note>
+        <note priority="veryhigh" time="1268062085" done="1288202203">
+            manage static
+            <comment>
+                done!
+            </comment>
+        </note>
+        <note priority="veryhigh" time="1268594198" done="1268833722">
+            locale
+            <comment>
+                done!
+            </comment>
+        </note>
+        <note priority="veryhigh" time="1288219889" done="1288222763">
+            read / mark as read comments
+        </note>
+        <note priority="high" time="1268062028" done="1268489875">
+            manage posts
+            <comment>
+                done!
+            </comment>
+            <note priority="medium" time="1268488334" done="0">
+                publish action
+            </note>
+        </note>
+        <note priority="high" time="1268062042" done="1288219900">
+            remove comment
+            <comment>
+                done!
+            </comment>
+        </note>
+        <note priority="high" time="1268689558" done="1268834057">
+            order of id, inverted
+            <comment>
+                done!
+            </comment>
+        </note>
+        <note priority="medium" time="1268062166" done="1288708882">
+            manage users
+            <comment>
+                done
+            </comment>
+            <note priority="low" time="1288666522" done="0">
+                generate client
+            </note>
+        </note>
+        <note priority="low" time="1268583209" done="1288222986">
+            clean /tmp
+            <comment>
+                done!
+            </comment>
+        </note>
+        <note priority="low" time="1288219483" done="1288650097">
+            generic destroy method.
+            <comment>
+                done
+            </comment>
+        </note>
+        <note priority="verylow" time="1268308695" done="1288712899">
+            alias in config
+            <comment>
+                won't do
+            </comment>
+        </note>
+        <note priority="verylow" time="1288220258" done="1288667152">
+            use highline for colourfull output
+            <comment>
+                won't do
+            </comment>
+        </note>
+    </note>
     <note priority="high" time="1268009587" done="1288375025">
         paginate
         <comment>
@@ -234,83 +315,11 @@
             done
         </comment>
     </note>
-    <note priority="high" time="1268005298">
-        client
-        <note priority="veryhigh" time="1268062003" done="1268353090">
-            manage categories
-            <comment>
-                done!
-            </comment>
-        </note>
-        <note priority="veryhigh" time="1268062085" done="1288202203">
-            manage static
-            <comment>
-                done!
-            </comment>
-        </note>
-        <note priority="veryhigh" time="1268594198" done="1268833722">
-            locale
-            <comment>
-                done!
-            </comment>
-        </note>
-        <note priority="veryhigh" time="1288219889" done="1288222763">
-            read / mark as read comments
-        </note>
-        <note priority="high" time="1268062028" done="1268489875">
-            manage posts
-            <comment>
-                done!
-            </comment>
-            <note priority="medium" time="1268488334" done="0">
-                publish action
-            </note>
-        </note>
-        <note priority="high" time="1268062042" done="1288219900">
-            remove comment
-            <comment>
-                done!
-            </comment>
-        </note>
-        <note priority="high" time="1268689558" done="1268834057">
-            order of id, inverted
-            <comment>
-                done!
-            </comment>
-        </note>
-        <note priority="medium" time="1268062166" done="1288708882">
-            manage users
-            <comment>
-                done
-            </comment>
-            <note priority="low" time="1288666522" done="0">
-                generate client
-            </note>
-        </note>
-        <note priority="low" time="1268583209" done="1288222986">
-            clean /tmp
-            <comment>
-                done!
-            </comment>
-        </note>
-        <note priority="low" time="1288219483" done="1288650097">
-            generic destroy method.
-            <comment>
-                done
-            </comment>
-        </note>
-        <note priority="verylow" time="1288220258" done="1288667152">
-            use highline for colourfull output
-            <comment>
-                won't do
-            </comment>
-        </note>
-        <note priority="verylow" time="1268308695">
-            alias in config
-        </note>
-    </note>
-    <note priority="high" time="1268360954">
+    <note priority="high" time="1268360954" done="1288714279">
         TODO|FIXME|XXX
+        <comment>
+            done
+        </comment>
     </note>
     <note priority="high" time="1268583266">
         public/ files support
@@ -323,14 +332,14 @@
     </note>
     <note priority="verylow" time="1268507957">
         new features?
-        <note priority="veryhigh" time="1268585452">
-            search?
-        </note>
         <note priority="veryhigh" time="1288708901" done="1288712555">
             client auto update
             <comment>
                 done
             </comment>
+        </note>
+        <note priority="veryhigh" time="1268585452">
+            search?
         </note>
         <note priority="high" time="1268059127">
             static link in sidebar?

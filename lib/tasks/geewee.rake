@@ -65,7 +65,7 @@ to run geewee. If you want to use it, click here to signup (it only require
 your hostname):
   http://www.google.com/recaptcha/whyrecaptcha
     EOF
-    if ask("do you want to use recaptcha? (recommended!)", :default => 'yes') =~ /^\s*y(?:es)\s*$/
+    if ask("do you want to use recaptcha? (recommended!)", :default => 'yes') =~ /^\s*y(?:es)?\s*$/
       c.recaptcha_private_key = ask("reCAPTCHA private key", :default => c.recaptcha_private_key)
       c.recaptcha_public_key = ask("reCAPTCHA public key", :default => c.recaptcha_public_key)
     else

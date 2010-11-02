@@ -55,7 +55,7 @@ def usage message
 
     # Build the operation -> resource help.
     h = Hash.new
-    Geewee::Resources.all.each do |r|
+    ::Geewee::Client::Resources.all.each do |r|
         r.operations.keys.each do |op|
             (h[op] ||= Array.new) << r
         end
@@ -125,6 +125,8 @@ end if RUBY_VERSION < '1.9.0'
 
 # My Shiny Geewee module <3
 module Geewee
+module Client
+
 # stolen and hacked REST module {{{
 #   from http://snipplr.com/view.php?codeview&id=2476
 #
@@ -884,11 +886,14 @@ class Resources::All::Comment < Resources::Base
     end
 end
 # }}}
+end # end of Client module.
 end # end of Geewee module.
 
 
 # main procedure called if this script is executed.
 def main
+    include ::Geewee::Client
+
     # FIXME: UGLY UGLY UGLY
     # basic config setup.
     $config = YAML.load(DATA.read)
@@ -912,18 +917,18 @@ def main
     argv      = ARGV
 
     # find the resource wanted.
-    rclass = Geewee::Resources::detect(resource.downcase.to_sym)
+    rclass = Resources::detect(resource.downcase.to_sym)
     usage "couldn't find resource #{resource}" unless rclass
-    r = rclass.new Geewee::REST::Connection.new($config['base_url'],
+    r = rclass.new REST::Connection.new($config['base_url'],
      :default_args => { :geewee_api_key => $config['geewee_api_key'], :locale => :en })
     begin
         r.apply :operation  => operation.downcase.to_sym,
                 :argv       => argv
     rescue Errno::ECONNREFUSED
         err "#{$config['base_url']} #$!"
-    rescue Geewee::Resources::Base::BadOperation
+    rescue Resources::Base::BadOperation
         usage $!
-    rescue Geewee::RequestError, Geewee::RFile::Error
+    rescue RequestError, RFile::Error
         err $!
     rescue Interrupt
         puts

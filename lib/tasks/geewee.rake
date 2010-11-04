@@ -76,9 +76,12 @@ your hostname):
   http://www.google.com/recaptcha/whyrecaptcha
     EOF
     if ask("do you want to use recaptcha? (recommended!)", :default => 'yes') =~ /^\s*y(?:es)?\s*$/
+      c.use_recaptcha = true
       c.recaptcha_private_key = ask("reCAPTCHA private key", :default => c.recaptcha_private_key)
       c.recaptcha_public_key = ask("reCAPTCHA public key", :default => c.recaptcha_public_key)
     else
+      c.use_recaptcha = false
+      c.recaptcha_private_key = c.recaptcha_public_key = nil
       c.recaptcha_private_key = c.recaptcha_public_key = nil
     end
 

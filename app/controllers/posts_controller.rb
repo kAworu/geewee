@@ -26,7 +26,7 @@ class PostsController < ApplicationController
       format.atom { @posts = Post.published.first(6) } # index.atom.builder
       format.html do # index.html.haml
         params[:page] ||= 1
-        @posts = Post.paginate :page => params[:page]
+        @posts = Post.published.paginate :page => params[:page]
         redirect_to :controller => :help if @posts.count.zero?
       end
       format.json do

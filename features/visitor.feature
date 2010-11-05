@@ -1,12 +1,17 @@
 Feature: Visit the blog
     In order to read the blog
     As a visitor
-    I want browse posts
+    I want to browse posts
 
     Scenario: Posts list
-        Given the blog has posts titled Geewee, Rails, Cucumber
+        Given the blog is configured
+        And   the blog has an author named "Me"
+        And   the blog has a category named "stuff"
+        And   the blog has a published post titled "Geewee" from 1 days ago
+        And   the blog has a published post titled "Rails" from 3 days ago
+        And   the blog has a published post titled "Cucumber" from 2 days ago
         When  I go to the home page
-        Then  I should see "Geewee"
-        Then  I should see "Rails"
-        Then  I should see "Cucumber"
-
+        Then  show me the page
+        And   I should see "Geewee"
+        And   I should see "Cucumber"
+        And   I should not see "Rails"

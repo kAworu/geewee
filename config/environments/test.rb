@@ -32,5 +32,3 @@ config.gem 'rspec-rails', :lib => false
 config.gem 'factory_girl'
 config.gem 'shoulda'
 config.gem 'timecop'
-config.gem 'cucumber'
-config.gem 'capybara'

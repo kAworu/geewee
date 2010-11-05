@@ -3,6 +3,8 @@
 #   they write posts (well, at least they should).
 #
 class Author < ActiveRecord::Base
+  CLIENT_FILE = File.join(Rails.root, 'client', 'geewee')
+
   # friendly_id, use the Author's name.
   has_friendly_id :name, :use_slug => true
 
@@ -29,6 +31,6 @@ class Author < ActiveRecord::Base
       cfg['editor'] = self.editor
     end
 
-    File.read("#{RAILS_ROOT}/client/geewee") + cfg.to_yaml
+    File.read(CLIENT_FILE) + cfg.to_yaml
   end
 end

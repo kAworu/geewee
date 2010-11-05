@@ -12,8 +12,7 @@ class Comment < ActiveRecord::Base
   default_scope :order => 'created_at'
 
   # get only the unread Comments.
-  named_scope   :unread,
-                lambda { { :conditions => ['read = ?', false] } }
+  named_scope :unread, {:conditions => ['read = ?', false]}
 
   # hook, reset bad URL address.
   def before_validation
@@ -27,6 +26,11 @@ class Comment < ActiveRecord::Base
   validates_presence_of :post, :name, :email, :body
   validates_associated  :post
   validates_format_of   :email, :with => Authlogic::Regex.email
+
+  # disallow update of comment.
+  def before_update
+    false
+  end
 
   # check that if self.name match an Author, self.email does too.
   def good_email_when_match_blog_author

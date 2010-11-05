@@ -34,7 +34,6 @@ class ApplicationController < ActionController::Base
   # filter method to require auth.
   def require_author
     unless current_author
-      puts "FOO"
       redirect_to unauthorized_path
       false
     end

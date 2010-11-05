@@ -1,15 +1,13 @@
 require 'spec_helper'
 
 describe GeeweeConfig do
-  describe :validations do
-    it { should validate_presence_of :bloguri }
-    it { should validate_presence_of :blogtitle }
-    it { should validate_presence_of :post_count_per_page }
-    it { should validate_presence_of :locale }
-    it { should validate_numericality_of :post_count_per_page }
-    GeeweeConfig::ACCEPTED_LOCALES.each do |l|
-      it "should accept #{l} as locale" do should allow_value(l).for(:locale) end
-    end
+  it { should validate_presence_of :bloguri }
+  it { should validate_presence_of :blogtitle }
+  it { should validate_presence_of :post_count_per_page }
+  it { should validate_presence_of :locale }
+  it { should validate_numericality_of :post_count_per_page }
+  GeeweeConfig::ACCEPTED_LOCALES.each do |l|
+    it "should accept #{l} as locale" do should allow_value(l).for(:locale) end
   end
 
   context 'when not configured' do

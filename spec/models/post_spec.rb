@@ -1,17 +1,14 @@
 require 'spec_helper'
 
 describe Post do
-  describe :validations do
-    it { should validate_presence_of :title }
-    it { should validate_presence_of :intro }
-    it { should validate_presence_of :author }
-    it { should validate_presence_of :category }
-  end
-  describe :associations do
-    it { should belong_to(:author) }
-    it { should belong_to(:category) }
-    it { should have_many(:comments).dependent(:destroy) }
-  end
+  it { should validate_presence_of :title }
+  it { should validate_presence_of :intro }
+  it { should validate_presence_of :author }
+  it { should validate_presence_of :category }
+
+  it { should belong_to(:author) }
+  it { should belong_to(:category) }
+  it { should have_many(:comments).dependent(:destroy) }
 
   it 'should define per_page method for will_paginate plugin' do
     Post.should respond_to(:per_page)

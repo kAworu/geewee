@@ -1,5 +1,5 @@
 Factory.sequence :name do |i|
-  "Born in #{Time.now - i}"
+  "Born in #{Time.now.year - i}"
 end
 
 Factory.sequence :email do |i|
@@ -12,6 +12,11 @@ Factory.define :author do |author|
   author.email { Factory.next(:email) }
 end
 
+Factory.define :page do |page|
+  page.title { Factory.next(:name) }
+  page.body  'Sexy body!'
+end
+
 Factory.define :category do |category|
   category.display_name { Factory.next(:name) }
 end
@@ -21,6 +26,13 @@ Factory.define :post do |post|
   post.intro       'Well, at least we try.'
   post.association :author
   post.association :category
+end
+
+Factory.define :comment do |post|
+  post.name  { Factory.next(:name) }
+  post.email { Factory.next(:email) }
+  post.body  'MOAR'
+  post.association :post
 end
 
 Factory.define :geewee_config do |cfg|

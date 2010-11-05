@@ -100,6 +100,6 @@ class StaticFilesController < ApplicationController
 
   # give a filename, return the locale path.
   def local(path='')
-    File.join(RAILS_ROOT, 'public', STATIC_FILES_DIRECTORY, path)
+    File.join(Rails.root, 'public', STATIC_FILES_DIRECTORY, path)
   end
 end

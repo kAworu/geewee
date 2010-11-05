@@ -1,7 +1,6 @@
 # Post, a Blog entry.
 #
 #   * intro and body are in markdown (extended).
-#   * published is false by default!
 #
 class Post < ActiveRecord::Base
   ### scopes
@@ -10,11 +9,11 @@ class Post < ActiveRecord::Base
 
   # get only the published Posts.
   named_scope   :published,
-                lambda { { :conditions => ['published = ?', true] } }
+                lambda { { :conditions => ['published_at <> ?', nil] } }
 
   # get only the non-published Posts.
   named_scope   :unpublished,
-                lambda { { :conditions => ['published = ?', false] } }
+                lambda { { :conditions => ['published_at = ?', nil] } }
 
   # filter only the Posts published after a given date.
   named_scope   :published_after,
@@ -36,7 +35,7 @@ class Post < ActiveRecord::Base
   end
 
   # hooks
-  before_save :reset_empty_body, :set_published_at_if_needed
+  before_save :reset_empty_body
 
   # relations
   belongs_to  :author
@@ -55,15 +54,15 @@ class Post < ActiveRecord::Base
     end
   end
 
-  def set_published_at_if_needed
-    if self.published? and not self.published_at?
-      self.published_at = Time.now
-    end
+  # return true if the post has been published, false otherwise.
+  def published?
+    not self.published_at.nil?
   end
 
-  # always return a valid date, for preview.
-  def published_at
-    super or (Time.now + 1.minute)
+  # set self to published and save.
+  def publish!
+    self.published_at = Time.now
+    save!
   end
 
   # used for group_by

@@ -4,8 +4,8 @@
   - links[:author]   = link_to h(post.author.name), archives_by_author_path(post.author)
   - links[:category] = link_to h(post.category.display_name), archives_by_category_path(post.category)
   = t('archives.somepost_by_someone_in_somecategory', links)
-  %abbr{ :title => l(post.published_at) }
-    = time_ago_sentance(post.published_at)
+  %abbr{ :title => l(post.published_at_or_now) }
+    = time_ago_sentance(post.published_at_or_now)
   \/
   - post.tags.each do |tag|
     = link_to h(tag.name), archives_by_tag_path(tag.name)

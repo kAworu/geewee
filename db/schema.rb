@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101102023951) do
+ActiveRecord::Schema.define(:version => 20101105062323) do
 
   create_table "authors", :force => true do |t|
     t.string   "name"
@@ -69,7 +69,6 @@ ActiveRecord::Schema.define(:version => 20101102023951) do
     t.string   "title"
     t.text     "intro"
     t.text     "body"
-    t.boolean  "published"
     t.string   "cached_slug"
     t.datetime "created_at"
     t.datetime "updated_at"

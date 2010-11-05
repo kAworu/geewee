@@ -101,8 +101,7 @@ class PostsController < ApplicationController
           e = [['post', 'is already published']]
           render :json => e, :status => :unprocessable_entity
         else
-          @post.published = true
-          @post.save!
+          @post.publish!
           head :ok
         end
       end

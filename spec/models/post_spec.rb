@@ -28,9 +28,8 @@ describe Post do
     @post = Factory.create :post, :published_at => nil
     @post.should_receive(:save!)
     @post.publish!
-    @new_post = Post.find(@post.id)
-    @new_post.should be_published
-    @new_post.published_at.should be_close Time.now, 1.second
+    @post.should be_published
+    @post.published_at.should be_close Time.now, 1.second
   end
 
   it 'should set body to nil if blank on save' do
@@ -50,16 +49,16 @@ describe Post do
 
   context 'with some entries' do
     before :each do
-      @author    = Factory.create :author
-      @category  = Factory.create :category
-      start_time = Time.now
+      @author   = Factory.create :author
+      @category = Factory.create :category
+      start     = Time.now
       6.times do |i|
         p = Factory.build :post, :author => @author, :category => @category
         if i % 2 == 0 then p.publish! else p.save! end
         Timecop.travel 1.hour
       end
-      end_time = Time.now
-      @middle_time = start_time + (end_time - start_time) / 2
+      stop = Time.now
+      @middle_time = Time.at((start.to_i + stop.to_i) / 2)
     end
 
     it 'should order by published_at DESC by default' do
@@ -73,7 +72,6 @@ describe Post do
     end
 
     it 'should have named scope unpublished returning only unpublished posts' do
-      pending 'need published?'
       @posts = Post.unpublished
       Post.all do |post|
         if post.published?
@@ -85,17 +83,20 @@ describe Post do
     end
 
     it 'should have named scope published_after returning only posts published after a given date' do
-      expected = Post.all.filter { |p| p.published_at > @middle_time }
-      Post.published_after(@middle_time).should == expected
+      expected = Post.all.delete_if { |p| not p.published? or p.published_at <= @middle_time }
+      Post.published_after(@middle_time).should == expected.sort_by(&:published_at).reverse
     end
 
     it 'should have named scope published_before returning only posts published before a given date' do
-      expected = Post.all.filter { |p| p.published_at < @middle_time }
-      Post.published_before(@middle_time).should == expected
+      expected = Post.all.delete_if { |p| not p.published? or p.published_at >= @middle_time }
+      Post.published_before(@middle_time).should == expected.sort_by(&:published_at).reverse
     end
   end
 
   it 'month_of_the_year' do
+    pending
+  end
+  it 'published_at_or_now' do
     pending
   end
 end

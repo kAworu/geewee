@@ -4,8 +4,8 @@
     = t('posts.published_by')
     %span.author-name
       = link_to h(post.author.name), archives_by_author_path(post.author)
-  %abbr.published{ :title => l(post.published_at) }
-    = time_ago_sentance(post.published_at)
+  %abbr.published{ :title => l(post.published_at_or_now) }
+    = time_ago_sentance(post.published_at_or_now)
   %br.clear
   .entry-content
     =markdown post.intro

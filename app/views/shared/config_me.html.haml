@@ -1,5 +1,5 @@
 .hentry
-  %h2.entry-title= link_to 'Welcome to geewee!', '#'
+  %h2.entry-title= link_to 'Welcome to geewee!', root_path
   .subtitle It's configuration time!
   %br.clear
   .entry-content
@@ -11,7 +11,8 @@
 
     %h2 Now,
     %p
-      Geewee is running but you need to configure some stuff like the blog's
-      title and an author before starting using it. please run:
+      Geewee is running but you need to configure some stuff like <strong>the
+      blog's title</strong> and <strong>an author</strong> before starting
+      using it. please run:
     %pre
       rake geewee:first_run

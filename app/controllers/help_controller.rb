@@ -2,6 +2,6 @@
 #
 class HelpController < ApplicationController
   def unauthorized
-    render :nothing
+    render :status => :unauthorized
   end
 end

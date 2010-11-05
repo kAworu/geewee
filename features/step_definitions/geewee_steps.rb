@@ -1,3 +1,7 @@
+Given /^The blog is not configured$/ do
+  GeeweeConfig.destroy_all
+end
+
 Given /^the blog is configured$/ do
   Factory.create :geewee_config
 end
@@ -15,4 +19,8 @@ Given /^there is a post titled "([^"]*)"(?: from (\d+) days? ago)?$/ do |t, n|
   Timecop.travel(jetlag) do
     Factory.build(:post, :title => t).publish!
   end
+end
+
+Then /^I should be redirected to "([^"]*)"$/ do |location|
+  response.should redirect_to path_to location
 end

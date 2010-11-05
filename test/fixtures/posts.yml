@@ -1,8 +1,0 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-
-one:
-  title: My First Post!
-  intro: this is my first post
-  body: about ruby
-  tags: ruby
-  published: true

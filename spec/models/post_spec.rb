@@ -18,7 +18,7 @@ describe Post do
   end
 
   it 'should have a published? method returning true if the post is published' do
-    @post = Factory.create :post
+    @post = Factory.create :post, :published_at => nil
     @post.published?.should be_false
     @post.update_attribute(:published_at, Time.now)
     @post.published?.should be_true
@@ -26,10 +26,21 @@ describe Post do
 
   it 'should have a publish! method setting published_at and calling save!' do
     @post = Factory.create :post, :published_at => nil
+    @post.published_at.should be_nil
     @post.should_receive(:save!)
     @post.publish!
     @post.should be_published
     @post.published_at.should be_close Time.now, 1.second
+  end
+
+  it 'should have a published_at_or_now method that always return a valid date' do
+    @post = Factory.create :post
+    @post.published_at.should be_nil
+    @post.published_at_or_now.should_not be_nil
+    @post.published_at_or_now.should be_close Time.now, 1.second
+    @post.publish!
+    @post.published_at.should_not be_nil
+    @post.published_at_or_now.should == @post.published_at
   end
 
   it 'should set body to nil if blank on save' do
@@ -94,9 +105,20 @@ describe Post do
   end
 
   it 'month_of_the_year' do
-    pending
-  end
-  it 'published_at_or_now' do
-    pending
+    I18n.locale = :en
+    @post_at_santa_claus = Factory.create :post,
+      :published_at => Time.local(2010, 12, 24, 23, 59, 59)
+    @post_at_new_year = Factory.create :post,
+      :published_at => Time.local(2010, 12, 31, 23, 59, 59)
+    @post_at_summer = Factory.create :post,
+      :published_at => Time.local(2011,  6, 21, 00, 00, 00)
+    @result = Post.all.group_by(&:month_of_the_year)
+    @result.keys.should == ['June 2011', 'December 2010']
+    @result['June 2011'].should_not include @post_at_santa_claus
+    @result['June 2011'].should_not include @post_at_new_year
+    @result['June 2011'].should     include @post_at_summer
+    @result['December 2010'].should     include @post_at_santa_claus
+    @result['December 2010'].should     include @post_at_new_year
+    @result['December 2010'].should_not include @post_at_summer
   end
 end

@@ -23,13 +23,12 @@ class PostsController < ApplicationController
   # GET /posts.json
   def index
     respond_to do |format|
-      format.atom { @posts = Post.published.first(6) } # index.atom.builder
       format.html do # index.html.haml
-        puts "INSIDE"
         params[:page] ||= 1
         @posts = Post.published.paginate :page => params[:page]
         redirect_to help_path if @posts.count.zero?
       end
+      format.atom { @posts = Post.published.first(6) } # index.atom.builder
       format.json do
         opts = JSON_OPTS.merge(:except => [:intro, :body])
         render :json => Post.all.to_json(opts)

@@ -13,7 +13,7 @@ Factory.define :author do |author|
 end
 
 Factory.define :category do |category|
-  category.name { Factory.next(:name) }
+  category.display_name { Factory.next(:name) }
 end
 
 Factory.define :post do |post|
@@ -31,5 +31,5 @@ Factory.define :geewee_config do |cfg|
   cfg.use_recaptcha false
   cfg.recaptcha_public_key  nil
   cfg.recaptcha_private_key nil
-  cfg.post_count_per_page   42
+  cfg.post_count_per_page   2
 end

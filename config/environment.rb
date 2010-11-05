@@ -20,13 +20,13 @@ Rails::Initializer.run do |config|
   # config.gem "sqlite3-ruby", :lib => "sqlite3"
   # config.gem "aws-s3", :lib => "aws/s3"
   #
-#  config.gem 'friendly_id', :version => '2.3.1'
   config.gem 'haml'
   config.gem 'BlueCloth', :lib => 'bluecloth'
   config.gem 'coderay'
   config.gem 'builder'
   config.gem 'friendly_id'
   config.gem 'authlogic'
+  config.gem 'searchlogic'
   config.gem 'will_paginate'
   config.gem 'gravatarify'
   config.gem "ambethia-recaptcha", :lib => "recaptcha/rails", :source => "http://gems.github.com"

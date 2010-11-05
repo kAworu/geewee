@@ -16,7 +16,8 @@ describe PostsController do
   context 'with some published posts' do
     before :each do
       (Post.per_page + 1).times do
-        Factory.create :post, :published_at => Time.now
+        p = Factory.build :post
+        p.publish!
       end
     end
 

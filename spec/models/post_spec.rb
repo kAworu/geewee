@@ -17,16 +17,9 @@ describe Post do
     Post.should respond_to(:per_page)
   end
 
-  it 'should have a published? method returning true if the post is published' do
-    @post = Factory.create :post, :published_at => nil
-    @post.published?.should be_false
-    @post.update_attribute(:published_at, Time.now)
-    @post.published?.should be_true
-  end
-
   it 'should have a publish! method setting published_at and calling save!' do
-    @post = Factory.create :post, :published_at => nil
-    @post.published_at.should be_nil
+    @post = Factory.create :post
+    @post.should_not be_published
     @post.should_receive(:save!)
     @post.publish!
     @post.should be_published
@@ -79,7 +72,7 @@ describe Post do
     end
 
     it 'should have named scope published returning only published posts' do
-      Post.published.should == Post.find(:all, :conditions => ['published_at <> ?', nil])
+      Post.published.should == Post.all.delete_if { |p| not p.published? }
     end
 
     it 'should have named scope unpublished returning only unpublished posts' do

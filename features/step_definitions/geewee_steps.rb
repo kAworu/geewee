@@ -21,6 +21,6 @@ Given /^there is a post titled "([^"]*)"(?: from (\d+) days? ago)?$/ do |t, n|
   end
 end
 
-Then /^I should be redirected to "([^"]*)"$/ do |location|
-  response.should redirect_to path_to location
+Then /^I should be redirected to (.+)$/ do |location|
+  @response.should redirect_to path_to location
 end

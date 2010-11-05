@@ -40,6 +40,7 @@ ActionController::Routing::Routes.draw do |map|
   # consider removing or commenting them out if you're using named routes and resources.
   map.root                              :controller => :posts
   map.help         'help/',             :controller => :help
+  map.config       'help/config',       :controller => :help, :action => :config
   map.unauthorized 'help/unauthorized', :controller => :help, :action => :unauthorized
 
   map.resources :authors

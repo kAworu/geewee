@@ -161,7 +161,7 @@ describe ApplicationHelper do
     end
 
     it 'should have comments_count_to_words speaking french' do
-      helper.comments_count_to_words( 0).should == 'aucun commentaires'
+      helper.comments_count_to_words( 0).should == 'aucun commentaire'
       helper.comments_count_to_words( 1).should == 'un commentaire'
       helper.comments_count_to_words( 2).should == 'deux commentaires'
       helper.comments_count_to_words(64).should == 'soixante-quatre commentaires'

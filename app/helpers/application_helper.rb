@@ -77,7 +77,7 @@ module ApplicationHelper
 
 
   # helper to display the comment count. Choose the right key to translate.
-  def comments_count count
+  def comments_count_to_words count
     case count
     when 0 then t('meta.no_comments')
     when 1 then t('meta.one_comment')

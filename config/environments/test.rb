@@ -27,8 +27,10 @@ config.action_mailer.delivery_method = :test
 # like if you have constraints or database-specific column types
 # config.active_record.schema_format = :sql
 
+config.gem 'rspec',       :lib => false
+config.gem 'rspec-rails', :lib => false
 config.gem 'factory_girl'
-config.gem 'rspec'
-config.gem 'rspec-rails'
+config.gem 'shoulda'
+config.gem 'timecop'
 config.gem 'cucumber'
 config.gem 'capybara'

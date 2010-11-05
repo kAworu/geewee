@@ -40,9 +40,10 @@ class ApplicationController < ActionController::Base
   end
 
   # if Geewee hasn't been configured, render a help page :D
+  CONFIG_ME_TEMPLATE = 'shared/config_me'
   def geewee_guide_steps
     if not GeeweeConfig.already_configured?
-      render :file => "#{RAILS_ROOT}/app/views/shared/config_me.html.haml", :layout => true
+      render :file => CONFIG_ME_TEMPLATE, :layout => true
     end
   end
 end

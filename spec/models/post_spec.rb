@@ -10,30 +10,30 @@ describe Post do
   it { should belong_to(:category) }
   it { should have_many(:comments).dependent(:destroy) }
 
-  it 'should define per_page method for will_paginate plugin' do
-    Post.should respond_to(:per_page)
+  describe :publish! do
+    it 'should set published_at and call save!' do
+      @post = Factory.create :post
+      @post.should_not be_published
+      @post.should_receive(:save!).exactly(1).times.and_return(true)
+      @post.publish!
+      @post.should be_published
+      @post.published_at.should be_close Time.now, 1.second
+    end
   end
 
-  it 'should have a publish! method setting published_at and calling save!' do
-    @post = Factory.create :post
-    @post.should_not be_published
-    @post.should_receive(:save!)
-    @post.publish!
-    @post.should be_published
-    @post.published_at.should be_close Time.now, 1.second
+  describe :published_at_or_now do
+    it 'should always return a valid date' do
+      @post = Factory.create :post
+      @post.published_at.should be_nil
+      @post.published_at_or_now.should_not be_nil
+      @post.published_at_or_now.should be_close Time.now, 1.second
+      @post.publish!
+      @post.published_at.should_not be_nil
+      @post.published_at_or_now.should == @post.published_at
+    end
   end
 
-  it 'should have a published_at_or_now method that always return a valid date' do
-    @post = Factory.create :post
-    @post.published_at.should be_nil
-    @post.published_at_or_now.should_not be_nil
-    @post.published_at_or_now.should be_close Time.now, 1.second
-    @post.publish!
-    @post.published_at.should_not be_nil
-    @post.published_at_or_now.should == @post.published_at
-  end
-
-  it 'should set body to nil if blank on save' do
+  it 'should set body to nil when blank on save' do
     @post = Factory.create :post, :body => String.new
     @post.body.should be_nil
   end
@@ -43,8 +43,14 @@ describe Post do
       Factory.create :geewee_config
     end
 
-    it "should honor GeeweeConfig's post_count_per_page for pagination" do
-      Post.per_page.should == GeeweeConfig.entry.post_count_per_page
+    describe :per_page do
+      it 'should be defined for will_paginate plugin' do
+        Post.should respond_to(:per_page)
+      end
+
+      it "should use GeeweeConfig's post_count_per_page for pagination" do
+        Post.per_page.should == GeeweeConfig.entry.post_count_per_page
+      end
     end
   end
 
@@ -65,50 +71,65 @@ describe Post do
     it 'should order by published_at DESC by default' do
       # remove unpublished entries since it would mess with the order.
       Post.destroy_all(:published_at => nil)
-      Post.all.should == Post.find(:all).sort_by(&:published_at).reverse
+      Post.all.should == Post.all.sort_by(&:published_at).reverse
     end
 
-    it 'should have named scope published returning only published posts' do
-      Post.published.should == Post.all.delete_if { |p| not p.published? }
+    describe 'named scope published' do
+      it 'should return only published posts' do
+        Post.published.should == Post.all.delete_if { |p| not p.published? }
+      end
     end
 
-    it 'should have named scope unpublished returning only unpublished posts' do
-      @posts = Post.unpublished
-      Post.all do |post|
-        if post.published?
-          @posts.should_not include post
-        else
-          @posts.should include post
+    describe 'named scope unpublished' do
+      it 'should return only unpublished posts' do
+        @posts = Post.unpublished
+        Post.all do |post|
+          if post.published?
+            @posts.should_not include post
+          else
+            @posts.should include post
+          end
         end
       end
     end
 
-    it 'should have named scope published_after returning only posts published after a given date' do
-      expected = Post.all.delete_if { |p| not p.published? or p.published_at <= @middle_time }
-      Post.published_after(@middle_time).should == expected.sort_by(&:published_at).reverse
+    describe 'named scope published_after' do
+      it 'should return posts published after a given date' do
+        expected = Post.all.delete_if do |p|
+          not p.published? or p.published_at <= @middle_time
+        end.sort_by(&:published_at).reverse
+        Post.published_after(@middle_time).should == expected
+      end
     end
 
-    it 'should have named scope published_before returning only posts published before a given date' do
-      expected = Post.all.delete_if { |p| not p.published? or p.published_at >= @middle_time }
-      Post.published_before(@middle_time).should == expected.sort_by(&:published_at).reverse
+    describe 'named scope published_before' do
+      it 'should return posts published before a given date' do
+        expected = Post.all.delete_if do |p|
+          not p.published? or p.published_at >= @middle_time
+        end.sort_by(&:published_at).reverse
+        Post.published_before(@middle_time).should == expected
+      end
     end
   end
 
-  it 'month_of_the_year' do
-    I18n.locale = :en
-    @post_at_santa_claus = Factory.create :post,
-      :published_at => Time.local(2010, 12, 24, 23, 59, 59)
-    @post_at_new_year = Factory.create :post,
-      :published_at => Time.local(2010, 12, 31, 23, 59, 59)
-    @post_at_summer = Factory.create :post,
-      :published_at => Time.local(2011,  6, 21, 00, 00, 00)
-    @result = Post.all.group_by(&:month_of_the_year)
-    @result.keys.should == ['June 2011', 'December 2010']
-    @result['June 2011'].should_not include @post_at_santa_claus
-    @result['June 2011'].should_not include @post_at_new_year
-    @result['June 2011'].should     include @post_at_summer
-    @result['December 2010'].should     include @post_at_santa_claus
-    @result['December 2010'].should     include @post_at_new_year
-    @result['December 2010'].should_not include @post_at_summer
+  describe :month_of_the_year do
+    it 'should return "month year" for posts' do
+      @post_at_santa_claus = Factory.create :post, :published => true,
+        :published_at => Time.local(2010, 12, 24, 23, 59, 59)
+      @post_at_new_year    = Factory.create :post, :published => true,
+        :published_at => Time.local(2010, 12, 31, 23, 59, 59)
+      @post_in_summer      = Factory.create :post, :published => true,
+        :published_at => Time.local(2011,  6, 21, 00, 00, 00)
+      # we're testing using group_by(), since it's how we need it in the app.
+      I18n.locale = :en
+      @result = Post.published.group_by(&:month_of_the_year)
+      @result.keys.should == ['June 2011', 'December 2010']
+      @result['June 2011'].should_not include @post_at_santa_claus
+      @result['June 2011'].should_not include @post_at_new_year
+      @result['June 2011'].should     include @post_in_summer
+      @result['December 2010'].should     include @post_at_santa_claus
+      @result['December 2010'].should     include @post_at_new_year
+      @result['December 2010'].should_not include @post_in_summer
+    end
   end
 end

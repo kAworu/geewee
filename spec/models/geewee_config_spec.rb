@@ -6,6 +6,7 @@ describe GeeweeConfig do
   it { should validate_presence_of :post_count_per_page }
   it { should validate_presence_of :locale }
   it { should validate_numericality_of :post_count_per_page }
+
   GeeweeConfig::ACCEPTED_LOCALES.each do |l|
     it "should accept #{l} as locale" do should allow_value(l).for(:locale) end
   end
@@ -22,13 +23,17 @@ describe GeeweeConfig do
       end.should change(GeeweeConfig, :count).from(0).to(1)
     end
 
-    it 'should have the already_configured? method returning false' do
-      GeeweeConfig.already_configured?.should be_false
+    describe :already_configured? do
+      it 'should be false' do
+        GeeweeConfig.should_not be_already_configured
+      end
     end
 
-    it 'should have the entry method returning an entry with blogtitle defined' do
-      GeeweeConfig.entry.should_not be_nil
-      GeeweeConfig.entry.blogtitle.should_not be_blank
+    describe :entry do
+      it 'should return a dummy entry with blogtitle not blank' do
+        GeeweeConfig.entry.should_not be_nil
+        GeeweeConfig.entry.blogtitle.should_not be_blank
+      end
     end
   end
 
@@ -48,12 +53,16 @@ describe GeeweeConfig do
       end.should_not change(GeeweeConfig, :count)
     end
 
-    it 'should have the already_configured? method returning true' do
-      GeeweeConfig.already_configured?.should be_true
+    describe :already_configured? do
+      it 'should return true' do
+        GeeweeConfig.should be_already_configured
+      end
     end
 
-    it 'should have the entry method returning the only entry' do
-      GeeweeConfig.entry.should == GeeweeConfig.find(:first)
+    describe :entry do
+      it 'should return the first entry' do
+        GeeweeConfig.entry.should == GeeweeConfig.find(:first)
+      end
     end
   end
 end

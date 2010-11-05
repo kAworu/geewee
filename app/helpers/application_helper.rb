@@ -69,7 +69,10 @@ module ApplicationHelper
   # translate and create a true sentance for
   # time_ago_in_word.
   def time_ago_sentance time
-    t('time_ago', :time => time_ago_in_words(time))
+    words = time_ago_in_words(time).gsub /\d+/ do |match|
+      number_to_word(match.to_i)
+    end
+    t('time_ago', :time => words)
   end
 
 

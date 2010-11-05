@@ -25,7 +25,7 @@
           =link_to h(tag.name), archives_by_tag_path(tag.name)
       %li
         = t('meta.meta')
-        = comments_count(post.comments.count)
+        = comments_count_to_words(post.comments.count)
         \-
         = link_to t('meta.atom'), post_path(post, :atom)
         \-

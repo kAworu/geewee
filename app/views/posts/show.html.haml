@@ -3,7 +3,7 @@
 
 %h5
   %a{ :name => 'comments' }
-  = comments_count(@post.comments.count)
+  = comments_count_to_words(@post.comments.count)
 
 %p
   %a{ :href => '#new_comment' }= t('comments.write_a_comment')

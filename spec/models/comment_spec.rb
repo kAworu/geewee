@@ -12,7 +12,7 @@ describe Comment do
   it { should validate_format_of(:email).with(Authlogic::Regex.email)  }
   it { should belong_to :post }
 
-  it 'should reset url if it is "http://"' do
+  it 'should reset url if it is "http://" when created' do
     Factory.create(:comment, :url => 'http://').url.should be_nil
   end
 
@@ -45,8 +45,10 @@ describe Comment do
       Comment.all.should == Comment.all.sort_by(&:created_at)
     end
 
-    it 'should have a named_scope unread returning all unreaded comments' do
-      Comment.unread.should == Comment.all.delete_if { |c| c.read? }
+    describe 'named scope unread' do
+      it 'should return all unreaded comments' do
+        Comment.unread.should == Comment.all.delete_if { |c| c.read? }
+      end
     end
   end
 end

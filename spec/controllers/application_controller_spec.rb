@@ -42,25 +42,6 @@ describe ApplicationController do
       end
     end
 
-    describe 'method require_author' do
-      before :each do
-        def controller.index
-          require_author
-          render :text => 'nice hack (bis)'
-        end
-      end
-
-      it 'should authorize the request if an author is logged int' do
-        get :index, :geewee_api_key => @author.single_access_token
-        response.should be_success
-      end
-
-      it 'should redirect to /help/unauthorized without an author logged in' do
-        get :index
-        response.should redirect_to unauthorized_path
-      end
-    end
-
     describe 'method set_locale' do
       it 'should set the configured locale by default' do
         get :index

@@ -215,8 +215,8 @@ fr:
     archives: 'Archives'
 
   footer:
-    powered_by: 'Propulsé par'
-    design: 'Design'
+    powered_by: 'propulsé par %{what}'
+    design_based_on: 'design basé sur'
 
   # numbers to words for the number_to_word() helper function.
   numbers:

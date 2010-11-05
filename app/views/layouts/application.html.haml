@@ -78,8 +78,7 @@
           = link_to h(GeeweeConfig.entry.try(:blogtitle)), root_url
         %ul
           %li
-            = t('footer.powered_by')
-            %a{ :href => 'http://hg.kaworu.ch/rails-geewee' } geewee
-            \/ #{t 'footer.design'}:
+            %a{ :href => 'http://hg.kaworu.ch/rails-geewee' }= t('footer.powered_by', :what => 'geewee')
+            \/ #{t 'footer.design_based_on'}:
             %a{ :href => 'http://quotedprintable.com/pages/scribbish' } scribbish
       <!-- end footer -->

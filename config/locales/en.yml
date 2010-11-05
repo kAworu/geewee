@@ -69,8 +69,8 @@ en:
     archives: 'Archives'
 
   footer:
-    powered_by: 'Powered by'
-    design: 'Design'
+    powered_by: 'powered by %{what}'
+    design_based_on: 'design based on'
 
   # numbers to words for the number_to_word() helper function.
   numbers:

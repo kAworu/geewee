@@ -39,11 +39,11 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # if Geewee hasn't been configured, render a help page :D
-  CONFIG_ME_TEMPLATE = 'shared/config_me'
+  # help the user through the installation process.
   def geewee_guide_steps
     if not GeeweeConfig.already_configured?
-      render :file => CONFIG_ME_TEMPLATE, :layout => true
+      redirect_to config_path
+      false
     end
   end
 end

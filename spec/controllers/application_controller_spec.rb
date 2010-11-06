@@ -8,12 +8,6 @@ describe ApplicationController do
   end
 
   context 'when Geewee is not configured' do
-    it 'should FAIL render the config help' do # FIXME
-      get :index
-      response.should be_success
-      response.should render_template ApplicationController::CONFIG_ME_TEMPLATE
-    end
-
     it 'should redirect to the config help' do
       get :index
       response.should redirect_to config_path
@@ -31,13 +25,7 @@ describe ApplicationController do
       @author = Factory.create :author
     end
 
-    it 'should MIGHTFAIL not render the config help' do # FIXME
-      get :index
-      response.should be_success
-      response.should_not render_template ApplicationController::CONFIG_ME_TEMPLATE
-    end
-
-    it 'should not render the config help' do
+    it 'should not redirect to the config help' do
       get :index
       response.should be_success
       response.should_not redirect_to config_path

@@ -42,7 +42,7 @@ Feature: see and use the pagination
         When I follow "previous" within "div.pagination"
         Then  I should be on the page 2
         When I follow "previous" within "div.pagination"
-        Then  I should be on the home page
+        Then  I should be on the page 1
 
     Scenario: using the numbered links for pagination
         Given I am on the homepage
@@ -54,8 +54,4 @@ Feature: see and use the pagination
         When I follow "3" within "div.pagination"
         Then  I should be on the page 3
         When I follow "1" within "div.pagination"
-        Then  I should be on the home page
-
-    Scenario: testing
-        Given I am on the page 2
-        Then I should be on the page 2
+        Then  I should be on the page 1

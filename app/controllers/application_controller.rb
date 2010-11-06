@@ -41,7 +41,7 @@ class ApplicationController < ActionController::Base
 
   # help the user through the installation process.
   def geewee_guide_steps
-    if not GeeweeConfig.already_configured?
+    unless GeeweeConfig.already_configured? or params[:controller] == 'help'
       redirect_to config_path
       false
     end

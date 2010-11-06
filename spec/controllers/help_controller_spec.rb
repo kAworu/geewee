@@ -4,7 +4,7 @@ describe HelpController do
   context 'when not configured' do
     %w[index unauthorized config].each do |action|
       describe action do
-        it 'should not be redirected to avoid infinit redirect' do
+        it 'should not redirect to avoid infinit redirect' do
           get action.to_sym
           response.should_not redirect_to config_path
           response.should be_success

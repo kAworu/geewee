@@ -33,6 +33,12 @@ describe Post do
     end
   end
 
+  it 'should set published_at on create if published is true' do
+    @post = Factory.create :post, :published => true
+    @post.published_at.should_not be_nil
+    @post.published_at.should be_close Time.now, 1.second
+  end
+
   it 'should set body to nil when blank on save' do
     @post = Factory.create :post, :body => String.new
     @post.body.should be_nil

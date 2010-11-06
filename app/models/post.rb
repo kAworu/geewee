@@ -7,22 +7,12 @@ class Post < ActiveRecord::Base
   # we always use the published order.
   default_scope :order => 'published_at DESC'
 
-  # get only the published Posts.
-  named_scope :published, lambda {
-    { :conditions => ['published = ?', true] }
-  }
+  named_scope :published,   { :conditions => ['published = ?', true] }
+  named_scope :unpublished, { :conditions => ['published = ?', false] }
 
-  # get only the non-published Posts.
-  named_scope :unpublished, lambda {
-    { :conditions => ['published = ?', false] }
-  }
-
-  # filter only the Posts published after a given date.
   named_scope :published_after, lambda { |date|
     { :conditions => ['published = ? AND published_at > ?', true, date] }
   }
-
-  # filter only the Posts published before a given date.
   named_scope :published_before, lambda { |date|
     { :conditions => ['published = ? AND published_at < ?', true, date] }
   }
@@ -39,7 +29,7 @@ class Post < ActiveRecord::Base
   end
 
   # hooks
-  before_save :reset_empty_body
+  before_save :reset_empty_body, :set_published_at_if_published
 
   # relations
   belongs_to  :author
@@ -50,13 +40,6 @@ class Post < ActiveRecord::Base
   validates_associated  :author, :category
   validates_presence_of :author, :category
   validates_presence_of :title,  :intro
-
-  # before save hook.
-  def reset_empty_body
-    if self.body and self.body.blank?
-      self.body = nil
-    end
-  end
 
   # set self to published and save.
   def publish!
@@ -70,8 +53,25 @@ class Post < ActiveRecord::Base
     self.published_at or Time.now
   end
 
-  # used for group_by
+  # used for group_by, do *not* try on unpublished post, since published_at
+  # will be nil.
   def month_of_the_year
       I18n.localize(self.published_at, :format => :month_of_the_year)
+  end
+
+  private
+
+  # before save hooks.
+
+  def reset_empty_body
+    if self.body and self.body.blank?
+      self.body = nil
+    end
+  end
+
+  def set_published_at_if_published
+    if self.published? and self.published_at.nil?
+      self.published_at = Time.now
+    end
   end
 end

@@ -13,6 +13,12 @@ describe ApplicationController do
       response.should redirect_to config_path
     end
 
+    it 'should avoid infinite redirect to the config help' do
+      get :controller => :help, :action => :config
+      response.should be_success
+      response.should_not redirect_to config_path
+    end
+
     it 'should set the :en locale' do
       get :index
       I18n.locale.should == :en

@@ -1,7 +1,7 @@
-Feature: browse the archives
-    In order to quickly find what I want
+Feature: browse the archives by author
+    In order to only see posts of interesting author
     As a visitor
-    I want to have many ways to see the published posts
+    I want to browse the posts by author
 
     Background:
         Given the blog is configured

@@ -11,7 +11,7 @@ Feature: browse the archives by author
         And there is an author named "C.A.R. Hoare"
         When I go to the homepage
         Then I should see "Authors" in the sidebar
-        Then I should see "Alan Turing" in the sidebar
+        And I should see "Alan Turing" in the sidebar
         And I should see "C.A.R. Hoare" in the sidebar
 
     Scenario: Seeing all the posts written by an author
@@ -22,18 +22,18 @@ Feature: browse the archives by author
         And I should see "Niklaus Wirth" in the content
         And I should see the list of all the posts written by "Niklaus Wirth"
 
-    Scenario: Seeing all the posts grouped by author
-        Given there is an author named "Grace Hopper" who wrote 1 posts
+    Scenario: Seeing the author index with their posts
+        Given there is an author named "Christopher Strachey" who wrote 1 posts
         And there is an author named "Ada Lovelace" who wrote 3 posts
         And I am on the homepage
         When I follow "Authors" in the sidebar
         Then I should be on the archives by author page
-        And I should see "Grace Hopper" in the content
-        And I should see the list of all the posts written by "Grace Hopper"
+        And I should see "Christopher Strachey" in the content
+        And I should see the list of all the posts written by "Christopher Strachey"
         And I should see "Ada Lovelace" in the content
         And I should see the list of all the posts written by "Ada Lovelace"
 
-    Scenario: reading a post from the archive by author link
+    Scenario: reading a post from the archive by the link from the author's page
         Given there is an author named "Grace Hopper"
         And there is a post titled "COBOL is dead" by "Grace Hopper"
         And I am on the archives page of the author "Grace Hopper"

@@ -20,6 +20,9 @@ module NavigationHelpers
     when /^the archives page of the author "([^"]*)"$/
       archives_by_author_path(Author.find_by_name($1))
 
+    when /^the archives page of the category "([^"]*)"$/
+      archives_by_category_path(Category.find_by_display_name($1))
+
     when /^the post page "([^"]*)"$/
       post_path(Post.find_by_title($1))
 

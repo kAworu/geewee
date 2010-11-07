@@ -1,3 +1,9 @@
+Then /^I should complete this scenario$/ do
+    pending # for ever!
+end
+
+# GeeweeConfig
+
 Given /^the blog is not configured$/ do
   GeeweeConfig.destroy_all
 end
@@ -14,34 +20,24 @@ Given /^the blog's title is "([^"]*)"$/ do |title|
   GeeweeConfig.entry.update_attribute(:blogtitle, title)
 end
 
+# Post
+
 Given /^there is no posts$/ do
   Post.destroy_all
 end
 
-Given /^there is a post titled "([^"]*)"(?: by "([^"]*)")?$/ do |title, author_name|
-  author = Author.find_by_name(author_name) || Factory.create(:author)
-  Factory.create :post, :title => title, :author => author
+# watch out the order!
+Given /^there is a post titled "([^"]*)"(?: by "([^"]*)")?(?: in the category "([^"]*)")?$/ do |title, author_name, category_name|
+  author   = Author.find_by_name(author_name) || Factory.create(:author)
+  category = Category.find_by_name(category_name.try(:downcase)) || Factory.create(:category)
+  Factory.create :post,
+    :title    => title,
+    :author   => author,
+    :category => category
 end
 
 Given /^there is (\d+) published posts?$/ do |n|
   n.to_i.times { Factory.create :post }
-end
-
-Given /^there is a page titled "([^"]*)"(?: with "([^"]*)" as body)?$/ do |title, content|
-  page = Factory.build(:page, :title => title)
-  page.body = content unless content.nil?
-  page.save!
-end
-
-Given /^there is an author named "([^"]*)"(?: who wrote (\d+) posts?)?$/ do |name, n|
-  author = Factory.create(:author, :name => name)
-  n.to_i.times { Factory.create :post, :author => author } unless n.nil?
-end
-
-Then /^I should see the list of all the posts written by "([^"]*)"$/ do |name|
-  Author.find_by_name(name).posts.each do |p|
-    Then %{I should see "#{p.title}" in the content}
-  end
 end
 
 # matching when we want to (not) see a list of posts. The list is given like
@@ -57,6 +53,36 @@ Then /^I should (not )?see the posts? ([0-9 ,]+)(?:and (\d+))?$/ do |neg, list, 
   end
 end
 
-Then /^I should complete this scenario$/ do
-    pending # for ever!
+# Page
+
+Given /^there is a page titled "([^"]*)"(?: with "([^"]*)" as body)?$/ do |title, content|
+  page = Factory.build(:page, :title => title)
+  page.body = content unless content.nil?
+  page.save!
+end
+
+# Author
+
+Given /^there is an author named "([^"]*)"(?: who wrote (\d+) posts?)?$/ do |name, n|
+  author = Factory.create(:author, :name => name)
+  n.to_i.times { Factory.create :post, :author => author } unless n.nil?
+end
+
+Then /^I should see the list of all the posts written by "([^"]*)"$/ do |name|
+  Author.find_by_name(name).posts.each do |p|
+    Then %{I should see "#{p.title}" in the content}
+  end
+end
+
+# Category
+
+Given /^there is a category named "([^"]*)"(?: with (\d+) posts?)?$/ do |name, n|
+  category = Factory.create(:category, :display_name => name)
+  n.to_i.times { Factory.create :post, :category => category } unless n.nil?
+end
+
+Then /^I should see the list of all the posts from the category "([^"]*)"$/ do |name|
+  Category.find_by_display_name(name).posts.each do |p|
+    Then %{I should see "#{p.title}" in the content}
+  end
 end

@@ -145,7 +145,7 @@ module REST
   # args can contains :default_arg hash that will be sent for each request of
   #   this connection.
   # Example:
-  #   REST::Connection.new('http://my.sexy/url',
+  #   REST::Connection.new 'http://my.sexy/url',
   #     :username => 'satan',
   #     :password => '666',
   #     :default_args => {:destination => 'Hell'}

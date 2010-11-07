@@ -20,7 +20,7 @@ Feature: browse the archives by author
         When I follow "Niklaus Wirth" in the sidebar
         Then I should be on the archives page of the author "Niklaus Wirth"
         And I should see "Niklaus Wirth" in the content
-        And I should see the posts list from the author "Niklaus Wirth"
+        And I should see the list of all the posts written by "Niklaus Wirth"
 
     Scenario: Seeing all the posts grouped by author
         Given there is an author named "Grace Hopper" who wrote 1 posts
@@ -29,9 +29,9 @@ Feature: browse the archives by author
         When I follow "Authors" in the sidebar
         Then I should be on the archives by author page
         And I should see "Grace Hopper" in the content
-        And I should see the posts list from the author "Grace Hopper"
+        And I should see the list of all the posts written by "Grace Hopper"
         And I should see "Ada Lovelace" in the content
-        And I should see the posts list from the author "Ada Lovelace"
+        And I should see the list of all the posts written by "Ada Lovelace"
 
     Scenario: reading a post from the archive by author link
         Given there is an author named "Grace Hopper"

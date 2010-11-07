@@ -38,7 +38,7 @@ Given /^there is an author named "([^"]*)"(?: who wrote (\d+) posts?)?$/ do |nam
   n.to_i.times { Factory.create :post, :author => author } unless n.nil?
 end
 
-Then /^I should see the posts list from the author "([^"]*)"$/ do |name|
+Then /^I should see the list of all the posts written by "([^"]*)"$/ do |name|
   Author.find_by_name(name).posts.each do |p|
     Then %{I should see "#{p.title}" in the content}
   end

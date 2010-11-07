@@ -65,6 +65,12 @@ describe ApplicationHelper do
             helper.markdown "%code line_numbers=#{ln_opt}\nrm -rf /\n%/code"
           end
         end
+
+        it 'should allow all the options on the same code block' do
+          @tokens.should_receive(:div).with(:line_numbers => :inline,
+                                            :tab_width    => 666).and_return('')
+          helper.markdown "%code tw=666 lang=ruby ln=inline\nrm -rf /\n%/code"
+        end
       end
     end
   end

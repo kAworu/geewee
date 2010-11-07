@@ -21,25 +21,25 @@ Feature: see and use the pagination
 
     Scenario: using the next and previous buttons
         Given I am on the homepage
-        Then I should see "previous" within "div.pagination"
-        And I should see "next" within "div.pagination"
-        When I follow "next" within "div.pagination"
+        Then I should see "previous" in the pagination
+        And I should see "next" in the pagination
+        When I follow "next" in the pagination
         Then I should be on the page 2
-        When I follow "next" within "div.pagination"
+        When I follow "next" in the pagination
         Then I should be on the page 3
-        When I follow "previous" within "div.pagination"
+        When I follow "previous" in the pagination
         Then I should be on the page 2
-        When I follow "previous" within "div.pagination"
+        When I follow "previous" in the pagination
         Then I should be on the page 1
 
     Scenario: using the numbered links for pagination
         Given I am on the homepage
-        Then I should see "1" within "div.pagination"
-        And I should see "2" within "div.pagination"
-        And I should see "3" within "div.pagination"
-        When I follow "2" within "div.pagination"
+        Then I should see "1" in the pagination
+        And I should see "2" in the pagination
+        And I should see "3" in the pagination
+        When I follow "2" in the pagination
         Then I should be on the page 2
-        When I follow "1" within "div.pagination"
+        When I follow "1" in the pagination
         Then I should be on the page 1
-        When I follow "3" within "div.pagination"
+        When I follow "3" in the pagination
         Then I should be on the page 3

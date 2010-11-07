@@ -18,7 +18,7 @@ Feature: configure the blog
         And there is no posts
         When I go to the home page
         Then I should be on the help page
-        And I should see "geewee help" within ".entry-title"
+        And I should see "geewee help" as post title
         And I should see "geewee config"
         And I should see "JSON API reference"
         And I should see "client manual"

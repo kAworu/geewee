@@ -10,13 +10,12 @@ Feature: see the blog
 
     Scenario: reading the home page
         When I go to the home page
-        Then I should see "Cucumber salad" within "#header"
-        And I should see "roses are red" within ".entry-title"
-        And I should see /atom feed/ within "#sidebar"
-        And I should see "Pages" within "#sidebar"
-        And I should see "Authors" within "#sidebar"
-        And I should see "Categories" within "#sidebar"
-        And I should see "Tags cloud" within "#sidebar"
-        And I should see "Archives" within "#sidebar"
-        And I should see "Cucumber salad" within "#footer"
-        And I should see /powered by geewee/ within "#footer"
+        Then I should see "Cucumber salad" in the header
+        And I should see "roses are red" as post title
+        And I should see "atom feed" in the sidebar
+        And I should see "Authors" in the sidebar
+        And I should see "Categories" in the sidebar
+        And I should see "Tags cloud" in the sidebar
+        And I should see "Archives" in the sidebar
+        And I should see "Cucumber salad" in the footer
+        And I should see "powered by geewee" in the footer

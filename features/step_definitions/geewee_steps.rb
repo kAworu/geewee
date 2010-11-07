@@ -18,12 +18,30 @@ Given /^there is no posts$/ do
   Post.destroy_all
 end
 
-Given /^there is a post titled "([^"]*)"?$/ do |title|
-  Factory.build(:post, :title => title).publish!
+Given /^there is a post titled "([^"]*)"(?: by "([^"]*)")?$/ do |title, author_name|
+  author = Author.find_by_name(author_name) || Factory.create(:author)
+  Factory.create :post, :title => title, :author => author
 end
 
-Given /^there is (\d+) published posts$/ do |n|
-  n.to_i.times { Factory.build(:post).publish! }
+Given /^there is (\d+) published posts?$/ do |n|
+  n.to_i.times { Factory.create :post }
+end
+
+Given /^there is a page titled "([^"]*)"(?: with "([^"]*)" as body)?$/ do |title, content|
+  page = Factory.build(:page, :title => title)
+  page.body = content unless content.nil?
+  page.save!
+end
+
+Given /^there is an author named "([^"]*)"(?: who wrote (\d+) posts?)?$/ do |name, n|
+  author = Factory.create(:author, :name => name)
+  n.to_i.times { Factory.create :post, :author => author } unless n.nil?
+end
+
+Then /^I should see the posts list from the author "([^"]*)"$/ do |name|
+  Author.find_by_name(name).posts.each do |p|
+    Then %{I should see "#{p.title}" in the content}
+  end
 end
 
 # matching when we want to (not) see a list of posts. The list is given like

@@ -8,14 +8,10 @@ Feature: see the blog
         And the blog's title is "Cucumber salad"
         And there is a post titled "roses are red"
 
-    Scenario: reading the home page
-        When I go to the home page
+    Scenario: reading the homepage
+        When I go to the homepage
         Then I should see "Cucumber salad" in the header
-        And I should see "roses are red" as post title
+        And I should see "roses are red" in the content
         And I should see "atom feed" in the sidebar
-        And I should see "Authors" in the sidebar
-        And I should see "Categories" in the sidebar
-        And I should see "Tags cloud" in the sidebar
-        And I should see "Archives" in the sidebar
         And I should see "Cucumber salad" in the footer
         And I should see "powered by geewee" in the footer

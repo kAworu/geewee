@@ -16,6 +16,7 @@ end
 Factory.define :post do |post|
   post.title       { Factory.next :title   }
   post.intro       { Factory.next :content }
+  post.published   true
   post.association :author
   post.association :category
 end

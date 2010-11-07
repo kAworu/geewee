@@ -5,20 +5,17 @@ Feature: configure the blog
 
     Scenario: being redirected to config help page
         Given the blog is not configured
-        When I go to the home page
+        When I go to the homepage
         Then I should be on the config page
         And I should see "Welcome to geewee!"
         And I should see "rake geewee:first_run"
-        And I should not see "rake geewee:config"
-        And I should not see "rake geewee:new_author"
-        And I should not see "rake geewee:client"
 
     Scenario: being redirected to help index page
         Given the blog is configured
         And there is no posts
-        When I go to the home page
+        When I go to the homepage
         Then I should be on the help page
-        And I should see "geewee help" as post title
+        And I should see "geewee help"
         And I should see "geewee config"
         And I should see "JSON API reference"
         And I should see "client manual"

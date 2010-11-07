@@ -9,10 +9,10 @@ Then /^(?:|I )should be on (.+)$/ do |page_name|
 end
 
 # use a similar mapping for selector as used for path.
-When /^(?:|I )follow "([^"]*)" ((?:in the|as) .+)$/ do |link, name|
+When /^(?:|I )follow "([^"]*)" in the (.+)$/ do |link, name|
   When %{I follow "#{link}" within "#{selector_for(name)}"}
 end
 
-Then /^(?:|I )should (not )?see "([^"]*)" ((?:in the|as) .+)$/ do |neg, text, name|
+Then /^(?:|I )should (not )?see "([^"]*)" in the (.+)$/ do |neg, text, name|
   Then %{I should #{neg}see "#{text}" within "#{selector_for(name)}"}
 end

@@ -1,5 +1,5 @@
 Feature: see and use the pagination
-    In order to avoid having all posts on the home page
+    In order to avoid having all posts on the homepage
     As a visitor
     I want to be to use the pagination
 
@@ -9,7 +9,7 @@ Feature: see and use the pagination
         And there is 5 published posts
 
     Scenario: reading all the posts
-        When I go to the home page
+        When I go to the homepage
         Then I should see the posts 1 and 2
         And I should not see the posts 3, 4 and 5
         When I go to the page 2

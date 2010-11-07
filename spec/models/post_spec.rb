@@ -12,7 +12,7 @@ describe Post do
 
   describe :publish! do
     it 'should set published_at and call save!' do
-      @post = Factory.create :post
+      @post = Factory.create :post, :published => false
       @post.should_not be_published
       @post.should_receive(:save!).exactly(1).times.and_return(true)
       @post.publish!
@@ -23,7 +23,7 @@ describe Post do
 
   describe :published_at_or_now do
     it 'should always return a valid date' do
-      @post = Factory.create :post
+      @post = Factory.create :post, :published => false
       @post.published_at.should be_nil
       @post.published_at_or_now.should_not be_nil
       @post.published_at_or_now.should be_close Time.now, 1.second
@@ -66,8 +66,7 @@ describe Post do
       @category = Factory.create :category
       start     = Time.now
       6.times do |i|
-        p = Factory.build :post, :author => @author, :category => @category
-        if i % 2 == 0 then p.publish! else p.save! end
+        p = Factory.create :post, :published => (i % 2 == 0)
         Timecop.travel 1.hour
       end
       stop = Time.now
@@ -120,11 +119,11 @@ describe Post do
 
   describe :month_of_the_year do
     it 'should return "month year" for posts' do
-      @post_at_santa_claus = Factory.create :post, :published => true,
+      @post_at_santa_claus = Factory.create :post,
         :published_at => Time.local(2010, 12, 24, 23, 59, 59)
-      @post_at_new_year    = Factory.create :post, :published => true,
+      @post_at_new_year    = Factory.create :post,
         :published_at => Time.local(2010, 12, 31, 23, 59, 59)
-      @post_in_summer      = Factory.create :post, :published => true,
+      @post_in_summer      = Factory.create :post,
         :published_at => Time.local(2011,  6, 21, 00, 00, 00)
       # we're testing using group_by(), since it's how we need it in the app.
       I18n.locale = :en

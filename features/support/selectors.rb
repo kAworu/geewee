@@ -8,12 +8,13 @@ module SelectorHelpers
   #
   def selector_for(name)
     case name
-    when /in the (header|footer|sidebar)/
-      "##$1"
-    when /in the pagination/
+
+    when /^pagination$/
       'div.pagination'
-    when /as post title/
-      '.entry-title'
+
+    when /^(header|footer|sidebar|content)$/
+      "##$1"
+
     else
       raise "Can't find mapping from \"#{name}\" to a selector.\n" +
         "Now, go and add a mapping in #{__FILE__}"

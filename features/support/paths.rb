@@ -8,10 +8,20 @@ module NavigationHelpers
   def path_to(page_name)
     case page_name
 
-    when /the home\s?page/
+    when /^the home\s?page$/
       '/'
-    when /the page (\d+)/
+
+    when /^the page (\d+)$/ # pagination
       root_path(:page => $1.to_i)
+
+    when /^the page "([^"]*)"$/
+      page_path(Page.find_by_title($1))
+
+    when /^the archives page of the author "([^"]*)"$/
+      archives_by_author_path(Author.find_by_name($1))
+
+    when /^the post page "([^"]*)"$/
+      post_path(Post.find_by_title($1))
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
@@ -21,7 +31,7 @@ module NavigationHelpers
 
     else
       begin
-        page_name =~ /the (.*) page/
+        page_name =~ /^the (.*) page$/
         path_components = $1.split(/\s+/)
         self.send(path_components.push('path').join('_').to_sym)
       rescue Object => e

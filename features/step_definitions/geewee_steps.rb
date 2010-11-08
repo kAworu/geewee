@@ -88,6 +88,13 @@ Then /^I should (not )?see the (intro|body) of the post "([^"]*)"$/ do |neg, fie
   Then %{I should #{neg}see "#{post.send(field)}" in the content}
 end
 
+# Comment
+
+
+Given /^there is a comment on "([^"]*)" saying "([^"]*)"$/ do |post_title, comment|
+  Factory.create :comment, :post => Post.find_by_title(post_title), :body => comment
+end
+
 # Page
 
 Given /^there is a page titled "([^"]*)"(?: with "([^"]*)" as body)?$/ do |title, content|

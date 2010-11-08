@@ -35,4 +35,3 @@ Feature: reading the posts
         Then I should see "very long post" in the content
         And I should see the intro of the post "very long post"
         And I should see the body of the post "very long post"
-        And show me the page

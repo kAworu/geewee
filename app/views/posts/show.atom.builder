@@ -1,6 +1,6 @@
 atom_feed do |feed|
   feed.title('Commentaires sur: ' + h(@post.title))
-  feed.updated(@post.comments.last.created_at)
+  feed.updated(@post.comments.last.try(:created_at) || @post.updated_at)
 
   @post.comments.each do |comment|
     feed.entry(comment) do |entry|

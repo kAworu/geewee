@@ -14,11 +14,17 @@ module NavigationHelpers
     when /^the page (\d+)$/ # pagination
       root_path(:page => $1.to_i)
 
+    when /^the blog atom feed page$/
+      posts_path(:atom)
+
     when /^the page "([^"]*)"$/
       page_path(Page.find_by_title($1))
 
     when /^the post page "([^"]*)"$/
       post_path(Post.find_by_title($1))
+
+    when /^the post "([^"]*)" atom feed page$/
+      post_path(Post.find_by_title($1), :atom)
 
     when /^the archives page of the author "([^"]*)"$/
       archives_by_author_path(Author.find_by_name($1))

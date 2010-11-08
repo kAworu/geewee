@@ -1,6 +1,6 @@
 atom_feed do |feed|
   feed.title h(GeeweeConfig.entry.blogtitle)
-  feed.updated(@posts.first.updated_at)
+  feed.updated(@posts.first.try(:updated_at) || Time.now)
 
   @posts.each do |post|
     feed.entry(post) do |entry|

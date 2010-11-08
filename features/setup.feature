@@ -11,40 +11,45 @@ Feature: configure the blog
         And I should see "rake geewee:first_run"
 
     Scenario: being redirected to help index page
-        Then I should complete this scenario
         Given the blog is configured
         And there is no posts
         When I go to the homepage
         Then I should be on the help page
-        And I should see "geewee help"
-        And I should see "geewee config"
-        And I should see "JSON API reference"
-        And I should see "client manual"
+        And I should see "geewee help" in the content
+        And I should see "geewee config" in the content
+        And I should see "JSON API reference" in the content
+        And I should see "client manual" in the content
+        And I should see "geewee development" in the content
 
     Scenario: reading the config help
-        Then I should complete this scenario
         Given the blog is configured
         And I am on the help page
         When I follow "geewee config"
         Then I should be on the config page
         And I should see "Welcome to geewee!"
-        And I should see "rake geewee:first_run"
-        And I should see "rake geewee:config"
-        And I should see "rake geewee:new_author"
-        And I should see "rake geewee:client"
+        And I should see "rake geewee:first_run" in the content
+        And I should see "rake geewee:config" in the content
+        And I should see "rake geewee:new_author" in the content
+        And I should see "rake geewee:client" in the content
 
     Scenario: reading the API reference
-        Then I should complete this scenario
         Given the blog is configured
         And I am on the help page
         When I follow "JSON API reference"
         Then I should be on the api page
-        And I should complete this scenario
 
     Scenario: reading the client manual
-        Then I should complete this scenario
         Given the blog is configured
         And I am on the help page
         When I follow "client manual"
         Then I should be on the man page
-        And I should complete this scenario
+
+    Scenario: reading the geewee development help
+        Given the blog is configured
+        And I am on the help page
+        When I follow "geewee development"
+        Then I should be on the development page
+        And I should see "setting up the test and cucumber database" in the content
+        And I should see "RAILS_ENV=test rake db:migrate" in the content
+        And I should see "RAILS_ENV=test rake gems:install" in the content
+        And I should see "RAILS_ENV=cucumber rake gems:install" in the content

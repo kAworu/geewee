@@ -25,7 +25,7 @@ module NavigationHelpers
 
     when /^the archives page for the month "([^"]*)"$/
       date = DateTime.parse($1)
-      archives_by_month_path(:month => date.month, :year => date.year)
+      archives_by_month_path(:year => date.year, :month => date.month)
 
     when /^the post page "([^"]*)"$/
       post_path(Post.find_by_title($1))

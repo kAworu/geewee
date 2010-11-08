@@ -67,7 +67,7 @@ describe Post do
       start     = Time.now
       6.times do |i|
         p = Factory.create :post, :published => (i % 2 == 0)
-        Timecop.travel 1.hour
+        Timecop.travel 2.week
       end
       stop = Time.now
       @middle_time = Time.at((start.to_i + stop.to_i) / 2)
@@ -99,7 +99,7 @@ describe Post do
     end
 
     describe 'named scope published_after' do
-      it 'should return posts published after a given date' do
+      it 'should FAIL_TO return posts published after a given date' do
         expected = Post.all.delete_if do |p|
           not p.published? or p.published_at <= @middle_time
         end.sort_by(&:published_at).reverse
@@ -108,11 +108,23 @@ describe Post do
     end
 
     describe 'named scope published_before' do
-      it 'should return posts published before a given date' do
+      it 'should FAIL_TO return posts published before a given date' do
         expected = Post.all.delete_if do |p|
           not p.published? or p.published_at >= @middle_time
         end.sort_by(&:published_at).reverse
         Post.published_before(@middle_time).should == expected
+      end
+    end
+
+    describe 'named scope from_month_of_year' do
+      it 'should return posts published on the given month' do
+        start = DateTime.new(@middle_time.year, @middle_time.month)
+        expected = Post.all.delete_if do |p|
+          not p.published? or
+            (p.published_at < start or p.published_at > (start + 1.month))
+        end.sort_by(&:published_at).reverse
+        got = Post.from_month_of_year(@middle_time.year, @middle_time.month)
+        got.should == expected
       end
     end
   end

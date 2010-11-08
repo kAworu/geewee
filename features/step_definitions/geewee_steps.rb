@@ -95,7 +95,7 @@ end
 
 Then /^I should see the list of all the posts written on "([^"]*)"$/ do |str_date|
   date = DateTime.parse(str_date)
-  Post.from_month_and_year(date.month, date.year).each do |p|
+  Post.from_month_of_year(date.year, date.month).each do |p|
     Then %{I should see "#{p.title}" in the content}
   end
 end

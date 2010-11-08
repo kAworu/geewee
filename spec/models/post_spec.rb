@@ -98,27 +98,9 @@ describe Post do
       end
     end
 
-    describe 'named scope published_after' do
-      it 'should FAIL_TO return posts published after a given date' do
-        expected = Post.all.delete_if do |p|
-          not p.published? or p.published_at <= @middle_time
-        end.sort_by(&:published_at).reverse
-        Post.published_after(@middle_time).should == expected
-      end
-    end
-
-    describe 'named scope published_before' do
-      it 'should FAIL_TO return posts published before a given date' do
-        expected = Post.all.delete_if do |p|
-          not p.published? or p.published_at >= @middle_time
-        end.sort_by(&:published_at).reverse
-        Post.published_before(@middle_time).should == expected
-      end
-    end
-
     describe 'named scope from_month_of_year' do
       it 'should return posts published on the given month' do
-        start = DateTime.new(@middle_time.year, @middle_time.month)
+        start = Date.new(@middle_time.year, @middle_time.month)
         expected = Post.all.delete_if do |p|
           not p.published? or
             (p.published_at < start or p.published_at > (start + 1.month))
@@ -131,22 +113,51 @@ describe Post do
 
   describe :month_of_the_year do
     it 'should return "month year" for posts' do
-      @post_at_santa_claus = Factory.create :post,
+      # NOTE: since month_of_the_year use I18n.localize(), we localized Time.
+      @post_at_christmas = Factory.create :post,
         :published_at => Time.local(2010, 12, 24, 23, 59, 59)
-      @post_at_new_year    = Factory.create :post,
+      @post_at_new_year  = Factory.create :post,
         :published_at => Time.local(2010, 12, 31, 23, 59, 59)
-      @post_in_summer      = Factory.create :post,
-        :published_at => Time.local(2011,  6, 21, 00, 00, 00)
+      @post_in_summer    = Factory.create :post,
+        :published_at => Time.local(2011, 06, 21, 00, 00, 00)
       # we're testing using group_by(), since it's how we need it in the app.
       I18n.locale = :en
       @result = Post.published.group_by(&:month_of_the_year)
       @result.keys.should == ['June 2011', 'December 2010']
-      @result['June 2011'].should_not include @post_at_santa_claus
+      @result['June 2011'].should_not include @post_at_christmas
       @result['June 2011'].should_not include @post_at_new_year
       @result['June 2011'].should     include @post_in_summer
-      @result['December 2010'].should     include @post_at_santa_claus
+      @result['December 2010'].should     include @post_at_christmas
       @result['December 2010'].should     include @post_at_new_year
       @result['December 2010'].should_not include @post_in_summer
+    end
+  end
+
+  describe 'named scope from_month_of_year' do
+    it 'should return posts published on the given month' do
+      nov_30 = Factory.create :post,
+        :published_at => DateTime.new(2010, 11, 30, 23, 59, 59)
+      dec_01 = Factory.create :post,
+        :published_at => DateTime.new(2010, 12, 01, 00, 00, 00)
+      dec_31 = Factory.create :post,
+        :published_at => DateTime.new(2010, 12, 31, 23, 59, 59)
+      jan_01 = Factory.create :post,
+        :published_at => DateTime.new(2011, 01, 01, 00, 00, 00)
+      one_year_before = Factory.create :post,
+        :published_at => DateTime.new(2009, 12, 24, 00, 00, 00)
+      the_good_year   = Factory.create :post,
+        :published_at => DateTime.new(2010, 12, 24, 00, 00, 00)
+      one_year_after  = Factory.create :post,
+        :published_at => DateTime.new(2011, 12, 24, 00, 00, 00)
+
+      result = Post.from_month_of_year(2010, 12)
+      result.should_not include nov_30
+      result.should include dec_01
+      result.should include dec_31
+      result.should_not include jan_01
+      result.should include the_good_year
+      result.should_not include one_year_before
+      result.should_not include one_year_after
     end
   end
 end

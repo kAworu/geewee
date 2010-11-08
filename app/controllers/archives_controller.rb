@@ -34,10 +34,9 @@ class ArchivesController < ApplicationController
 
   # order posts by month
   def by_month
-    if params[:month] and params[:year]
-      start = Time.local(params[:year].to_i, params[:month].to_i)
-      stop  = start + 1.month
-      posts = Post.published_after(start).published_before(stop)
+    y, m = params[:year], params[:month]
+    if y and m
+      posts = Post.from_month_of_year(y.to_i, m.to_i)
     else
       posts = Post.published
     end

@@ -10,11 +10,11 @@ class Post < ActiveRecord::Base
   named_scope :published,   { :conditions => ['published = ?', true] }
   named_scope :unpublished, { :conditions => ['published = ?', false] }
 
-  named_scope :published_after, lambda { |date|
-    { :conditions => ['published = ? AND published_at > ?', true, date] }
-  }
-  named_scope :published_before, lambda { |date|
-    { :conditions => ['published = ? AND published_at < ?', true, date] }
+  # since we're intersted into the published_at date, it implies published=true
+  named_scope :from_month_of_year, lambda { |year, month|
+    date = Date.new(year, month)
+    { :conditions => ['published = ? AND published_at >= ? AND published_at < ?',
+      true, date, (date + 1.month)] }
   }
 
   # friendly_id, use the Post's title.

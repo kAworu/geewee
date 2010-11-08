@@ -8,7 +8,8 @@ Feature: configure the blog
         When I go to the homepage
         Then I should be on the config page
         And I should see "Welcome to geewee!"
-        And I should see "rake geewee:first_run"
+        And I should see "geewee is not configured" in the content
+        And I should see "rake geewee:first_run" in the content
 
     Scenario: being redirected to help index page
         Given the blog is configured
@@ -26,7 +27,7 @@ Feature: configure the blog
         And I am on the help page
         When I follow "geewee config"
         Then I should be on the config page
-        And I should see "Welcome to geewee!"
+        And I should see "geewee is configured"
         And I should see "rake geewee:first_run" in the content
         And I should see "rake geewee:config" in the content
         And I should see "rake geewee:new_author" in the content

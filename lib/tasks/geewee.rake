@@ -5,6 +5,10 @@ namespace :geewee do
   task :statsetup do
     require 'code_statistics'
     ::STATS_DIRECTORIES << %w(Geewee\ Client client)
+    ::STATS_DIRECTORIES << %w(Client\ features client/features) if File.exist?('client/features')
+    ::CodeStatistics::TEST_TYPES << "Client features" if File.exist?('client/features')
+    ::STATS_DIRECTORIES << %w(Client\ specs client/spec) if File.exist?('client/spec')
+    ::CodeStatistics::TEST_TYPES << "Client specs" if File.exist?('client/spec')
   end
 
   def ask(question, opts=Hash.new)

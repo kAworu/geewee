@@ -54,7 +54,7 @@ class PostsController < ApplicationController
   # POST /posts.json
   def create
     @post = Post.new(params[:post])
-    @post.author = current_author
+    @post.author = current_author # FIXME: in the model
 
     respond_to do |format|
       format.json do

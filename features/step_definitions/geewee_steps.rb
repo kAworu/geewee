@@ -27,8 +27,8 @@ Given /^there is no posts$/ do
 end
 
 # watch out the order!
-# (1) post title (2) author name? (3) category name? (4) date?
-Given %r{^there is a post titled "([^"]*)"(?: by "([^"]*)")?(?: in the category "([^"]*)")?(?: published the "([^"]*)")?$} do |title, author_name, category_name, str_date|
+# (1) post title (2) author name? (3) category name? (4) date? (5) tags?
+Given %r{^there is a post titled "([^"]*)"(?: by "([^"]*)")?(?: in the category "([^"]*)")?(?: published the "([^"]*)")?(?: tagged with "([^"]*)")?$} do |title, author_name, category_name, str_date, str_tags|
   author   = Author.find_by_name(author_name) || Factory.create(:author)
   category = Category.find_by_name(category_name.try(:downcase)) || Factory.create(:category)
   date     = DateTime.parse(str_date) rescue DateTime.now
@@ -36,12 +36,13 @@ Given %r{^there is a post titled "([^"]*)"(?: by "([^"]*)")?(?: in the category 
     Factory.create :post,
       :title    => title,
       :author   => author,
-      :category => category
+      :category => category,
+      :tag_list => (str_tags || '')
   end
 end
 
-Given /^there is (\d+) published posts?$/ do |n|
-  n.to_i.times { Factory.create :post }
+Given /^there is (\d+) published posts?(?: tagged with "([^"]*)")?$/ do |n, str_tags|
+  n.to_i.times { Factory.create :post, :tag_list => (str_tags || '') }
 end
 
 # matching when we want to (not) see a list of posts. The list is given like
@@ -117,5 +118,13 @@ Then /^I should see all the posts published in (\d+)$/ do |year|
   1.upto(12) do |month|
     str_date = I18n.localize(Time.local(year.to_i, month), :format => :month_of_the_year)
     Then %{I should see the list of all the posts published on "#{str_date}"}
+  end
+end
+
+# Archives by tag
+#
+Then /^I should see the list of all the posts tagged with "([^"]*)"$/ do |tag|
+  Post.published.find_tagged_with(tag).each do |p|
+    Then %{I should see "#{p.title}" in the content}
   end
 end

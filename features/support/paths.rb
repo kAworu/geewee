@@ -17,6 +17,9 @@ module NavigationHelpers
     when /^the page "([^"]*)"$/
       page_path(Page.find_by_title($1))
 
+    when /^the post page "([^"]*)"$/
+      post_path(Post.find_by_title($1))
+
     when /^the archives page of the author "([^"]*)"$/
       archives_by_author_path(Author.find_by_name($1))
 
@@ -27,10 +30,11 @@ module NavigationHelpers
       date = DateTime.parse($1)
       archives_by_month_path(:year => date.year, :month => date.month)
 
-    when /^the post page "([^"]*)"$/
-      post_path(Post.find_by_title($1))
     when /^the archives by month page$/
       '/archives/by_month'
+
+    when /^the archives page of the posts tagged with "([^"]*)"$/
+      archives_by_tag_path($1)
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:

@@ -46,14 +46,14 @@ describe PostsController do
         assigns[:post].should == @post
       end
     end
+  end
 
-    describe 'JSON API' do
-      it 'should test index'   do pending 'JSON API' end
-      it 'should test show'    do pending 'JSON API' end
-      it 'should test create'  do pending 'JSON API' end
-      it 'should test update'  do pending 'JSON API' end
-      it 'should test destroy' do pending 'JSON API' end
-      it 'should test publish' do pending 'JSON API' end
-    end
+  describe 'JSON API' do
+    it 'should test index'   do pending 'JSON API' end
+    it 'should test show'    do pending 'JSON API' end
+    it 'should test create'  do pending 'JSON API' end
+    it 'should test update'  do pending 'JSON API' end
+    it 'should test destroy' do pending 'JSON API' end
+    it 'should test publish' do pending 'JSON API' end
   end
 end

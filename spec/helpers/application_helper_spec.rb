@@ -92,7 +92,7 @@ describe ApplicationHelper do
     it "should return the comment's post path with comment as anchor" do
       @comment = Factory.create :comment
       @post    = @comment.post
-      expected = "http://test.host/posts/#{@post.cached_slug}#comment_#{@comment.id}"
+      expected = post_url(@post, :anchor => "comment_#{@comment.id}")
       helper.comment_url(@comment).should == expected
     end
   end

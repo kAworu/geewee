@@ -18,7 +18,7 @@
     %legend= t('comments.write_a_comment').capitalize + ':'
     %p#flash-notice= flash[:notice]
     %p#flash-error=  flash[:error]
-    - if flash[:error].blank? and flash[:comment] # display errors.
+    - if flash[:error].blank? and flash[:comment] # display validation errors.
       %div
         = error_messages_for 'comment'
     #preview{ :style => 'display:none;' }

@@ -14,13 +14,13 @@ Feature: browse the archives by author
         And I should see "Alan Turing" in the sidebar
         And I should see "C.A.R. Hoare" in the sidebar
 
-    Scenario: Seeing all the posts written by an author
+    Scenario: Seeing all the posts published by an author
         Given there is an author named "Niklaus Wirth" who wrote 3 posts
         And I am on the homepage
         When I follow "Niklaus Wirth" in the sidebar
         Then I should be on the archives page of the author "Niklaus Wirth"
         And I should see "Niklaus Wirth" in the content
-        And I should see the list of all the posts written by "Niklaus Wirth"
+        And I should see the list of all the posts published by "Niklaus Wirth"
 
     Scenario: Seeing the author index with their posts
         Given there is an author named "Christopher Strachey" who wrote 1 posts
@@ -29,13 +29,13 @@ Feature: browse the archives by author
         When I follow "Authors" in the sidebar
         Then I should be on the archives by author page
         And I should see "Christopher Strachey" in the content
-        And I should see the list of all the posts written by "Christopher Strachey"
+        And I should see the list of all the posts published by "Christopher Strachey"
         And I should see "Ada Lovelace" in the content
-        And I should see the list of all the posts written by "Ada Lovelace"
+        And I should see the list of all the posts published by "Ada Lovelace"
 
-    Scenario: reading a post from the archive by the link from the author's page
+    Scenario: following the author link in post list
         Given there is an author named "Grace Hopper"
         And there is a post titled "COBOL is dead" by "Grace Hopper"
-        And I am on the archives page of the author "Grace Hopper"
-        When I follow "COBOL is dead" in the content
-        Then I should be on the post page "COBOL is dead"
+        And I am on the archives by author page
+        When I follow "Grace Hopper" in the content
+        Then I should be on the archives page of the author "Grace Hopper"

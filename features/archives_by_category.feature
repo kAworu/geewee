@@ -33,9 +33,9 @@ Feature: browse the archives by category
         And I should see "Thriller" in the content
         And I should see the list of all the posts from the category "Thriller"
 
-    Scenario: reading a post from the archive by the link from the category's page
+    Scenario: following the category link in post list
         Given there is a category named "Music"
         And there is a post titled "Oh by the way, which one's Pink?" in the category "Music"
-        And I am on the archives page of the category "Music"
-        When I follow "Oh by the way, which one's Pink?" in the content
-        Then I should be on the post page "Oh by the way, which one's Pink?"
+        And I am on the archives by category page
+        When I follow "Music" in the content
+        Then I should be on the archives page of the category "Music"

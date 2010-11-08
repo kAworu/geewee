@@ -72,7 +72,7 @@ Given /^there is an author named "([^"]*)"(?: who wrote (\d+) posts?)?$/ do |nam
   n.to_i.times { Factory.create :post, :author => author } unless n.nil?
 end
 
-Then /^I should see the list of all the posts written by "([^"]*)"$/ do |name|
+Then /^I should see the list of all the posts published by "([^"]*)"$/ do |name|
   Author.find_by_name(name).posts.each do |p|
     Then %{I should see "#{p.title}" in the content}
   end
@@ -93,9 +93,29 @@ end
 
 # Archives by month
 
-Then /^I should see the list of all the posts written on "([^"]*)"$/ do |str_date|
+Then /^I should see the list of all the posts published on "([^"]*)"$/ do |str_date|
   date = DateTime.parse(str_date)
   Post.from_month_of_year(date.year, date.month).each do |p|
     Then %{I should see "#{p.title}" in the content}
+  end
+end
+
+Given /^there is one post per month in the year (\d+)$/ do |year|
+  1.upto(12) do |month|
+    Timecop.travel(year.to_i, month) { Factory.create :post }
+  end
+end
+
+Then /^I should see all the months from the year (\d+)$/ do |year|
+  1.upto(12) do |month|
+    str_date = I18n.localize(Time.local(year.to_i, month), :format => :month_of_the_year)
+    Then %{I should see "#{str_date}" in the content}
+  end
+end
+
+Then /^I should see all the posts published in (\d+)$/ do |year|
+  1.upto(12) do |month|
+    str_date = I18n.localize(Time.local(year.to_i, month), :format => :month_of_the_year)
+    Then %{I should see the list of all the posts published on "#{str_date}"}
   end
 end

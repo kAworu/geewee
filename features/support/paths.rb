@@ -29,6 +29,8 @@ module NavigationHelpers
 
     when /^the post page "([^"]*)"$/
       post_path(Post.find_by_title($1))
+    when /^the archives by month page$/
+      '/archives/by_month'
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:

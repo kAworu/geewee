@@ -3,7 +3,7 @@
 #   they write posts (well, at least they should).
 #
 class Author < ActiveRecord::Base
-  CLIENT_FILE = File.join(Rails.root, 'client', 'geewee')
+  CLIENT_FILE = File.join(Rails.root, 'client', 'geewee.rb')
 
   # friendly_id, use the Author's name.
   has_friendly_id :name, :use_slug => true

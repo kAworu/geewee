@@ -23,6 +23,10 @@ module NavigationHelpers
     when /^the archives page of the category "([^"]*)"$/
       archives_by_category_path(Category.find_by_display_name($1))
 
+    when /^the archives page for the month "([^"]*)"$/
+      date = DateTime.parse($1)
+      archives_by_month_path(:month => date.month, :year => date.year)
+
     when /^the post page "([^"]*)"$/
       post_path(Post.find_by_title($1))
 

@@ -11,7 +11,7 @@ Feature: browse the archives by category
         And there is a category named "Children"
         When I go to the homepage
         Then I should see "Categories" in the sidebar
-        Then I should see "Business" in the sidebar
+        And I should see "Business" in the sidebar
         And I should see "Children" in the sidebar
 
     Scenario: Seeing all the posts that belongs to a category

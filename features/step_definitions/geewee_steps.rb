@@ -27,13 +27,17 @@ Given /^there is no posts$/ do
 end
 
 # watch out the order!
-Given /^there is a post titled "([^"]*)"(?: by "([^"]*)")?(?: in the category "([^"]*)")?$/ do |title, author_name, category_name|
+# (1) post title (2) author name? (3) category name? (4) date?
+Given %r{^there is a post titled "([^"]*)"(?: by "([^"]*)")?(?: in the category "([^"]*)")?(?: published the "([^"]*)")?$} do |title, author_name, category_name, str_date|
   author   = Author.find_by_name(author_name) || Factory.create(:author)
   category = Category.find_by_name(category_name.try(:downcase)) || Factory.create(:category)
-  Factory.create :post,
-    :title    => title,
-    :author   => author,
-    :category => category
+  date     = DateTime.parse(str_date) rescue DateTime.now
+  Timecop.travel(date) do
+    Factory.create :post,
+      :title    => title,
+      :author   => author,
+      :category => category
+  end
 end
 
 Given /^there is (\d+) published posts?$/ do |n|
@@ -83,6 +87,15 @@ end
 
 Then /^I should see the list of all the posts from the category "([^"]*)"$/ do |name|
   Category.find_by_display_name(name).posts.each do |p|
+    Then %{I should see "#{p.title}" in the content}
+  end
+end
+
+# Archives by month
+
+Then /^I should see the list of all the posts written on "([^"]*)"$/ do |str_date|
+  date = DateTime.parse(str_date)
+  Post.from_month_and_year(date.month, date.year).each do |p|
     Then %{I should see "#{p.title}" in the content}
   end
 end

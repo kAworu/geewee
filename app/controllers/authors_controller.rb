@@ -31,7 +31,8 @@ class AuthorsController < ApplicationController
   end
 
   # GET /client/update.json
-  # XXX: the update id is currently not used nor checked.
+  # XXX: the param id is currently not used nor checked, geewee.rb gives
+  #       "update".
   def client
     respond_to do |format|
       format.json { render :json => {:client => current_author.client!} }

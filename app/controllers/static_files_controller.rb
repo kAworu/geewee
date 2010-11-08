@@ -2,7 +2,6 @@ require 'base64'
 
 # Controller for static files management under the files/ directory.
 #
-#   * show and index are public via HTML UI.
 #   * all but show and index are private via JSON API.
 #
 class StaticFilesController < ApplicationController
@@ -93,6 +92,7 @@ class StaticFilesController < ApplicationController
   end
 
   private
+
   # give a filename, return the full remote path.
   def remote(path='')
     "#{GeeweeConfig.entry.bloguri}/#{STATIC_FILES_DIRECTORY}/#{path}"

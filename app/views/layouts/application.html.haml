@@ -56,7 +56,8 @@
           <!-- archives by Tag -->
           %h3= link_to t('menu.tags_cloud'), archives_by_tag_path
           %p#tag-cloud{ :style => 'overflow:hidden' }
-            - tag_cloud Post.tag_counts, ([].tap { |ary| 1.upto(12) { |i| ary << "tag#{i}" } }) do |tag, css_class|
+            - tag_cloud Post.published.tag_counts, |
+            %w[tag1 tag2 tag3 tag4 tag5 tag6 tag7 tag8 tag9 tag10 tag11 tag12] do |tag, css_class|
               = link_to h(tag.name), archives_by_tag_path(tag.name), :class => css_class
 
           <!-- archives by month and year -->

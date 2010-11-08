@@ -33,10 +33,30 @@ end
 
 # watch out the order!
 # (1) post title (2) author name? (3) category name? (4) date? (5) tags?
-Given %r{^there is a post titled "([^"]*)"(?: by "([^"]*)")?(?: in the category "([^"]*)")?(?: (?:published|created) the "([^"]*)")?(?: tagged with "([^"]*)")?$} do |title, author_name, category_name, str_date, str_tags|
+# Examples:
+#   title only:
+#     there is a post titled "Cookies need love"
+#   title and author:
+#     there is a post titled "Cookies need love" by "Agent Smith"
+#   title and category
+#     there is a post titled "Cookies need love" in the category "movie quote"
+#   title and date
+#     there is a post titled "Cookies need love" created the "10 April 2010"
+#     there is a post titled "Cookies need love" published the "10 April 2010"
+#     there is a post titled "Cookies need love" created 10 years ago
+#   title and tags
+#     there is a post titled "Cookies need love" tagged with "smith, matrix, cookies"
+Given %r{^there is a post titled "([^"]*)"(?: by "([^"]*)")?(?: in the category "([^"]*)")?(?: (?:published|created) (the ".+?"|\d+ \w+ ago))?(?: tagged with "([^"]*)")?$} do |title, author_name, category_name, str_date, str_tags|
   author   = Author.find_by_name(author_name) || Factory.create(:author)
   category = Category.find_by_name(category_name.try(:downcase)) || Factory.create(:category)
-  date     = DateTime.parse(str_date) rescue DateTime.now
+  case str_date
+  when /^(\d+) (seconds?|minutes?|hours?|days?|weeks?|months?|years?) ago$/
+    date = $1.to_i.send($2)
+  when /^the "(.+)?"$/
+    date = DateTime.parse($1)
+  when nil
+    date = Time.now
+  end
   Timecop.travel(date) do
     Factory.create :post,
       :title    => title,
@@ -61,6 +81,11 @@ Then /^I should (not )?see the posts? ([0-9 ,]+)(?:and (\d+))?$/ do |neg, list, 
     post = Post.published.find(:first, :offset => (i - 1))
     Then %{I should #{neg}see "#{post.title}"}
   end
+end
+
+Then /^I should (not )?see the (intro|body) of the post "([^"]*)"$/ do |neg, field, title|
+  post = Post.find_by_title(title)
+  Then %{I should #{neg}see "#{post.send(field)}" in the content}
 end
 
 # Page

@@ -11,6 +11,7 @@ Feature: configure the blog
         And I should see "rake geewee:first_run"
 
     Scenario: being redirected to help index page
+        Then I should complete this scenario
         Given the blog is configured
         And there is no posts
         When I go to the homepage
@@ -21,6 +22,7 @@ Feature: configure the blog
         And I should see "client manual"
 
     Scenario: reading the config help
+        Then I should complete this scenario
         Given the blog is configured
         And I am on the help page
         When I follow "geewee config"
@@ -32,6 +34,7 @@ Feature: configure the blog
         And I should see "rake geewee:client"
 
     Scenario: reading the API reference
+        Then I should complete this scenario
         Given the blog is configured
         And I am on the help page
         When I follow "JSON API reference"
@@ -39,6 +42,7 @@ Feature: configure the blog
         And I should complete this scenario
 
     Scenario: reading the client manual
+        Then I should complete this scenario
         Given the blog is configured
         And I am on the help page
         When I follow "client manual"

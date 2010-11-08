@@ -1,4 +1,12 @@
+task :stats => "geewee:statsetup"
+
 namespace :geewee do
+  # Setup geewee client for stats
+  task :statsetup do
+    require 'code_statistics'
+    ::STATS_DIRECTORIES << %w(Geewee\ Client client)
+  end
+
   def ask(question, opts=Hash.new)
     answer = nil
     begin

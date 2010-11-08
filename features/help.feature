@@ -1,7 +1,7 @@
-Feature: configure the blog
+Feature: read the geewee help pages
     In order to use the blog
     As an author and admin
-    I want to be guided through the configuration
+    I want to be guided through the configuration and to have help pages
 
     Scenario: being redirected to config help page
         Given the blog is not configured

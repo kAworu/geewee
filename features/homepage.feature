@@ -12,6 +12,5 @@ Feature: see the blog
         When I go to the homepage
         Then I should see "Cucumber salad" in the header
         And I should see "roses are red" in the content
-        And I should see "atom feed" in the sidebar
         And I should see "Cucumber salad" in the footer
         And I should see "powered by geewee" in the footer

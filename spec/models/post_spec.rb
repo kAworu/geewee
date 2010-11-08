@@ -14,8 +14,8 @@ describe Post do
     it 'should set published_at and call save!' do
       @post = Factory.create :post, :published => false
       @post.should_not be_published
-      @post.should_receive(:save!).exactly(1).times.and_return(true)
-      @post.publish!
+      lambda { @post.publish! }.should_not raise_error
+      @post.reload
       @post.should be_published
       @post.published_at.should be_close Time.now, 1.second
     end

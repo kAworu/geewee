@@ -17,6 +17,6 @@ begin
       t.rcov_opts << %[-o "features_rcov"]
     end
   end
-rescue
+rescue LoadError
   # ok nevermind
 end

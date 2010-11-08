@@ -26,9 +26,14 @@ Given /^there is no posts$/ do
   Post.destroy_all
 end
 
+Given /^the post titled "([^"]*)" has not been published yet$/ do |t|
+  Post.find_by_title(t).update_attributes(:published_at => nil, :published => false)
+end
+
+
 # watch out the order!
 # (1) post title (2) author name? (3) category name? (4) date? (5) tags?
-Given %r{^there is a post titled "([^"]*)"(?: by "([^"]*)")?(?: in the category "([^"]*)")?(?: published the "([^"]*)")?(?: tagged with "([^"]*)")?$} do |title, author_name, category_name, str_date, str_tags|
+Given %r{^there is a post titled "([^"]*)"(?: by "([^"]*)")?(?: in the category "([^"]*)")?(?: (?:published|created) the "([^"]*)")?(?: tagged with "([^"]*)")?$} do |title, author_name, category_name, str_date, str_tags|
   author   = Author.find_by_name(author_name) || Factory.create(:author)
   category = Category.find_by_name(category_name.try(:downcase)) || Factory.create(:category)
   date     = DateTime.parse(str_date) rescue DateTime.now

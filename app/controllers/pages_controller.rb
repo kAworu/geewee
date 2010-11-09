@@ -12,9 +12,9 @@ class PagesController < ApplicationController
   # GET /pages
   # GET /pages.json
   def index
-    respond_to do |format|
-      @pages = Page.all
+    @pages = Page.all
 
+    respond_to do |format|
       format.html # index.html.haml
       format.json { render :json => @pages }
     end
@@ -64,10 +64,12 @@ class PagesController < ApplicationController
   # DELETE /pages/1.json
   def destroy
     @page = Page.find(params[:id])
-    @page.destroy
 
     respond_to do |format|
-      format.json { head :ok }
+      format.json do
+        @page.destroy
+        head :ok
+      end
     end
   end
 end

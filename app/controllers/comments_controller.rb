@@ -68,11 +68,13 @@ class CommentsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        flash[:comment] = @comment if @comment.id.nil? # save it for editing.
-        redirect_to :controller => :posts,
-                    :action     => :show,
-                    :id         => @post,
-                    :anchor     => :new_comment
+        if @comment.id.nil? # not saved
+          flash[:comment] = @comment # save in flash for editing.
+          anchor = :new_comment
+        else
+          anchor = "comment_#{@comment.id}"
+        end
+        redirect_to post_path(@post, :anchor => anchor)
       end
       format.js # create.js.rjs
     end

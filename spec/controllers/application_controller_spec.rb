@@ -21,7 +21,7 @@ describe ApplicationController do
 
   context 'when Geewee is configured' do
     before :each do
-      Factory.create :geewee_config, :locale => 'fr'
+      Factory.create :geewee_config
       @author = Factory.create :author
     end
 
@@ -43,6 +43,10 @@ describe ApplicationController do
     end
 
     describe 'method set_locale' do
+      before :each do
+        GeeweeConfig.entry.update_attribute(:locale, 'fr')
+      end
+
       it 'should set the configured locale by default' do
         get :index
         I18n.locale.should == :fr

@@ -17,10 +17,23 @@ Feature: read the geewee help pages
         When I go to the homepage
         Then I should be on the help page
         And I should see "geewee help" in the content
+        And I should see "geewee installation" in the content
         And I should see "geewee config" in the content
         And I should see "JSON API reference" in the content
         And I should see "client manual" in the content
         And I should see "geewee development" in the content
+
+    Scenario: reading the installation help
+        Given the blog is configured
+        And I am on the help page
+        When I follow "geewee installation"
+        Then I should be on the installation page
+        And I should see "how to install geewee" in the content
+        And I should see "Ruby On Rails" in the content
+        And I should see "database.yml" in the content
+        And I should see "rake gems:install" in the content
+        And I should see "rake db:migrate" in the content
+        And I should see "./script/server" in the content
 
     Scenario: reading the config help
         Given the blog is configured

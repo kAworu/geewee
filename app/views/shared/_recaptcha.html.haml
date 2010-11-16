@@ -1,4 +1,6 @@
 - if GeeweeConfig.entry.use_recaptcha?
+  :javascript
+    var RecaptchaOptions = {theme:'white', lang:'#{I18n.locale}'};
   = label :option, :captcha, t('comments.captcha')
   %br
   = recaptcha_tags :public_key => GeeweeConfig.entry.recaptcha_public_key, :ajax => true

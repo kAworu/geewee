@@ -44,9 +44,9 @@
       = t('comments.you_can_use_the_foo_syntax_markup', :markup => link_to('markdown', mkduri))
       = f.text_area :body
     %p#js-preview-checkbox(style='display:none;')
-      = label :option, :preview, t('comments.preview')
-      = check_box :option, :preview
-    %p#recaptcha
+      = label :options, :preview, t('comments.preview')
+      = check_box :options, :preview
+    %div#geewee-recaptcha
       = render :partial => 'shared/recaptcha'
     %p
       = f.submit t('comments.submit')

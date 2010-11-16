@@ -1,22 +1,11 @@
-$('#recaptcha').html("<%=ejs render(:partial => 'shared/recaptcha') %>");
-
-<% if @captcha_valid and not @comment.valid?
-  flash[:error] = error_messages_for('comment')
-end %>
-
-<% [:notice, :error].each do |lvl| %>
-  <% unless flash[lvl].blank? %>
-    $('#preview').hide();
-    $('#flash-<%= lvl %>').fadeOut('slow', function() {
-      $('#flash-<%= lvl %>').html("<%=ejs flash[lvl] %>").fadeIn('slow');
-    });
-  <% else %>
-    $('#flash-<%= lvl %>').hide();
-  <% end %>
-<% end %>
+$('#geewee-recaptcha').html("<%=ejs render(:partial => 'shared/recaptcha') %>");
 
 <% if @captcha_valid and @comment.valid? %>
-  <% if @preview %>
+    $('#flash-error').hide();
+    $('#flash-notice').fadeOut('slow', function() {
+      $('#flash-notice').html("<%=ejs flash[:notice] %>").fadeIn('slow');
+    });
+  <% if @comment.new_record? %>
     $('#preview').fadeOut('slow', function() {
       $('#preview-comment').html("<ol class='comments'><%=ejs render(:partial => @comment) %></ol>");
       $('#preview').fadeIn('slow');
@@ -27,4 +16,14 @@ end %>
     $('#comments').append("<%=ejs render(:partial => @comment) %>");
     $('#comment_<%= @comment.id %>').css('display', 'none').show('slow');
   <% end %>
+<% else %>
+  $('#flash-notice').hide();
+  $('#preview').hide();
+  $('#flash-error').fadeOut('slow', function() {
+    $('#flash-error').html("<%=ejs flash[:error] %>");
+    <% unless @comment.valid? %>
+      $('#flash-error').append("<%=ejs error_messages_for 'comment' %>");
+    <% end %>
+    $('#flash-error').fadeIn('slow');
+  });
 <% end %>

@@ -38,14 +38,12 @@ class CommentsController < ApplicationController
 
   # POST /comments
   def create
-    @post = Post.find(params[:post_id])
-    @comment = @post.comments.build(params[:comment])
-    @preview = params[:option][:preview] == '1'
-    @captcha_valid = if GeeweeConfig.entry.use_recaptcha?
-                       verify_recaptcha(:private_key => GeeweeConfig.entry.recaptcha_private_key)
-                     else
-                       true
-                     end
+    @comment = Post.find(params[:post_id]).comments.build(params[:comment])
+    if GeeweeConfig.entry.use_recaptcha?
+      @captcha_valid = verify_recaptcha(:private_key => GeeweeConfig.entry.recaptcha_private_key)
+    else
+      @captcha_valid = true
+    end
 
     flash[:error] = flash[:notice] = ''
     catch :done do
@@ -57,7 +55,7 @@ class CommentsController < ApplicationController
       # check comment
       throw :done unless @comment.valid?
 
-      if @preview
+      if params[:options][:preview] == '1'
         flash[:notice] = I18n.translate('comments.comment_is_valid')
         @comment.created_at = Time.now # hack for the partial
       else
@@ -68,13 +66,12 @@ class CommentsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        if @comment.id.nil? # not saved
+        if @comment.new_record? # not saved in db
           flash[:comment] = @comment # save in flash for editing.
-          anchor = :new_comment
+          redirect_to post_path(@comment.post, :anchor => :new_comment)
         else
-          anchor = "comment_#{@comment.id}"
+          redirect_to post_path(@comment.post, :anchor => "comment_#{@comment.id}")
         end
-        redirect_to post_path(@post, :anchor => anchor)
       end
       format.js # create.js.erb
     end

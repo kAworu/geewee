@@ -13,7 +13,7 @@
     = render :partial => 'comments/comment', :collection => @post.comments
 
 %a(name='new_comment')
-- remote_form_for [@post, @comment] do |f|
+- form_for [@post, @comment] do |f|
   %fieldset
     %legend= t('comments.write_a_comment').capitalize + ':'
     %p#flash-notice= flash[:notice]
@@ -23,8 +23,7 @@
         = error_messages_for 'comment'
     #preview(style='display:none;')
       %h3= t('comments.preview')
-      %ul
-        %li#preview-comment
+      #preview-comment
     %p
       = f.label :name, t('comments.name')
       %br
@@ -44,15 +43,25 @@
       - mkduri = 'http://daringfireball.net/projects/markdown/syntax'
       = t('comments.you_can_use_the_foo_syntax_markup', :markup => link_to('markdown', mkduri))
       = f.text_area :body
-    %p#js-preview(style='display:none;')
+    %p#js-preview-checkbox(style='display:none;')
       = label :option, :preview, t('comments.preview')
       = check_box :option, :preview
     %p#recaptcha
       = render :partial => 'shared/recaptcha'
     %p
-      = f.submit t('comments.submit'), :onclick => '$("#spinner").fadeIn("slow");'
+      = f.submit t('comments.submit')
       = image_tag '/images/theme/spinner.gif', :id => 'spinner', :style => 'display:none;'
 
 :javascript
-  // preview works only with JS
-  $(document).ready(function () { $("#js-preview").show(); });
+  $(document).ready(function() {
+    // preview works only with JS
+    $("#js-preview-checkbox").show();
+    $("#flash-notice, #flash-error").hide();
+    $("#new_comment").submit(function(event) {
+      $('#spinner').fadeIn('slow');
+      $(this).ajaxSubmit(function() {
+        $('#spinner').fadeOut('slow');
+      });
+      event.preventDefault();
+    });
+  });

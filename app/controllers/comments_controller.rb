@@ -76,7 +76,7 @@ class CommentsController < ApplicationController
         end
         redirect_to post_path(@post, :anchor => anchor)
       end
-      format.js # create.js.rjs
+      format.js # create.js.erb
     end
   end
 

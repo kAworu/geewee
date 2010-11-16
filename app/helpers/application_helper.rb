@@ -66,6 +66,11 @@ module ApplicationHelper
     end
   end
 
+  # sexy alias for .js.erb
+  def ejs txt
+    escape_javascript txt
+  end
+
   # translate and create a true sentance for
   # time_ago_in_word.
   def time_ago_sentance time

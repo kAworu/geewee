@@ -26,7 +26,6 @@ Rails::Initializer.run do |config|
   config.gem 'builder'
   config.gem 'friendly_id'
   config.gem 'authlogic'
-  config.gem 'searchlogic'
   config.gem 'will_paginate'
   config.gem 'gravatarify'
   config.gem "ambethia-recaptcha", :lib => "recaptcha/rails", :source => "http://gems.github.com"

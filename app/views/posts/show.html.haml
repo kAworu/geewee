@@ -2,17 +2,17 @@
 = render :partial => @post
 
 %h5
-  %a{ :name => 'comments' }
+  %a(name='comments')
   = comments_count_to_words(@post.comments.count)
 
 %p
-  %a{ :href => '#new_comment' }= t('comments.write_a_comment')
+  %a(href='#new_comment')= t('comments.write_a_comment')
 
 #comment_div
   %ol#comments.comments
     = render :partial => 'comments/comment', :collection => @post.comments
 
-%a{ :name => 'new_comment' }
+%a(name='new_comment')
 - remote_form_for [@post, @comment] do |f|
   %fieldset
     %legend= t('comments.write_a_comment').capitalize + ':'
@@ -21,7 +21,7 @@
     - if flash[:error].blank? and flash[:comment] # display validation errors.
       %div
         = error_messages_for 'comment'
-    #preview{ :style => 'display:none;' }
+    #preview(style='display:none;')
       %h3= t('comments.preview')
       %ul
         %li#preview-comment
@@ -44,19 +44,15 @@
       - mkduri = 'http://daringfireball.net/projects/markdown/syntax'
       = t('comments.you_can_use_the_foo_syntax_markup', :markup => link_to('markdown', mkduri))
       = f.text_area :body
-    %p#js-preview{ :style => 'display:none;' }
+    %p#js-preview(style='display:none;')
       = label :option, :preview, t('comments.preview')
-      %br
       = check_box :option, :preview
     %p#recaptcha
       = render :partial => 'shared/recaptcha'
     %p
-      = f.submit t('comments.submit'), :onclick => '$("spinner").style.display = "block";'
+      = f.submit t('comments.submit'), :onclick => '$("#spinner").fadeIn("slow");'
       = image_tag '/images/theme/spinner.gif', :id => 'spinner', :style => 'display:none;'
 
 :javascript
   // preview works only with JS
-  window.onload = js_preview_show;
-  function js_preview_show() {
-    $("js-preview").style.display = "block";
-  }
+  $(document).ready(function () { $("#js-preview").show(); });

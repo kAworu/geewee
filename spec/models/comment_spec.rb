@@ -26,11 +26,6 @@ describe Comment do
     @comment.errors.on(:email).should == expected
   end
 
-  it 'should FAIL_TO disallow update' do
-      @comment.body = '42'
-      @comment.should be_valid
-      @comment.save.should be_false
-  end
   it 'should allow update in order to mark as read' do
       @comment.update_attribute(:read, true).should be_true
   end

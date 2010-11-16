@@ -27,11 +27,6 @@ class Comment < ActiveRecord::Base
   validates_associated  :post
   validates_format_of   :email, :with => Authlogic::Regex.email
 
-  # disallow update of comment.
-  def before_update
-    false
-  end
-
   # check that if self.name match an Author, self.email does too.
   def good_email_when_match_blog_author
     if author = Author.find_by_name(self.name) and author.email != self.email
